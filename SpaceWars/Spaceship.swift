@@ -32,7 +32,9 @@ class Spaceship: SKSpriteNode {
         }
         
         super.init(texture: tex, color: .clear, size: dimensions)
-
+        self.physicsBody = SKPhysicsBody()
+        self.physicsBody?.affectedByGravity = false
+        self.physicsBody?.linearDamping = 0.7
         
         self.addShield(shieldLevel)
     }

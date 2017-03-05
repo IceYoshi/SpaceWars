@@ -7,6 +7,30 @@ public extension CGSize {
     }
 }
 
+public extension CGPoint {
+    static func *(left: CGPoint, right: Double) -> CGPoint {
+        return CGPoint(x: left.x * CGFloat(right), y: left.y * CGFloat(right))
+    }
+}
+
+public extension CGVector {
+    static func -=(left: inout CGVector, right: CGVector) {
+        left = left - right
+    }
+    
+    static func -(left: CGVector, right: CGVector) -> CGVector {
+        return CGVector(dx: left.dx - right.dx, dy: left.dy - right.dy)
+    }
+    
+    static func +=(left: inout CGVector, right: CGVector) {
+        left = left + right
+    }
+    
+    static func +(left: CGVector, right: CGVector) -> CGVector {
+        return CGVector(dx: left.dx + right.dx, dy: left.dy + right.dy)
+    }
+}
+
 public extension Int {
     static func rand(_ lowerBound: Int, _ upperBound: Int) -> Int {
         let lower, upper: Int

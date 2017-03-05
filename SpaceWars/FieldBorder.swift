@@ -17,6 +17,8 @@ class FieldBorder: SKShapeNode{
         self.strokeColor = .red
         self.glowWidth = 2
         self.alpha = 0.5
+        
+        
     }
     
 }
