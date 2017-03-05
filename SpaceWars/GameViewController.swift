@@ -19,8 +19,11 @@ class GameViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
         self.view = SKView()
+        
+        skView.showsFPS = true
+        skView.showsNodeCount = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,11 +31,24 @@ class GameViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let label = SKLabelNode(text: "Hello world!")
-        label.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2)
-        //label.position = CGPoint(x: 0, y: 0)
-        scene.addChild(label)
+        let sSpaceship = SKSpriteNode(imageNamed: "spaceship1.png")
+        sSpaceship.position = CGPoint(x: 0, y: 0)
+        scene.addChild(sSpaceship)
         
+        let sShield = SKSpriteNode(imageNamed: "shield.png")
+        sShield.position = sSpaceship.position
+        sShield.scale(to: sSpaceship.size * 1.3)
+        sShield.color = .red
+        sShield.colorBlendFactor = 1
+        scene.addChild(sShield)
+        
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         skView.presentScene(scene)
+    }
+}
+
+extension CGSize {
+    static func *(left: CGSize, right: Double) -> CGSize {
+        return CGSize(width: left.width * CGFloat(right), height: left.height * CGFloat(right))
     }
 }
