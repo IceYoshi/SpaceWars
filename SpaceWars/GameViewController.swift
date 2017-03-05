@@ -12,14 +12,14 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
-    let scene = SKScene(size: CGSize(width: 1024, height: 768))
+    let scene = GameScene()
     
     var skView: SKView {
         return self.view as! SKView
     }
     
     override func viewDidLoad() {
-        super.viewDidLoad()        
+        super.viewDidLoad()
         self.view = SKView()
         
         skView.showsFPS = true
@@ -31,24 +31,8 @@ class GameViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let sSpaceship = SKSpriteNode(imageNamed: "spaceship1.png")
-        sSpaceship.position = CGPoint(x: 0, y: 0)
-        scene.addChild(sSpaceship)
-        
-        let sShield = SKSpriteNode(imageNamed: "shield.png")
-        sShield.position = sSpaceship.position
-        sShield.scale(to: sSpaceship.size * 1.3)
-        sShield.color = .red
-        sShield.colorBlendFactor = 1
-        scene.addChild(sShield)
-        
-        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         skView.presentScene(scene)
     }
 }
 
-extension CGSize {
-    static func *(left: CGSize, right: Double) -> CGSize {
-        return CGSize(width: left.width * CGFloat(right), height: left.height * CGFloat(right))
-    }
-}
+
