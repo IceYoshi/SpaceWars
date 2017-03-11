@@ -11,27 +11,24 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
-
-    let scene = GameScene()
     
-    var skView: SKView {
-        return self.view as! SKView
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view = SKView()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let skView = self.view as! SKView
         
         skView.showsFPS = true
         skView.showsNodeCount = true
+        
+        let scene = LobbyScene(self.view.bounds.size)
+        //let scene = GameScene(self.view.bounds.size)
+        
+        
+        skView.presentScene(scene)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        skView.presentScene(scene)
     }
 }
 

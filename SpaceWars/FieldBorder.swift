@@ -6,19 +6,19 @@
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
-import Foundation
 import SpriteKit
 
-class FieldBorder: SKShapeNode{
+class FieldBorder: SKShapeNode {
     
-    convenience init(size: CGSize) {
+    convenience init(_ parent: SKNode) {
         self.init()
-        self.init(rectOf: size)
+        self.init(rectOf: Global.Constants.spacefieldSize)
+        self.name = "FieldBorder"
         self.strokeColor = .red
-        self.glowWidth = 2
+        self.glowWidth = 3
         self.alpha = 0.5
         
-        
+        parent.addChild(self)
     }
     
 }

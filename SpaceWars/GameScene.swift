@@ -7,52 +7,64 @@
 //
 
 import SpriteKit
-import GameplayKit
+
+protocol NeedsUpdateProtocol {
+    func update()
+}
+protocol NeedsPhysicsUpdateProtocol {
+    func didSimulatePhysics()
+}
 
 class GameScene: SKScene {
     
-    let dimensions = CGSize(width: 1024, height: 768)
-    var spaceship: Spaceship?
+    var world: World?
+    var background: SKNode?
+    var overlay: Overlay?
+    var playerCamera: PlayerCamera?
     
-    override init() {
-        super.init(size: dimensions)
-    }
+    var updateDelegates = [NeedsUpdateProtocol?]()
+    var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
-    override func didMove(to view: SKView) {
+    init(_ screenSize: CGSize) {
+        super.init(size: screenSize)
+        
+        self.scaleMode = .resizeFill
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.backgroundColor = .black
         
-        let camera = SKCameraNode()
-        camera.setScale(1)
-        camera.physicsBody = SKPhysicsBody()
-        camera.physicsBody?.affectedByGravity = false
-        camera.physicsBody?.linearDamping = 0.7
-        self.addChild(camera)
-        self.camera = camera
+        self.name = "GameScene"
         
-        self.addObjects()
+        self.playerCamera = PlayerCamera(self)
+        self.overlay = Overlay(self.camera!, screenSize: screenSize)
+        self.world = World(self)
+        
+        self.playerCamera!.targetObject = world?.player
+        self.addNeedsPhysicsUpdateDelegate(delegate: self.playerCamera!)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addObjects() {
-        self.addChild(FieldBorder(size: self.size))
-        
-        spaceship = Spaceship(type: .klington, shieldLevel: 10)
-        spaceship!.position = CGPoint.zero
-        self.addChild(spaceship!)
+    override func didMove(to view: SKView) {
+        let gestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(self.didPerformPinchGesture(recognizer:)))
+        self.view?.addGestureRecognizer(gestureRecognizer)
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+        for delegate in updateDelegates {
+            delegate?.update()
+        }
+    }
+    
+    override func didSimulatePhysics() {
+        for delegate in physicUpdateDelegates {
+            delegate?.didSimulatePhysics()
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let location = touches.first?.location(in: self) {
-            if let position = spaceship?.position {
-                let direction = CGVector(dx: position.x, dy: position.y) - CGVector(dx: location.x, dy: location.y)
-                spaceship?.physicsBody?.velocity += direction
-                self.camera?.physicsBody?.velocity += direction
-            }
-        }
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -64,10 +76,32 @@ class GameScene: SKScene {
         
     }
     
-    override func didSimulatePhysics() {
+    func didPerformPinchGesture(recognizer: UIPinchGestureRecognizer) {
+        if camera != nil && recognizer.numberOfTouches == 2 {
+            for i in 0...recognizer.numberOfTouches - 1 {
+                let touchLocation = recognizer.location(ofTouch: i, in: self.view)
+                let objects = self.nodes(at: touchLocation)
+                for node in objects {
+                    if node.name == "Overlay" {
+                        return
+                    }
+                }
+            }
+            
+            if recognizer.state == .changed {
+                let scaleMultiplier = 2 - recognizer.scale
+                let newScale = max(Global.Constants.minZoomLevel, min(Global.Constants.maxZoomLevel, scaleMultiplier * camera!.xScale))
+                camera!.setScale(newScale)
+                recognizer.scale = 1.0
+            }
+        }
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+    func addNeedsUpdateDelegate(delegate: NeedsUpdateProtocol) {
+        updateDelegates.append(delegate)
+    }
+    
+    func addNeedsPhysicsUpdateDelegate(delegate: NeedsPhysicsUpdateProtocol) {
+        physicUpdateDelegates.append(delegate)
     }
 }

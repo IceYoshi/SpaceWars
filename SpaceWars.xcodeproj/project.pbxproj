@@ -8,28 +8,42 @@
 
 /* Begin PBXBuildFile section */
 		270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C79141E6B54B70045C868 /* AppDelegate.swift */; };
-		270C791B1E6B54B70045C868 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C791A1E6B54B70045C868 /* GameScene.swift */; };
 		270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C791C1E6B54B70045C868 /* GameViewController.swift */; };
 		270C79201E6B54B70045C868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270C791E1E6B54B70045C868 /* Main.storyboard */; };
 		270C79221E6B54B70045C868 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 270C79211E6B54B70045C868 /* Assets.xcassets */; };
 		270C79251E6B54B70045C868 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270C79231E6B54B70045C868 /* LaunchScreen.storyboard */; };
+		271980DF1E73230F006A058A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271980DE1E73230F006A058A /* GameScene.swift */; };
+		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
 		27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30D1E6C344900F05F72 /* Spaceship.swift */; };
 		27B5F3101E6C531D00F05F72 /* FieldBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */; };
+		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
+		27D913021E6D98140030EFAC /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913011E6D98140030EFAC /* World.swift */; };
+		27D913071E6D98CC0030EFAC /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913061E6D98CC0030EFAC /* Background.swift */; };
+		27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913081E6D98FB0030EFAC /* Overlay.swift */; };
+		27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130A1E6DBBE70030EFAC /* Global.swift */; };
+		27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		270C79111E6B54B70045C868 /* SpaceWars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWars.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		270C79141E6B54B70045C868 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		270C791A1E6B54B70045C868 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		270C791C1E6B54B70045C868 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		270C791F1E6B54B70045C868 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		270C79211E6B54B70045C868 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		270C79241E6B54B70045C868 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		270C79261E6B54B70045C868 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		271980DE1E73230F006A058A /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B5F30D1E6C344900F05F72 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
 		27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldBorder.swift; sourceTree = "<group>"; };
+		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
+		27D913011E6D98140030EFAC /* World.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		27D913061E6D98CC0030EFAC /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
+		27D913081E6D98FB0030EFAC /* Overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
+		27D9130A1E6DBBE70030EFAC /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,15 +76,16 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
+				27D913051E6D98810030EFAC /* layer */,
+				27D913041E6D98400030EFAC /* scene */,
+				27D913031E6D98230030EFAC /* extra */,
 				27B5F30C1E6C342C00F05F72 /* object */,
 				270C79141E6B54B70045C868 /* AppDelegate.swift */,
-				270C791A1E6B54B70045C868 /* GameScene.swift */,
 				270C791C1E6B54B70045C868 /* GameViewController.swift */,
 				270C791E1E6B54B70045C868 /* Main.storyboard */,
 				270C79211E6B54B70045C868 /* Assets.xcassets */,
 				270C79231E6B54B70045C868 /* LaunchScreen.storyboard */,
 				270C79261E6B54B70045C868 /* Info.plist */,
-				27B5F30A1E6C335A00F05F72 /* Extensions.swift */,
 			);
 			path = SpaceWars;
 			sourceTree = "<group>";
@@ -80,8 +95,38 @@
 			children = (
 				27B5F30D1E6C344900F05F72 /* Spaceship.swift */,
 				27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */,
+				27B8E02A1E740397003A12DE /* Joystick.swift */,
+				27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */,
 			);
 			name = object;
+			sourceTree = "<group>";
+		};
+		27D913031E6D98230030EFAC /* extra */ = {
+			isa = PBXGroup;
+			children = (
+				27B5F30A1E6C335A00F05F72 /* Extensions.swift */,
+				27D9130A1E6DBBE70030EFAC /* Global.swift */,
+			);
+			name = extra;
+			sourceTree = "<group>";
+		};
+		27D913041E6D98400030EFAC /* scene */ = {
+			isa = PBXGroup;
+			children = (
+				271980DE1E73230F006A058A /* GameScene.swift */,
+				27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */,
+			);
+			name = scene;
+			sourceTree = "<group>";
+		};
+		27D913051E6D98810030EFAC /* layer */ = {
+			isa = PBXGroup;
+			children = (
+				27D913011E6D98140030EFAC /* World.swift */,
+				27D913061E6D98CC0030EFAC /* Background.swift */,
+				27D913081E6D98FB0030EFAC /* Overlay.swift */,
+			);
+			name = layer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -158,11 +203,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				27B5F3101E6C531D00F05F72 /* FieldBorder.swift in Sources */,
-				270C791B1E6B54B70045C868 /* GameScene.swift in Sources */,
+				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
+				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
+				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
+				27D913021E6D98140030EFAC /* World.swift in Sources */,
+				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
+				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
 				27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */,
+				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
+				271980DF1E73230F006A058A /* GameScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +339,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = E499E7H6Y3;
 				INFOPLIST_FILE = SpaceWars/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = lu.uni.mike.SpaceWars;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -300,6 +353,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = E499E7H6Y3;
 				INFOPLIST_FILE = SpaceWars/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = lu.uni.mike.SpaceWars;
 				PRODUCT_NAME = "$(TARGET_NAME)";

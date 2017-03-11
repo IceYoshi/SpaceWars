@@ -1,4 +1,11 @@
-import Foundation
+//
+//  Extensions.swift
+//  SpaceWars
+//
+//  Created by Mike Pereira on 06/03/2017.
+//  Copyright © 2017 Mike Pereira. All rights reserved.
+//
+
 import SpriteKit
 
 public extension CGSize {
@@ -10,6 +17,32 @@ public extension CGSize {
 public extension CGPoint {
     static func *(left: CGPoint, right: Double) -> CGPoint {
         return CGPoint(x: left.x * CGFloat(right), y: left.y * CGFloat(right))
+    }
+    
+    static func +(left: CGPoint, right: Double) -> CGPoint {
+        return CGPoint(x: left.x + CGFloat(right), y: left.y + CGFloat(right))
+    }
+    
+    static func +(left: CGPoint, right: CGPoint) -> CGPoint {
+        return CGPoint(x: left.x + right.x, y: left.y + right.y)
+    }
+    
+    static func +(left: CGPoint, right: CGVector) -> CGPoint {
+        return CGPoint(x: left.x + right.dx, y: left.y + right.dy)
+    }
+    
+    static func +=(left: inout CGPoint, right: CGPoint) {
+        left = left + right
+    }
+    
+    static func +=(left: inout CGPoint, right: CGVector) {
+        left = left + right
+    }
+}
+
+public extension CGRect {
+    static func *(left: CGRect, right: Double) -> CGRect {
+        return CGRect(origin: left.origin, size: left.size * right)
     }
 }
 
@@ -28,6 +61,22 @@ public extension CGVector {
     
     static func +(left: CGVector, right: CGVector) -> CGVector {
         return CGVector(dx: left.dx + right.dx, dy: left.dy + right.dy)
+    }
+    
+    static func *(left: CGVector, right: CGFloat) -> CGVector {
+        return CGVector(dx: left.dx * CGFloat(right), dy: left.dy * CGFloat(right))
+    }
+    
+    static func /(left: CGVector, right: CGFloat) -> CGVector {
+        return CGVector(dx: left.dx / CGFloat(right), dy: left.dy / CGFloat(right))
+    }
+    
+    func length() -> CGFloat {
+        return sqrt(dx*dx + dy*dy)
+    }
+    
+    func normalized() -> CGVector {
+        return self / length()
     }
 }
 
