@@ -12,6 +12,7 @@ class Joystick: SKNode {
     
     fileprivate var sDPad: SKSpriteNode?
     fileprivate var sJoystick: SKSpriteNode?
+    fileprivate var blocked: Bool = false
     
     fileprivate var joystickOffset: CGVector {
         get {
@@ -90,7 +91,12 @@ class Joystick: SKNode {
 extension Joystick: SpaceshipControllerProtocol {
     
     var enabled: Bool {
-        return thrust > 0
+        get {
+            return !blocked && thrust > 0
+        }
+        set(value) {
+            self.blocked = !value
+        }
     }
     
     var angle: CGFloat {

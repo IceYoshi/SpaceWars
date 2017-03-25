@@ -17,8 +17,10 @@ class GameViewController: UIViewController {
         
         let skView = self.view as! SKView
         
-        skView.showsFPS = true
-        skView.showsNodeCount = true
+        skView.showsFPS = Global.Constants.debugShowFPS
+        skView.showsNodeCount = Global.Constants.debugShowNodeCount
+        skView.showsPhysics = Global.Constants.debugShowPhysics
+        skView.showsFields = Global.Constants.debugShowFields
         
         let scene = LobbyScene(self.view.bounds.size)
         //let scene = GameScene(self.view.bounds.size)

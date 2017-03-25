@@ -21,6 +21,7 @@ class World: SKNode {
         
         // Add objects to the world
         _ = FieldBorder(self)
+        _ = BlackHole(self)
         player = Spaceship(self, type: .klington, shieldLevel: 10)
         player!.controller = scene.overlay?.joystick
         scene.addNeedsUpdateDelegate(delegate: player!)

@@ -13,43 +13,46 @@ enum SpaceshipType {
 }
 
 protocol SpaceshipControllerProtocol {
-    var enabled: Bool {get}
+    var enabled: Bool {get set}
     var angle: CGFloat {get}
     var thrust: CGFloat {get}
 }
 
-class Spaceship: SKSpriteNode {
+class Spaceship: SKNode {
     
     public var controller: SpaceshipControllerProtocol?
+    private var sShip: SKSpriteNode?
+    private var sShield: SKSpriteNode?
     
     required init(_ parent: SKNode, type: SpaceshipType, shieldLevel: Int) {
-        let tex: SKTexture
-        switch(type) {
-            case .klington:
-                tex = Global.textureDictionary["spaceship1.png"]!
-            case .human:
-                tex = Global.textureDictionary["spaceship2.png"]!
-            case .borg:
-                tex = Global.textureDictionary["spaceship3.png"]!
-            case .random:
-                tex = Global.textureDictionary["spaceship\(Int.rand(1, 3)).png"]!
-        }
-        super.init(texture: tex, color: .clear, size: Global.Constants.spaceshipSize)
+        super.init()
         
         self.name = "Spaceship"
         
-        self.physicsBody = SKPhysicsBody()
+        var combinedBodies = [SKPhysicsBody]()
+        
+        sShip = createSpaceship(type)
+        self.addChild(sShip!)
+        combinedBodies.append(SKPhysicsBody(texture: sShip!.texture!, alphaThreshold: 0, size: Global.Constants.spaceshipSize))
+        
+        if(shieldLevel > 0) {
+            sShield = createShield(shieldLevel)
+            self.addChild(sShield!)
+            combinedBodies.append(SKPhysicsBody(texture: sShield!.texture!, alphaThreshold: 0, size: sShield!.size))
+        }
+        
+        self.physicsBody = SKPhysicsBody(bodies: combinedBodies)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.linearDamping = Global.Constants.spaceshipLinearDamping
+        self.physicsBody!.angularDamping = 0
+        self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
+        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory
+        self.physicsBody!.collisionBitMask = 0
         
-        
-        let xLimit = SKConstraint.positionX(SKRange(lowerLimit: -Global.Constants.spacefieldSize.width / 2, upperLimit: Global.Constants.spacefieldSize.width / 2))
-        let yLimit = SKConstraint.positionY(SKRange(lowerLimit: -Global.Constants.spacefieldSize.height / 2, upperLimit: Global.Constants.spacefieldSize.height / 2))
-        
-        self.constraints = [xLimit, yLimit]
-        
-        
-        self.addShield(shieldLevel)
+        self.constraints = [
+            SKConstraint.positionX(SKRange(lowerLimit: -Global.Constants.spacefieldSize.width / 2, upperLimit: Global.Constants.spacefieldSize.width / 2)),
+            SKConstraint.positionY(SKRange(lowerLimit: -Global.Constants.spacefieldSize.height / 2, upperLimit: Global.Constants.spacefieldSize.height / 2))
+        ]
         
         parent.addChild(self)
     }
@@ -58,18 +61,32 @@ class Spaceship: SKSpriteNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func addShield(_ value: Int) {
-        let level = min(value, Global.Constants.maxShieldLevel)
+    private func createSpaceship(_ type: SpaceshipType) -> SKSpriteNode {
+        let tex: SKTexture
         
-        if(level > 0) {
-            let sShield = SKSpriteNode(imageNamed: "shield.png")
-            sShield.position = self.position
-            sShield.scale(to: self.size * 1.3)
-            sShield.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-            sShield.colorBlendFactor = 1 - CGFloat(level) / CGFloat(Global.Constants.maxShieldLevel)
-            self.addChild(sShield)
+        switch(type) {
+        case .klington:
+            tex = Global.textureDictionary["spaceship1.png"]!
+        case .human:
+            tex = Global.textureDictionary["spaceship2.png"]!
+        case .borg:
+            tex = Global.textureDictionary["spaceship3.png"]!
+        case .random:
+            tex = Global.textureDictionary["spaceship\(Int.rand(1, 3)).png"]!
         }
         
+        return SKSpriteNode(texture: tex, size: Global.Constants.spaceshipSize)
+    }
+    
+    private func createShield(_ value: Int) -> SKSpriteNode {
+        let level = min(value, Global.Constants.maxShieldLevel)
+        
+        let sShield = SKSpriteNode(texture: Global.textureDictionary["shield.png"]!)
+        sShield.scale(to: sShip!.size * 1.3)
+        sShield.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
+        sShield.colorBlendFactor = 1 - CGFloat(level) / CGFloat(Global.Constants.maxShieldLevel)
+        
+        return sShield
     }
     
 }
@@ -77,8 +94,8 @@ class Spaceship: SKSpriteNode {
 extension Spaceship: NeedsUpdateProtocol {
     
     func update() {
-        if self.physicsBody != nil && controller != nil && controller!.enabled {
-            self.zRotation = controller!.angle - CGFloat.pi / 2 // TODO: Make a smooth rotation
+        if self.physicsBody != nil && (controller?.enabled) ?? false {
+            self.zRotation = controller!.angle - CGFloat.pi / 2
             
             let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
             let multiplier = Global.Constants.spaceshipAcceleration * controller!.thrust

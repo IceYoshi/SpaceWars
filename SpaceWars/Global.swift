@@ -11,9 +11,14 @@ import SpriteKit
 class Global {
     
     struct Constants {
-        static let spacefieldSize = CGSize(width: 1000, height: 1000)
+        static let debugShowFPS: Bool = true
+        static let debugShowNodeCount: Bool = true
+        static let debugShowPhysics: Bool = false
+        static let debugShowFields: Bool = false
         
-        static let spaceshipMaxSpeed: CGFloat = 600
+        static let spacefieldSize = CGSize(width: 2000, height: 2000)
+        
+        static let spaceshipMaxSpeed: CGFloat = 700
         static let spaceshipAcceleration: CGFloat = 10
         static let spaceshipLinearDamping: CGFloat = 0.9
         static let spaceshipSize = CGSize(width: 108, height: 132)
@@ -25,11 +30,17 @@ class Global {
         static let defaultZoomLevel: CGFloat = 2.0
         
         static let joystickDeadZone: CGFloat = 0.1
+        
+        static let blackholeCategory: UInt32 = 0x1 << 0
+        static let spaceshipCategory: UInt32 = 0x1 << 1
     }
     
     static let textureDictionary: [String: SKTexture] = [
+        "shield.png": SKTexture(imageNamed: "shield.png"),
         "spaceship1.png": SKTexture(imageNamed: "spaceship1.png"),
         "spaceship2.png": SKTexture(imageNamed: "spaceship2.png"),
-        "spaceship3.png": SKTexture(imageNamed: "spaceship3.png")
+        "spaceship3.png": SKTexture(imageNamed: "spaceship3.png"),
+        "parallax-stars.png": SKTexture(imageNamed: "parallax-stars.png"),
+        "blackhole.png": SKTexture(imageNamed: "blackhole.png")
     ]
 }

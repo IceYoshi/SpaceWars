@@ -11,6 +11,7 @@ import SpriteKit
 class PlayerCamera: SKCameraNode {
     
     var targetObject: SKNode?
+    var oldOffset = CGVector.zero
     
     init(_ scene: GameScene) {
         super.init()
@@ -34,7 +35,14 @@ extension PlayerCamera: NeedsPhysicsUpdateProtocol {
         if targetObject != nil {
             self.position = targetObject!.position
             if let playerVelocity = targetObject?.physicsBody?.velocity {
-                self.position += playerVelocity * self.xScale / 8
+                let alpha = 10
+                let beta = 1
+                
+                let newOffset = playerVelocity * self.xScale / 8
+                let weightedOffset = (oldOffset * alpha + newOffset * beta) / (alpha + beta)
+                
+                self.position += weightedOffset
+                oldOffset = weightedOffset
             }
         }
     }

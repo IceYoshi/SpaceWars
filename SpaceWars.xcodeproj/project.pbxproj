@@ -13,6 +13,8 @@
 		270C79221E6B54B70045C868 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 270C79211E6B54B70045C868 /* Assets.xcassets */; };
 		270C79251E6B54B70045C868 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270C79231E6B54B70045C868 /* LaunchScreen.storyboard */; };
 		271980DF1E73230F006A058A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271980DE1E73230F006A058A /* GameScene.swift */; };
+		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
+		277D47331E74BDC100901D8F /* BlackHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47321E74BDC100901D8F /* BlackHole.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
 		27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30D1E6C344900F05F72 /* Spaceship.swift */; };
@@ -34,6 +36,8 @@
 		270C79241E6B54B70045C868 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		270C79261E6B54B70045C868 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		271980DE1E73230F006A058A /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
+		277D47321E74BDC100901D8F /* BlackHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlackHole.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B5F30D1E6C344900F05F72 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 				27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */,
 				27B8E02A1E740397003A12DE /* Joystick.swift */,
 				27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */,
+				277D47301E74B2B800901D8F /* StarField.swift */,
+				277D47321E74BDC100901D8F /* BlackHole.swift */,
 			);
 			name = object;
 			sourceTree = "<group>";
@@ -206,12 +212,14 @@
 				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
+				277D47311E74B2B800901D8F /* StarField.swift in Sources */,
 				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
 				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
+				277D47331E74BDC100901D8F /* BlackHole.swift in Sources */,
 				27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,

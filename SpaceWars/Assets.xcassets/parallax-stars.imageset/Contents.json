@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "star-spritesheet.png",
+      "filename" : "parallax-stars.png",
       "scale" : "1x"
     },
     {
