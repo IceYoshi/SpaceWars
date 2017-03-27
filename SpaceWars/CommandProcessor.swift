@@ -8,7 +8,11 @@
 
 import SpriteKit
 
-class CommandProcessor {
+protocol CommandProcessorDelegate {
+    func interpret(data: Data)
+}
+
+class CommandProcessor: CommandProcessorDelegate {
     
     private var commandDictionary = [String: Command]()
     

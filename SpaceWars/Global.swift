@@ -11,17 +11,21 @@ import SpriteKit
 class Global {
     
     struct Constants {
+        // ConnectionManager settings
+        static let serviceType: String = "spacewars_peer_connection_identifier"
+        
+        // Debug information
         static let debugShowFPS: Bool = true
         static let debugShowNodeCount: Bool = true
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
-        static let spacefieldSize = CGSize(width: 2000, height: 2000)
+        static let spacefieldSize: CGSize = CGSize(width: 2000, height: 2000)
         
         static let spaceshipMaxSpeed: CGFloat = 700
         static let spaceshipAcceleration: CGFloat = 10
         static let spaceshipLinearDamping: CGFloat = 0.9
-        static let spaceshipSize = CGSize(width: 108, height: 132)
+        static let spaceshipSize: CGSize = CGSize(width: 108, height: 132)
         
         static let maxShieldLevel: Int = 10
         

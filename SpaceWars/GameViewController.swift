@@ -12,10 +12,17 @@ import GameplayKit
 
 class GameViewController: UIViewController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view = SKView()
+    }
+    
+    var skView: SKView {
+        return self.view as! SKView
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        let skView = self.view as! SKView
         
         skView.showsFPS = Global.Constants.debugShowFPS
         skView.showsNodeCount = Global.Constants.debugShowNodeCount
@@ -36,8 +43,8 @@ class GameViewController: UIViewController {
     
     func testMessage() {
         let cp = CommandProcessor()
-        _ = FireCommand(commandProcessor: cp, view: self.view as! SKView)
-        _ = MoveCommand(commandProcessor: cp, view: self.view as! SKView)
+        _ = FireCommand(commandProcessor: cp, view: skView)
+        _ = MoveCommand(commandProcessor: cp, view: skView)
         
         let data: Data = "{\"type\":\"fire\"}".data(using: .utf8)!
         

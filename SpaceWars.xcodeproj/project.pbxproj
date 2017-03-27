@@ -19,6 +19,7 @@
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
 		27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30D1E6C344900F05F72 /* Spaceship.swift */; };
 		27B5F3101E6C531D00F05F72 /* FieldBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */; };
+		27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */; };
 		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
 		27C2E6501E884AB2001A52D5 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E64F1E884AB2001A52D5 /* Command.swift */; };
 		27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */; };
@@ -46,6 +47,7 @@
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B5F30D1E6C344900F05F72 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
 		27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldBorder.swift; sourceTree = "<group>"; };
+		27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		27C2E64F1E884AB2001A52D5 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandProcessor.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
+				27B8BDD61E893173007D8EF7 /* mpc */,
 				27C2E64E1E884A71001A52D5 /* commands */,
 				27D913051E6D98810030EFAC /* layer */,
 				27D913041E6D98400030EFAC /* scene */,
@@ -114,6 +117,14 @@
 				277D47321E74BDC100901D8F /* BlackHole.swift */,
 			);
 			name = object;
+			sourceTree = "<group>";
+		};
+		27B8BDD61E893173007D8EF7 /* mpc */ = {
+			isa = PBXGroup;
+			children = (
+				27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */,
+			);
+			name = mpc;
 			sourceTree = "<group>";
 		};
 		27C2E64E1E884A71001A52D5 /* commands */ = {
@@ -241,6 +252,7 @@
 				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
+				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
 				277D47331E74BDC100901D8F /* BlackHole.swift in Sources */,
 				27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */,
