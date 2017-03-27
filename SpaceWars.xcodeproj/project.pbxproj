@@ -20,6 +20,10 @@
 		27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30D1E6C344900F05F72 /* Spaceship.swift */; };
 		27B5F3101E6C531D00F05F72 /* FieldBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */; };
 		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
+		27C2E6501E884AB2001A52D5 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E64F1E884AB2001A52D5 /* Command.swift */; };
+		27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */; };
+		27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6541E884AE8001A52D5 /* MoveCommand.swift */; };
+		27C2E6571E884B16001A52D5 /* FireCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6561E884B16001A52D5 /* FireCommand.swift */; };
 		27D913021E6D98140030EFAC /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913011E6D98140030EFAC /* World.swift */; };
 		27D913071E6D98CC0030EFAC /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913061E6D98CC0030EFAC /* Background.swift */; };
 		27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913081E6D98FB0030EFAC /* Overlay.swift */; };
@@ -43,6 +47,10 @@
 		27B5F30D1E6C344900F05F72 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
 		27B5F30F1E6C531D00F05F72 /* FieldBorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldBorder.swift; sourceTree = "<group>"; };
 		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
+		27C2E64F1E884AB2001A52D5 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandProcessor.swift; sourceTree = "<group>"; };
+		27C2E6541E884AE8001A52D5 /* MoveCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveCommand.swift; sourceTree = "<group>"; };
+		27C2E6561E884B16001A52D5 /* FireCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireCommand.swift; sourceTree = "<group>"; };
 		27D913011E6D98140030EFAC /* World.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		27D913061E6D98CC0030EFAC /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		27D913081E6D98FB0030EFAC /* Overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
@@ -80,6 +88,7 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
+				27C2E64E1E884A71001A52D5 /* commands */,
 				27D913051E6D98810030EFAC /* layer */,
 				27D913041E6D98400030EFAC /* scene */,
 				27D913031E6D98230030EFAC /* extra */,
@@ -105,6 +114,17 @@
 				277D47321E74BDC100901D8F /* BlackHole.swift */,
 			);
 			name = object;
+			sourceTree = "<group>";
+		};
+		27C2E64E1E884A71001A52D5 /* commands */ = {
+			isa = PBXGroup;
+			children = (
+				27C2E64F1E884AB2001A52D5 /* Command.swift */,
+				27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */,
+				27C2E6541E884AE8001A52D5 /* MoveCommand.swift */,
+				27C2E6561E884B16001A52D5 /* FireCommand.swift */,
+			);
+			name = commands;
 			sourceTree = "<group>";
 		};
 		27D913031E6D98230030EFAC /* extra */ = {
@@ -213,8 +233,11 @@
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
 				277D47311E74B2B800901D8F /* StarField.swift in Sources */,
+				27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */,
+				27C2E6571E884B16001A52D5 /* FireCommand.swift in Sources */,
 				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
+				27C2E6501E884AB2001A52D5 /* Command.swift in Sources */,
 				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
@@ -222,6 +245,7 @@
 				277D47331E74BDC100901D8F /* BlackHole.swift in Sources */,
 				27B5F30E1E6C344900F05F72 /* Spaceship.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
+				27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,6 +376,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = lu.uni.mike.SpaceWars;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -366,6 +391,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = lu.uni.mike.SpaceWars;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

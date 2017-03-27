@@ -25,12 +25,23 @@ class GameViewController: UIViewController {
         let scene = LobbyScene(self.view.bounds.size)
         //let scene = GameScene(self.view.bounds.size)
         
-        
         skView.presentScene(scene)
+        
+        //testMessage()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func testMessage() {
+        let cp = CommandProcessor()
+        _ = FireCommand(commandProcessor: cp, view: self.view as! SKView)
+        _ = MoveCommand(commandProcessor: cp, view: self.view as! SKView)
+        
+        let data: Data = "{\"type\":\"fire\"}".data(using: .utf8)!
+        
+        cp.interpret(data: data)
     }
 }
 
