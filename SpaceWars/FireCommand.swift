@@ -17,7 +17,7 @@ class FireCommand: Command {
         super.init(commandProcessor: commandProcessor, commandName: "fire")
     }
     
-    override func process(_ data: [String : Any]) {
+    override func process(_ data: JSON) {
         print("Command: fire received")
     }
     

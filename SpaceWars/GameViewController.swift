@@ -29,8 +29,8 @@ class GameViewController: UIViewController {
         skView.showsPhysics = Global.Constants.debugShowPhysics
         skView.showsFields = Global.Constants.debugShowFields
         
-        let scene = LobbyScene(self.view.bounds.size)
-        //let scene = GameScene(self.view.bounds.size)
+        //let scene = LobbyScene(self.view.bounds.size)
+        let scene = GameScene(self.view.bounds.size)
         
         skView.presentScene(scene)
         
@@ -48,7 +48,7 @@ class GameViewController: UIViewController {
         
         let data: Data = "{\"type\":\"fire\"}".data(using: .utf8)!
         
-        cp.interpret(data: data)
+        cp.interpret(data)
     }
 }
 

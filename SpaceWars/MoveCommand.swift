@@ -17,7 +17,7 @@ class MoveCommand: Command {
         super.init(commandProcessor: commandProcessor, commandName: "move")
     }
     
-    override func process(_ data: [String : Any]) {
+    override func process(_ data: JSON) {
         print("Command: move received")
     }
     

@@ -9,7 +9,7 @@
 import SpriteKit
 
 protocol CommandProcessorDelegate {
-    func interpret(data: Data)
+    func interpret(_ data: Data)
 }
 
 class CommandProcessor: CommandProcessorDelegate {
@@ -20,20 +20,12 @@ class CommandProcessor: CommandProcessorDelegate {
         commandDictionary[key] = command
     }
     
-    func interpret(data: Data) {
-        do {
-            let dataJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-            if let type = dataJSON?["type"] as? String {
-                if let cmd = commandDictionary[type] {
-                    cmd.process(dataJSON!)
-                } else {
-                    print("CommandProcessor: Command \(type) is not registered. Ignoring request.")
-                }
-            } else {
-                print("CommandProcessor: Unexpected JSON structure (missing 'type' key). Ignoring request. Raw data: \(String(data: data, encoding: .utf8)!)")
-            }
-        } catch {
-            print("CommandProcessor: Error while parsing data as JSON in the interpretation step. Raw data: \(String(data: data, encoding: .utf8)!)")
+    func interpret(_ data: Data) {
+        let dataJSON = JSON(data: data)
+        if let cmd = commandDictionary[dataJSON["type"].stringValue] {
+            cmd.process(dataJSON)
+        } else {
+            print("CommandProcessor: Error while processing JSON in the interpretation step.\nReceived data: \(String(data: data, encoding: .utf8)!)")
         }
     }
     

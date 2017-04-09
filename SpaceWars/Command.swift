@@ -19,7 +19,7 @@ class Command {
         commandProcessor.register(key: commandName, command: self)
     }
     
-    func process(_ data: [String: Any]) {
+    func process(_ data: JSON) {
         print("Warning: Command superclass implementation of process() should not have been called.")
     }
     
