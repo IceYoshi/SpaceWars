@@ -89,7 +89,13 @@ class Joystick: SKNode {
 
 }
 
-extension Joystick: SpaceshipControllerProtocol {
+protocol JoystickControllerProtocol {
+    var enabled: Bool {get set}
+    var angle: CGFloat {get}
+    var thrust: CGFloat {get}
+}
+
+extension Joystick: JoystickControllerProtocol {
     
     var enabled: Bool {
         get {

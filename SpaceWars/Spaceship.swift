@@ -8,21 +8,17 @@
 
 import SpriteKit
 
-protocol SpaceshipControllerProtocol {
-    var enabled: Bool {get set}
-    var angle: CGFloat {get}
-    var thrust: CGFloat {get}
-}
 
-class Spaceship: GameObject, NeedsUpdateProtocol {
+
+class Spaceship: GameObject {
     
-    public var controller: SpaceshipControllerProtocol?
+    public var controller: JoystickControllerProtocol?
     private var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
     private var dmg: Int
-    private var speed_max: Int
-    private var acc: Int
+    fileprivate var speed_max: Int
+    fileprivate var acc: Int
     private var hp_max: Int
     private var hp: Int
     private var ammo: [Int]
@@ -126,6 +122,10 @@ class Spaceship: GameObject, NeedsUpdateProtocol {
         updateShield()
     }
     
+}
+
+extension Spaceship: NeedsUpdateProtocol {
+    
     public func update() {
         if self.physicsBody != nil && (controller?.enabled) ?? false {
             self.zRotation = controller!.angle - CGFloat.pi / 2
@@ -141,6 +141,5 @@ class Spaceship: GameObject, NeedsUpdateProtocol {
             self.physicsBody!.velocity = newVelocity
         }
     }
-    
     
 }

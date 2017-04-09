@@ -35,14 +35,14 @@ class GameScene: SKScene {
         objectManager = ObjectManager(World(), Background(), Overlay(screenSize: screenSize), PlayerCamera())
         objectManager?.attachTo(scene: self)
         
-        createObjects(fieldShape: .rect, fieldSize: Global.Constants.spacefieldSize)
+        createObjects(screenSize, .rect, Global.Constants.spacefieldSize)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createObjects(fieldShape: SpacefieldShape, fieldSize: CGSize) {
+    private func createObjects(_ screenSize: CGSize, _ fieldShape: SpacefieldShape, _ fieldSize: CGSize) {
         if(objectManager != nil) {
             let idCounter = IDCounter()
             
@@ -58,9 +58,14 @@ class GameScene: SKScene {
             
             // Overlay
             let joystick = Joystick(deadZone: 0.1)
-            let padding = joystick.calculateAccumulatedFrame()
-            joystick.position = CGPoint(x: padding.width, y: padding.height)
+            let joystickPadding = joystick.calculateAccumulatedFrame()
+            joystick.position = CGPoint(x: joystickPadding.width, y: joystickPadding.height)
             objectManager?.assignToOverlay(obj: joystick)
+            
+            let fireButton = FireButton()
+            let buttonPadding = fireButton.calculateAccumulatedFrame()
+            fireButton.position = CGPoint(x: screenSize.width - buttonPadding.width, y: buttonPadding.height)
+            objectManager?.assignToOverlay(obj: fireButton)
             
             // Setup delegates
             objectManager?.player?.controller = joystick
@@ -102,6 +107,7 @@ class GameScene: SKScene {
     
     func didPerformPinchGesture(recognizer: UIPinchGestureRecognizer) {
         if camera != nil && recognizer.numberOfTouches == 2 {
+            /*
             for i in 0...recognizer.numberOfTouches - 1 {
                 let touchLocation = recognizer.location(ofTouch: i, in: self.view)
                 let objects = self.nodes(at: touchLocation)
@@ -111,6 +117,7 @@ class GameScene: SKScene {
                     }
                 }
             }
+            */
             
             if recognizer.state == .changed {
                 let scaleMultiplier = 2 - recognizer.scale
