@@ -9,7 +9,7 @@
 import SpriteKit
 
 enum GameEnvironmentType {
-    case spacefield
+    case spacefield, starfield
 }
 
 class GameEnvironment: SKNode {

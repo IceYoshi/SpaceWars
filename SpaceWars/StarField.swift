@@ -8,12 +8,11 @@
 
 import SpriteKit
 
-class StarField: SKNode {
+class StarField: GameEnvironment {
     
     init(fieldSize: CGSize) {
-        super.init()
+        super.init("StarField", .starfield)
         
-        self.name = "StarField"
         let arraySize: Int = 3
         let scale: CGFloat = 3
         

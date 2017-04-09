@@ -22,7 +22,7 @@ enum GameObjectType {
 
 class GameObject: SKNode {
     
-    private var id: Int
+    private(set) var id: Int
     private var type: GameObjectType
     
     init(_ id: Int, _ name: String, _ type: GameObjectType) {

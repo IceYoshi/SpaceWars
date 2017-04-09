@@ -17,44 +17,57 @@ protocol NeedsPhysicsUpdateProtocol {
 
 class GameScene: SKScene {
     
-    var world: World?
-    var background: Background?
-    var overlay: Overlay?
-    var playerCamera: PlayerCamera?
+    private var objectManager: ObjectManager?
+    private var playerCamera: PlayerCamera?
     
-    var updateDelegates = [NeedsUpdateProtocol?]()
-    var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
+    private var updateDelegates = [NeedsUpdateProtocol?]()
+    private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
     init(_ screenSize: CGSize) {
         super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
+        self.physicsWorld.contactDelegate = self
         
         self.name = "GameScene"
         
-        self.world = World(size: Global.Constants.spacefieldSize)
-        self.background = Background(parallaxReference: world?.player)
-        self.overlay = Overlay(screenSize: screenSize)
-        self.playerCamera = PlayerCamera(targetObject: world?.player)
+        objectManager = ObjectManager(World(), Background(), Overlay(screenSize: screenSize), PlayerCamera())
+        objectManager?.attachTo(scene: self)
         
-        self.world!.player?.controller = self.overlay!.joystick
-        
-        self.addNeedsUpdateDelegate(delegate: world!.player)
-        self.addNeedsPhysicsUpdateDelegate(delegate: self.playerCamera)
-        self.addNeedsPhysicsUpdateDelegate(delegate: self.background)
-        
-        self.physicsWorld.contactDelegate = self
-        
-        self.addChild(world!)
-        self.addChild(self.background!)
-        self.addChild(self.playerCamera!)
-        self.camera = self.playerCamera
-        self.playerCamera?.addChild(self.overlay!)
+        createObjects(fieldShape: .rect, fieldSize: Global.Constants.spacefieldSize)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func createObjects(fieldShape: SpacefieldShape, fieldSize: CGSize) {
+        if(objectManager != nil) {
+            let idCounter = IDCounter()
+            
+            // World
+            objectManager?.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: fieldSize))
+            
+            objectManager?.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(fieldSize.width)), y: Int.rand(0, Int(fieldSize.height))), spawn_pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2)))
+            
+            objectManager?.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2), fieldShape: fieldShape, fieldSize: fieldSize))
+            
+            // Background
+            objectManager?.assignToBackground(obj: StarField(fieldSize: fieldSize))
+            
+            // Overlay
+            let joystick = Joystick(deadZone: 0.1)
+            let padding = joystick.calculateAccumulatedFrame()
+            joystick.position = CGPoint(x: padding.width, y: padding.height)
+            objectManager?.assignToOverlay(obj: joystick)
+            
+            // Setup delegates
+            objectManager?.player?.controller = joystick
+            self.addNeedsUpdateDelegate(delegate: objectManager?.player)
+            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager?.camera)
+            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager?.background)
+        }
     }
     
     override func didMove(to view: SKView) {

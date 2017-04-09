@@ -10,25 +10,22 @@ import SpriteKit
 
 class PlayerCamera: SKCameraNode {
     
-    var targetObject: SKNode?
-    var oldOffset = CGVector.zero
+    fileprivate var targetObject: SKNode?
+    fileprivate var oldOffset = CGVector.zero
     
-    init(targetObject: SKNode?) {
+    override init() {
         super.init()
         
         self.name = "PlayerCamera"
-        self.targetObject = targetObject
         self.setScale(Global.Constants.defaultZoomLevel)
-    }
-    
-    public func assignTo(_ scene: GameScene) {
-        self.removeFromParent()
-        scene.addChild(self)
-        scene.camera = self
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func setTarget(obj: SKNode) {
+        self.targetObject = obj
     }
     
 }

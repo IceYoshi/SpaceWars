@@ -23,6 +23,7 @@
 		2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9E61E991764009D57B3 /* CPUSlaveShip.swift */; };
 		2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */; };
 		2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9EB1E991801009D57B3 /* Spaceship.swift */; };
+		2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */; };
 		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
@@ -61,6 +62,7 @@
 		2719C9E61E991764009D57B3 /* CPUSlaveShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUSlaveShip.swift; sourceTree = "<group>"; };
 		2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUMasterShip.swift; sourceTree = "<group>"; };
 		2719C9EB1E991801009D57B3 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
+		2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectManager.swift; sourceTree = "<group>"; };
 		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 			children = (
 				270D97171E9A385600FFA117 /* GameEnvironment.swift */,
 				270D97151E9A37CB00FFA117 /* SpacefieldBorder.swift */,
+				277D47301E74B2B800901D8F /* StarField.swift */,
 			);
 			name = environment;
 			sourceTree = "<group>";
@@ -164,7 +167,6 @@
 			isa = PBXGroup;
 			children = (
 				2719C9EA1E991795009D57B3 /* ship */,
-				277D47301E74B2B800901D8F /* StarField.swift */,
 				2719C9DC1E99153D009D57B3 /* GameObject.swift */,
 				270D971B1E9A4AB500FFA117 /* Blackhole.swift */,
 			);
@@ -204,6 +206,7 @@
 				27B5F30A1E6C335A00F05F72 /* Extensions.swift */,
 				27D9130A1E6DBBE70030EFAC /* Global.swift */,
 				27CABFEC1E99418200CE0717 /* IDCounter.swift */,
+				2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */,
 			);
 			name = extra;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */,
 				270D97161E9A37CB00FFA117 /* SpacefieldBorder.swift in Sources */,
 				2719C9E31E99172C009D57B3 /* SkeletonShip.swift in Sources */,
+				2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */,
 				2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
