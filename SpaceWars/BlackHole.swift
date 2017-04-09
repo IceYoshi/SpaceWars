@@ -1,60 +1,81 @@
 //
-//  BlackHole.swift
+//  Blackhole.swift
 //  SpaceWars
 //
-//  Created by Mike Pereira on 12/03/2017.
+//  Created by Mike Pereira on 09/04/2017.
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
 import SpriteKit
 
-class BlackHole: SKNode {
+class Blackhole: GameObject {
     
-    init(_ parent: SKNode) {
-        super.init()
+    private var dmg: Int
+    private var delay: Int
+    private var spawnPoint: CGPoint
+    
+    required init(_ config: JSON) {
+        self.dmg = config["dmg"].intValue
+        self.delay = config["delay"].intValue
+        self.spawnPoint = CGPoint(x: config["spawn_pos"]["x"].intValue, y: config["spawn_pos"]["y"].intValue)
         
-        let randomX = Int.rand(200, Int(Global.Constants.spacefieldSize.width / 3.0))
-        let randomY = Int.rand(200, Int(Global.Constants.spacefieldSize.height / 3.0))
+        super.init(config["id"].intValue, "blackhole", .blackhole)
         
-        let bh1 = createBlackHole()
-        bh1.position = CGPoint(x: randomX, y: randomY)
-        self.addChild(bh1)
+        let radius = CGFloat(config["size"]["r"].intValue)
+        let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
+        let strength = Float(config["strength"].intValue)
+        let minRange = Float(config["min_range"].intValue)
+        let maxRange = Float(config["max_range"].intValue)
         
-        let bh2 = createBlackHole()
-        bh2.position = CGPoint(x: -randomX, y: -randomY)
-        self.addChild(bh2)
+        let sBlackhole = createBlackhole(radius)
+        sBlackhole.position = pos
+        sBlackhole.zRotation = CGFloat.rand(0, 2*CGFloat.pi)
         
+        sBlackhole.physicsBody = SKPhysicsBody(circleOfRadius: radius*2/3)
+        sBlackhole.physicsBody!.affectedByGravity = false
+        sBlackhole.physicsBody!.angularDamping = 0
+        sBlackhole.physicsBody!.angularVelocity = 1
+        sBlackhole.physicsBody!.categoryBitMask = Global.Constants.blackholeCategory
+        sBlackhole.physicsBody!.contactTestBitMask = 0
+        sBlackhole.physicsBody!.collisionBitMask = 0
         
-        parent.addChild(self)
+        let gravityNode = SKFieldNode.radialGravityField()
+        gravityNode.minimumRadius = minRange
+        gravityNode.region = SKRegion(radius: maxRange)
+        gravityNode.strength = strength
+        sBlackhole.addChild(gravityNode)
+        
+        self.addChild(sBlackhole)
+    }
+    
+    convenience init(idManager: IDCounter, radius: CGFloat, pos: CGPoint, spawn_pos: CGPoint) {
+        self.init([
+            "id":idManager.nextID,
+            "strength":6,
+            "min_range":radius / 3,
+            "max_range":radius * 3,
+            "dmg":30,
+            "delay":5,
+            "spawn_pos":[
+                "x":spawn_pos.x,
+                "y":spawn_pos.y
+            ],
+            "pos":[
+                "x":pos.x,
+                "y":pos.y
+            ],
+            "size":[
+                "r":radius
+            ]
+        ])
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createBlackHole() -> SKSpriteNode {
-        let sBlackHole = SKSpriteNode(texture: Global.textureDictionary["blackhole.png"]!)
-        
-        sBlackHole.name = "BlackHoleNode"
-        
-        sBlackHole.alpha = 0.6
-        sBlackHole.zRotation = CGFloat.rand(0, 2*CGFloat.pi)
-        
-        sBlackHole.physicsBody = SKPhysicsBody(circleOfRadius: sBlackHole.size.width / 3)
-        sBlackHole.physicsBody!.affectedByGravity = false
-        sBlackHole.physicsBody!.angularDamping = 0
-        sBlackHole.physicsBody!.angularVelocity = 1
-        sBlackHole.physicsBody!.categoryBitMask = Global.Constants.blackholeCategory
-        sBlackHole.physicsBody!.contactTestBitMask = 0
-        sBlackHole.physicsBody!.collisionBitMask = 0
-        
-        let gravityNode = SKFieldNode.radialGravityField()
-        gravityNode.minimumRadius = 75
-        gravityNode.region = SKRegion(radius: 400)
-        gravityNode.strength = 6
-        sBlackHole.addChild(gravityNode)
-        
-        return sBlackHole
+    func createBlackhole(_ radius: CGFloat) -> SKSpriteNode {
+        return SKSpriteNode(texture: Global.textureDictionary["blackhole.png"]!, size: CGSize(width: radius*2, height: radius*2))
     }
     
 }
