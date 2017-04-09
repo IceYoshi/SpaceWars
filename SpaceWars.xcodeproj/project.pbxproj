@@ -14,7 +14,7 @@
 		270C79251E6B54B70045C868 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270C79231E6B54B70045C868 /* LaunchScreen.storyboard */; };
 		270D97161E9A37CB00FFA117 /* SpacefieldBorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270D97151E9A37CB00FFA117 /* SpacefieldBorder.swift */; };
 		270D97181E9A385600FFA117 /* GameEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270D97171E9A385600FFA117 /* GameEnvironment.swift */; };
-		270D971C1E9A4AB500FFA117 /* BlackHoleNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270D971B1E9A4AB500FFA117 /* BlackHoleNew.swift */; };
+		270D971C1E9A4AB500FFA117 /* Blackhole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270D971B1E9A4AB500FFA117 /* Blackhole.swift */; };
 		271980DF1E73230F006A058A /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271980DE1E73230F006A058A /* GameScene.swift */; };
 		2719C9DD1E99153D009D57B3 /* GameObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9DC1E99153D009D57B3 /* GameObject.swift */; };
 		2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9DE1E9916F8009D57B3 /* HumanShip.swift */; };
@@ -52,7 +52,7 @@
 		270C79261E6B54B70045C868 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		270D97151E9A37CB00FFA117 /* SpacefieldBorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpacefieldBorder.swift; sourceTree = "<group>"; };
 		270D97171E9A385600FFA117 /* GameEnvironment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEnvironment.swift; sourceTree = "<group>"; };
-		270D971B1E9A4AB500FFA117 /* BlackHoleNew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlackHoleNew.swift; sourceTree = "<group>"; };
+		270D971B1E9A4AB500FFA117 /* Blackhole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Blackhole.swift; sourceTree = "<group>"; };
 		271980DE1E73230F006A058A /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		2719C9DC1E99153D009D57B3 /* GameObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameObject.swift; sourceTree = "<group>"; };
 		2719C9DE1E9916F8009D57B3 /* HumanShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanShip.swift; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 				27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */,
 				277D47301E74B2B800901D8F /* StarField.swift */,
 				2719C9DC1E99153D009D57B3 /* GameObject.swift */,
-				270D971B1E9A4AB500FFA117 /* BlackHoleNew.swift */,
+				270D971B1E9A4AB500FFA117 /* Blackhole.swift */,
 			);
 			name = object;
 			sourceTree = "<group>";
@@ -315,7 +315,7 @@
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
 				27C2E6501E884AB2001A52D5 /* Command.swift in Sources */,
 				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
-				270D971C1E9A4AB500FFA117 /* BlackHoleNew.swift in Sources */,
+				270D971C1E9A4AB500FFA117 /* Blackhole.swift in Sources */,
 				2719C9E11E99171A009D57B3 /* RobotShip.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
