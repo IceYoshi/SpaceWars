@@ -13,12 +13,16 @@ class PlayerCamera: SKCameraNode {
     var targetObject: SKNode?
     var oldOffset = CGVector.zero
     
-    init(_ scene: GameScene) {
+    init(targetObject: SKNode?) {
         super.init()
         
         self.name = "PlayerCamera"
-        
+        self.targetObject = targetObject
         self.setScale(Global.Constants.defaultZoomLevel)
+    }
+    
+    public func assignTo(_ scene: GameScene) {
+        self.removeFromParent()
         scene.addChild(self)
         scene.camera = self
     }

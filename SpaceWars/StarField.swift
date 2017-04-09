@@ -10,23 +10,33 @@ import SpriteKit
 
 class StarField: SKNode {
     
-    init(_ parent: SKNode) {
+    init(fieldSize: CGSize) {
         super.init()
         
         self.name = "StarField"
+        let arraySize: Int = 3
+        let scale: CGFloat = 3
         
-        let starTexture = Global.textureDictionary["parallax-stars.png"]!
-        let stars = SKSpriteNode(texture: starTexture)
+        for i in 0...arraySize {
+            for j in 0...arraySize*4 {
+                let sStars = createStarBackground(scale)
+                sStars.position = CGPoint(x: sStars.size.width * CGFloat(i), y: sStars.size.height * CGFloat(j))
+                sStars.position -= CGPoint(x: sStars.size.width * CGFloat(arraySize) / CGFloat(2), y: sStars.size.height * CGFloat(arraySize*4) / CGFloat(2))
+                self.addChild(sStars)
+            }
+        }
         
-        stars.size = starTexture.size() * 5
-        self.addChild(stars)
-        self.position = CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2)
-        
-        parent.addChild(self)
+        self.position = CGPoint(x: fieldSize.width/2, y: fieldSize.height/2)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func createStarBackground(_ scale: CGFloat) -> SKSpriteNode {
+        let sStars = SKSpriteNode(texture: Global.textureDictionary["parallax-stars.png"]!)
+        sStars.setScale(scale)
+        return sStars
     }
     
 }

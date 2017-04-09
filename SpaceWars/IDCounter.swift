@@ -20,13 +20,11 @@ class IDCounter {
     
     public func nextIDRange(_ count: Int) -> [Int] {
         var idRange = [Int]()
-        if(count < 1) {
-            return idRange
+        if(count > 0) {
+            for _ in 1...count {
+                idRange.append(nextID())
+            }
         }
-        for i in head...(head+count-1) {
-            idRange.append(i)
-        }
-        head += count
         return idRange
     }
     

@@ -12,24 +12,20 @@ class World: SKNode {
     
     var player: Spaceship?
     
-    init(_ scene: GameScene) {
+    init(size: CGSize) {
         super.init()
         
         self.name = "World"
-        // Add world to the main scene
-        scene.addChild(self)
         
         let idCounter = IDCounter()
         
         // Add objects to the world
-        self.addChild(SpacefieldBorder(fieldShape: .circle, fieldSize: Global.Constants.spacefieldSize))
+        self.addChild(SpacefieldBorder(fieldShape: .rect, fieldSize: size))
         
-        self.addChild(Blackhole(idManager: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(Global.Constants.spacefieldSize.width)), y: Int.rand(0, Int(Global.Constants.spacefieldSize.height))), spawn_pos: CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2)))
+        self.addChild(Blackhole(idManager: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(size.width)), y: Int.rand(0, Int(size.height))), spawn_pos: CGPoint(x: size.width/2, y: size.height/2)))
         
-        player = HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2), fieldShape: .circle, fieldSize: Global.Constants.spacefieldSize)
-        player!.controller = scene.overlay?.joystick
+        player = HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2), fieldShape: .rect, fieldSize: Global.Constants.spacefieldSize)
         self.addChild(player!)
-        scene.addNeedsUpdateDelegate(delegate: player!)
     }
     
     required init?(coder aDecoder: NSCoder) {

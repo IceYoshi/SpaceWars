@@ -36,14 +36,13 @@ class Spaceship: GameObject, NeedsUpdateProtocol {
         self.hp_max = config["hp_max"].intValue
         self.hp = config["hp"].intValue
         
-        self.ammo = [Int]()
+        if let ammo_available = config["ammo"]["available"].arrayObject as? [Int] {
+            self.ammo = ammo_available
+        } else {
+            self.ammo = [Int]()
+        }
         self.ammo_min = config["ammo"]["min"].intValue
         self.ammo_max = config["ammo"]["max"].intValue
-        let head = config["ammo"]["head"].intValue
-        
-        for i in stride(from: head, through: self.ammo_max, by: 1) {
-            self.ammo.append(i)
-        }
         
         super.init(config["id"].intValue, config["name"].stringValue, type)
         

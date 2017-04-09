@@ -12,20 +12,19 @@ class Overlay: SKNode {
     
     var joystick: Joystick?
     
-    init(_ camera: SKCameraNode, screenSize: CGSize) {
+    init(screenSize: CGSize) {
         super.init()
         
         self.name = "Overlay"
         self.zPosition = 100
-        
-        // Add Overlay to the main scene
-        camera.addChild(self)
+        self.position = CGPoint(x: -screenSize.width/2, y: -screenSize.height/2)
         
         // Add objects to the overlay
-        joystick = Joystick(self)
-        let padding = joystick!.calculateAccumulatedFrame()
-        joystick?.position = CGPoint(x: padding.width, y: padding.height)
-        self.position = CGPoint(x: -screenSize.width/2, y: -screenSize.height/2)
+        let joystick = Joystick(deadZone: 0.1)
+        self.addChild(joystick)
+        let padding = joystick.calculateAccumulatedFrame()
+        joystick.position = CGPoint(x: padding.width, y: padding.height)
+        self.joystick = joystick
     }
     
     required init?(coder aDecoder: NSCoder) {

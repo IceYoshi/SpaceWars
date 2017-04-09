@@ -15,7 +15,7 @@ class HumanShip: Spaceship {
     }
     
     convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {
-        let id = idCounter.nextID
+        let id = idCounter.nextID()
         let idRange = idCounter.nextIDRange(25)
         
         var config: JSON = [

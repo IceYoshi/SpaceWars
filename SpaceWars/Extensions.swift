@@ -55,8 +55,16 @@ public extension CGPoint {
         return CGPoint(x: left.x + right.x, y: left.y + right.y)
     }
     
+    static func +(left: CGPoint, right: CGSize) -> CGPoint {
+        return CGPoint(x: left.x + right.width, y: left.y + right.height)
+    }
+    
     static func -(left: CGPoint, right: CGPoint) -> CGPoint {
         return CGPoint(x: left.x - right.x, y: left.y - right.y)
+    }
+    
+    static func -(left: CGPoint, right: CGSize) -> CGPoint {
+        return CGPoint(x: left.x - right.width, y: left.y - right.height)
     }
     
     static func +(left: CGPoint, right: CGVector) -> CGPoint {
@@ -65,6 +73,10 @@ public extension CGPoint {
     
     static func +=(left: inout CGPoint, right: CGPoint) {
         left = left + right
+    }
+    
+    static func -=(left: inout CGPoint, right: CGPoint) {
+        left = left - right
     }
     
     static func +=(left: inout CGPoint, right: CGVector) {

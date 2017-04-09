@@ -13,6 +13,7 @@ class Joystick: SKNode {
     fileprivate var sDPad: SKSpriteNode?
     fileprivate var sJoystick: SKSpriteNode?
     fileprivate var blocked: Bool = false
+    fileprivate var deadZone: CGFloat
     
     fileprivate var joystickOffset: CGVector {
         get {
@@ -24,7 +25,9 @@ class Joystick: SKNode {
         }
     }
     
-    init(_ parent: SKNode) {
+    init(deadZone: CGFloat) {
+        self.deadZone = deadZone
+        
         super.init()
         
         self.name = "Joystick"
@@ -37,8 +40,6 @@ class Joystick: SKNode {
         self.setScale(0.6)
         
         self.isUserInteractionEnabled = true
-        
-        parent.addChild(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -109,7 +110,7 @@ extension Joystick: SpaceshipControllerProtocol {
         get {
             if sJoystick != nil {
                 let calculatedThrust = joystickOffset.length() / sJoystick!.size.width
-                return calculatedThrust >= Global.Constants.joystickDeadZone ? calculatedThrust : 0
+                return calculatedThrust >= self.deadZone ? calculatedThrust : 0
             } else {
                 return 0
             }

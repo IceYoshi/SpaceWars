@@ -12,16 +12,15 @@ class Background: SKNode {
     
     var parallaxReference: SKNode?
     
-    init(_ scene: GameScene) {
+    init(parallaxReference: SKNode?) {
         super.init()
         
         self.name = "Background"
         self.zPosition = -100
-        // Add world to the main scene
-        scene.addChild(self)
+        self.parallaxReference = parallaxReference
         
         // Add objects to the world
-        _ = StarField(self)
+        self.addChild(StarField(fieldSize: Global.Constants.spacefieldSize))
     }
     
     required init?(coder aDecoder: NSCoder) {

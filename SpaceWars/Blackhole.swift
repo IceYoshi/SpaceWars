@@ -50,7 +50,7 @@ class Blackhole: GameObject {
     
     convenience init(idManager: IDCounter, radius: CGFloat, pos: CGPoint, spawn_pos: CGPoint) {
         self.init([
-            "id":idManager.nextID,
+            "id":idManager.nextID(),
             "strength":6,
             "min_range":radius / 3,
             "max_range":radius * 3,
@@ -65,7 +65,7 @@ class Blackhole: GameObject {
                 "y":pos.y
             ],
             "size":[
-                "r":radius
+                "r":radius	
             ]
         ])
     }

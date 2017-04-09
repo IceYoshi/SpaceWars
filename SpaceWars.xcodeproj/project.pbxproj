@@ -164,7 +164,6 @@
 			isa = PBXGroup;
 			children = (
 				2719C9EA1E991795009D57B3 /* ship */,
-				27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */,
 				277D47301E74B2B800901D8F /* StarField.swift */,
 				2719C9DC1E99153D009D57B3 /* GameObject.swift */,
 				270D971B1E9A4AB500FFA117 /* Blackhole.swift */,
@@ -224,6 +223,7 @@
 				27D913011E6D98140030EFAC /* World.swift */,
 				27D913061E6D98CC0030EFAC /* Background.swift */,
 				27D913081E6D98FB0030EFAC /* Overlay.swift */,
+				27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */,
 			);
 			name = layer;
 			sourceTree = "<group>";

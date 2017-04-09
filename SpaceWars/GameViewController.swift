@@ -35,6 +35,7 @@ class GameViewController: UIViewController {
         skView.presentScene(scene)
         
         //testMessage()
+        
     }
 
     override func didReceiveMemoryWarning() {

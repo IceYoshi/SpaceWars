@@ -33,18 +33,24 @@ class GameScene: SKScene {
         
         self.name = "GameScene"
         
-        self.playerCamera = PlayerCamera(self)
-        self.overlay = Overlay(self.camera!, screenSize: screenSize)
-        self.world = World(self)
-        self.background = Background(self)
+        self.world = World(size: Global.Constants.spacefieldSize)
+        self.background = Background(parallaxReference: world?.player)
+        self.overlay = Overlay(screenSize: screenSize)
+        self.playerCamera = PlayerCamera(targetObject: world?.player)
         
-        self.background?.parallaxReference = world?.player
-        self.playerCamera!.targetObject = world?.player
+        self.world!.player?.controller = self.overlay!.joystick
         
-        self.addNeedsPhysicsUpdateDelegate(delegate: self.playerCamera!)
-        self.addNeedsPhysicsUpdateDelegate(delegate: self.background!)
+        self.addNeedsUpdateDelegate(delegate: world!.player)
+        self.addNeedsPhysicsUpdateDelegate(delegate: self.playerCamera)
+        self.addNeedsPhysicsUpdateDelegate(delegate: self.background)
         
         self.physicsWorld.contactDelegate = self
+        
+        self.addChild(world!)
+        self.addChild(self.background!)
+        self.addChild(self.playerCamera!)
+        self.camera = self.playerCamera
+        self.playerCamera?.addChild(self.overlay!)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -102,12 +108,16 @@ class GameScene: SKScene {
         }
     }
     
-    func addNeedsUpdateDelegate(delegate: NeedsUpdateProtocol) {
-        updateDelegates.append(delegate)
+    func addNeedsUpdateDelegate(delegate: NeedsUpdateProtocol?) {
+        if(delegate != nil) {
+            updateDelegates.append(delegate)
+        }
     }
     
-    func addNeedsPhysicsUpdateDelegate(delegate: NeedsPhysicsUpdateProtocol) {
-        physicUpdateDelegates.append(delegate)
+    func addNeedsPhysicsUpdateDelegate(delegate: NeedsPhysicsUpdateProtocol?) {
+        if(delegate != nil) {
+            physicUpdateDelegates.append(delegate)
+        }
     }
 }
 
