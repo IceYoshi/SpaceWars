@@ -15,8 +15,8 @@ class Global {
         static let serviceType: String = "spacewars_peer_connection_identifier"
         
         // Debug information
-        static let debugShowFPS: Bool = true
-        static let debugShowNodeCount: Bool = true
+        static let debugShowFPS: Bool = false
+        static let debugShowNodeCount: Bool = false
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
@@ -41,9 +41,11 @@ class Global {
     
     static let textureDictionary: [String: SKTexture] = [
         "shield.png": SKTexture(imageNamed: "shield.png"),
-        "spaceship1.png": SKTexture(imageNamed: "spaceship1.png"),
-        "spaceship2.png": SKTexture(imageNamed: "spaceship2.png"),
-        "spaceship3.png": SKTexture(imageNamed: "spaceship3.png"),
+        "spaceship_human.png": SKTexture(imageNamed: "spaceship_human.png"),
+        "spaceship_robot.png": SKTexture(imageNamed: "spaceship_robot.png"),
+        "spaceship_skeleton.png": SKTexture(imageNamed: "spaceship_skeleton.png"),
+        "spaceship_cpu_master.png": SKTexture(imageNamed: "spaceship_cpu_master.png"),
+        "spaceship_cpu_slave.png": SKTexture(imageNamed: "spaceship_cpu_slave.png"),
         "parallax-stars.png": SKTexture(imageNamed: "parallax-stars.png"),
         "blackhole.png": SKTexture(imageNamed: "blackhole.png")
     ]

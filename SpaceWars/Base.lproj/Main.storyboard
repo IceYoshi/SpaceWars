@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+    <device id="retina4_0" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Lobby View Controller-->
+        <scene sceneID="pGk-nu-8zS">
+            <objects>
+                <viewController id="sfb-FC-IrQ" customClass="LobbyViewController" customModule="SpaceWars" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="e7G-Xy-yg6"/>
+                        <viewControllerLayoutGuide type="bottom" id="aMR-gj-re2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ore-ga-odd">
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="q6R-ie-6Y8">
+                                <rect key="frame" x="50" y="107.5" width="468" height="105"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Enter Nickname" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gLA-BZ-Zdg">
+                                        <rect key="frame" x="30" y="0.0" width="408" height="33"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="onNameChanged:" destination="sfb-FC-IrQ" eventType="editingDidEnd" id="34l-mw-r27"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NjG-71-vFr">
+                                        <rect key="frame" x="190" y="65" width="88" height="40"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                        <state key="normal" title="Connect"/>
+                                        <connections>
+                                            <action selector="onConnectClicked:" destination="sfb-FC-IrQ" eventType="touchUpInside" id="2bl-Ox-GH2"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="gLA-BZ-Zdg" firstAttribute="leading" secondItem="q6R-ie-6Y8" secondAttribute="leading" constant="30" id="Jug-Md-PNc"/>
+                                    <constraint firstAttribute="trailing" secondItem="gLA-BZ-Zdg" secondAttribute="trailing" constant="30" id="uMv-Pt-JNP"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s12-Hy-Q5S">
+                                <rect key="frame" x="478" y="290" width="70" height="30"/>
+                                <state key="normal" title="Play alone"/>
+                                <connections>
+                                    <segue destination="BV1-FR-VrT" kind="show" id="xJI-zD-9bF"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="q6R-ie-6Y8" firstAttribute="centerY" secondItem="Ore-ga-odd" secondAttribute="centerY" id="5hb-uF-MN8"/>
+                            <constraint firstItem="q6R-ie-6Y8" firstAttribute="leading" secondItem="Ore-ga-odd" secondAttribute="leadingMargin" constant="30" id="EfX-Dl-JIC"/>
+                            <constraint firstItem="s12-Hy-Q5S" firstAttribute="trailing" secondItem="Ore-ga-odd" secondAttribute="trailingMargin" id="NFe-wr-QEO"/>
+                            <constraint firstItem="aMR-gj-re2" firstAttribute="top" secondItem="s12-Hy-Q5S" secondAttribute="bottom" id="SQf-P2-BQf"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="q6R-ie-6Y8" secondAttribute="trailing" constant="30" id="bsA-VV-wyY"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="connectButton" destination="NjG-71-vFr" id="Z0C-ud-IPH"/>
+                        <outlet property="nameLabel" destination="gLA-BZ-Zdg" id="ZcH-eC-v0v"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wMb-aA-yMd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-730" y="21"/>
+        </scene>
         <!--Game View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
@@ -18,7 +83,7 @@
                         <viewControllerLayoutGuide type="bottom" id="qHh-Mt-9TT"/>
                     </layoutGuides>
                     <view key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx" customClass="SKView">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>

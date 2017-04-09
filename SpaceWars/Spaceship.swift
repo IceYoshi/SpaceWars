@@ -2,15 +2,11 @@
 //  Spaceship.swift
 //  SpaceWars
 //
-//  Created by Mike Pereira on 05/03/2017.
+//  Created by Mike Pereira on 08/04/2017.
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
 import SpriteKit
-
-enum SpaceshipType {
-    case human, klington, borg, random
-}
 
 protocol SpaceshipControllerProtocol {
     var enabled: Bool {get set}
@@ -18,95 +14,134 @@ protocol SpaceshipControllerProtocol {
     var thrust: CGFloat {get}
 }
 
-class Spaceship: SKNode {
+class Spaceship: GameObject, NeedsUpdateProtocol {
     
     public var controller: SpaceshipControllerProtocol?
     private var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
-    required init(_ parent: SKNode, type: SpaceshipType, shieldLevel: Int) {
-        super.init()
+    private var dmg: Int
+    private var speed_max: Int
+    private var acc: Int
+    private var hp_max: Int
+    private var hp: Int
+    private var ammo: [Int]
+    private var ammo_min: Int
+    private var ammo_max: Int
+    
+    init(config: JSON, type: GameObjectType, tex: SKTexture) {
+        self.dmg = config["dmg"].intValue
+        self.speed_max = config["speed"].intValue
+        self.acc = config["acc"].intValue
+        self.hp_max = config["hp_max"].intValue
+        self.hp = config["hp"].intValue
         
-        self.name = "Spaceship"
+        self.ammo = [Int]()
+        self.ammo_min = config["ammo"]["min"].intValue
+        self.ammo_max = config["ammo"]["max"].intValue
+        let head = config["ammo"]["head"].intValue
         
-        var combinedBodies = [SKPhysicsBody]()
-        
-        sShip = createSpaceship(type)
-        self.addChild(sShip!)
-        combinedBodies.append(SKPhysicsBody(texture: sShip!.texture!, alphaThreshold: 0, size: Global.Constants.spaceshipSize))
-        
-        if(shieldLevel > 0) {
-            sShield = createShield(shieldLevel)
-            self.addChild(sShield!)
-            combinedBodies.append(SKPhysicsBody(texture: sShield!.texture!, alphaThreshold: 0, size: sShield!.size))
+        for i in stride(from: head, through: self.ammo_max, by: 1) {
+            self.ammo.append(i)
         }
         
-        self.physicsBody = SKPhysicsBody(bodies: combinedBodies)
+        super.init(config["id"].intValue, config["name"].stringValue, type)
+        
+        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
+        let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
+        let vel = CGVector(dx: config["vel"]["dx"].intValue, dy: config["vel"]["dy"].intValue)
+        let rot = config["rot"].floatValue
+        let damping = config["damping"].floatValue
+        let fieldShape = config["space_field"]["shape"].stringValue
+        
+        self.position = pos
+        self.zRotation = CGFloat(rot)
+        
+        self.physicsBody = SKPhysicsBody(texture: tex, size: size)
         self.physicsBody!.affectedByGravity = false
-        self.physicsBody!.linearDamping = Global.Constants.spaceshipLinearDamping
+        self.physicsBody!.linearDamping = CGFloat(damping)
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
         self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory
         self.physicsBody!.collisionBitMask = 0
+        self.physicsBody!.velocity = vel
         
-        self.constraints = [
-            SKConstraint.positionX(SKRange(lowerLimit: -Global.Constants.spacefieldSize.width / 2, upperLimit: Global.Constants.spacefieldSize.width / 2)),
-            SKConstraint.positionY(SKRange(lowerLimit: -Global.Constants.spacefieldSize.height / 2, upperLimit: Global.Constants.spacefieldSize.height / 2))
-        ]
+        switch fieldShape {
+        case SpacefieldShape.rect.rawValue:
+            let fieldWidth = config["space_field"]["w"].intValue
+            let fieldHeight = config["space_field"]["h"].intValue
+            self.constraints = [
+                SKConstraint.positionX(SKRange(lowerLimit: 0, upperLimit: CGFloat(fieldWidth))),
+                SKConstraint.positionY(SKRange(lowerLimit: 0, upperLimit: CGFloat(fieldHeight)))
+            ]
+        case SpacefieldShape.circle.rawValue:
+            let fieldRadius = config["space_field"]["r"].intValue
+            self.constraints = [
+                SKConstraint.distance(SKRange(upperLimit: CGFloat(fieldRadius)), to: CGPoint(x: fieldRadius, y: fieldRadius))
+            ]
+        default:
+            print("Received unexpected spacefield shape: \(fieldShape)")
+        }
         
-        parent.addChild(self)
+        self.sShip = createShip(tex, size)
+        self.addChild(sShip!)
+        self.sShield = createShield()
+        if(sShield != nil) {
+            self.addChild(sShield!)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createSpaceship(_ type: SpaceshipType) -> SKSpriteNode {
-        let tex: SKTexture
-        
-        switch(type) {
-        case .klington:
-            tex = Global.textureDictionary["spaceship1.png"]!
-        case .human:
-            tex = Global.textureDictionary["spaceship2.png"]!
-        case .borg:
-            tex = Global.textureDictionary["spaceship3.png"]!
-        case .random:
-            tex = Global.textureDictionary["spaceship\(Int.rand(1, 3)).png"]!
-        }
-        
-        return SKSpriteNode(texture: tex, size: Global.Constants.spaceshipSize)
+    private func createShip(_ tex: SKTexture, _ size: CGSize) -> SKSpriteNode {
+        return SKSpriteNode(texture: tex, size: size)
     }
     
-    private func createShield(_ value: Int) -> SKSpriteNode {
-        let level = min(value, Global.Constants.maxShieldLevel)
-        
-        let sShield = SKSpriteNode(texture: Global.textureDictionary["shield.png"]!)
-        sShield.scale(to: sShip!.size * 1.3)
+    private func createShield() -> SKSpriteNode? {
+        if (self.hp <= 0) {
+            return nil
+        }
+        let sShield = SKSpriteNode(texture: Global.textureDictionary["shield.png"]!, size: sShip!.size * 1.3)
         sShield.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
-        sShield.colorBlendFactor = 1 - CGFloat(level) / CGFloat(Global.Constants.maxShieldLevel)
-        
+        sShield.colorBlendFactor = 1 - CGFloat(self.hp) / CGFloat(self.hp_max)
         return sShield
     }
     
-}
-
-extension Spaceship: NeedsUpdateProtocol {
+    private func updateShield() {
+        if(self.hp > 0) {
+            if(sShield == nil) {
+                sShield = createShield()
+                self.addChild(sShield!)
+            }
+            sShield?.colorBlendFactor = 1 - CGFloat(self.hp) / CGFloat(self.hp_max)
+        } else if(sShield != nil) {
+            self.removeChildren(in: [sShield!])
+            sShield = nil
+        }
+    }
     
-    func update() {
+    public func setHP(value: Int) {
+        self.hp = min(value, self.hp_max)
+        updateShield()
+    }
+    
+    public func update() {
         if self.physicsBody != nil && (controller?.enabled) ?? false {
             self.zRotation = controller!.angle - CGFloat.pi / 2
             
             let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
-            let multiplier = Global.Constants.spaceshipAcceleration * controller!.thrust
+            let multiplier = self.acc * controller!.thrust
             var newVelocity = self.physicsBody!.velocity + accelerationVector * multiplier
             
-            if newVelocity.length() > Global.Constants.spaceshipMaxSpeed {
-                newVelocity = newVelocity.normalized() * Global.Constants.spaceshipMaxSpeed
+            if newVelocity.length() > self.speed_max {
+                newVelocity = newVelocity.normalized() * self.speed_max
             }
             
             self.physicsBody!.velocity = newVelocity
         }
     }
+    
     
 }

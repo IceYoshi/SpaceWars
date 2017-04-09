@@ -133,6 +133,10 @@ public extension Int {
         
         return Int( arc4random_uniform( UInt32(upper - lower + 1) ) + UInt32(lower) )
     }
+    
+    static func *(left: Int, right: CGFloat) -> CGFloat {
+        return CGFloat(left)*right
+    }
 }
 
 public extension CGFloat {
@@ -147,5 +151,13 @@ public extension CGFloat {
         }
         
         return (CGFloat(arc4random()) / CGFloat(UINT32_MAX)) * (upper - lower) + lower
+    }
+    
+    static func <(left: CGFloat, right: Int) -> Bool {
+        return left < CGFloat(right)
+    }
+    
+    static func >(left: CGFloat, right: Int) -> Bool {
+        return left > CGFloat(right)
     }
 }

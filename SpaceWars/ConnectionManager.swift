@@ -55,7 +55,7 @@ class ConnectionManager: NSObject {
     }
     
     func send(data: Data) {
-        NSLog("%@", "send \(String(data: data, encoding: .utf8)) to \(session.connectedPeers.count) peers")
+        NSLog("%@", "send \(String(data: data, encoding: .utf8)!) to \(session.connectedPeers.count) peers")
         
         if(session.connectedPeers.count > 0) {
             do {

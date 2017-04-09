@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class FieldBorder: SKShapeNode {
+class FieldBorderOld: SKShapeNode {
     
     convenience init(_ parent: SKNode) {
         self.init()
@@ -17,6 +17,7 @@ class FieldBorder: SKShapeNode {
         self.strokeColor = .red
         self.glowWidth = 3
         self.alpha = 0.5
+        self.position = CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2)
         
         parent.addChild(self)
     }

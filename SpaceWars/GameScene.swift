@@ -29,7 +29,6 @@ class GameScene: SKScene {
         super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
-        self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.backgroundColor = .black
         
         self.name = "GameScene"

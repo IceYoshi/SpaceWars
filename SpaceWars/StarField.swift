@@ -20,6 +20,7 @@ class StarField: SKNode {
         
         stars.size = starTexture.size() * 5
         self.addChild(stars)
+        self.position = CGPoint(x: Global.Constants.spacefieldSize.width/2, y: Global.Constants.spacefieldSize.height/2)
         
         parent.addChild(self)
     }

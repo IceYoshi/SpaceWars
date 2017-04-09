@@ -23,9 +23,8 @@ class Overlay: SKNode {
         
         // Add objects to the overlay
         joystick = Joystick(self)
-        let joystickSize = joystick!.calculateAccumulatedFrame() * 0.8
-        joystick?.position = CGPoint(x: joystickSize.width, y: joystickSize.height)
-        
+        let padding = joystick!.calculateAccumulatedFrame()
+        joystick?.position = CGPoint(x: padding.width, y: padding.height)
         self.position = CGPoint(x: -screenSize.width/2, y: -screenSize.height/2)
     }
     
