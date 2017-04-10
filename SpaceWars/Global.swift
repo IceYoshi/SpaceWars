@@ -12,7 +12,7 @@ class Global {
     
     struct Constants {
         // ConnectionManager settings
-        static let serviceType: String = "spacewars_peer_connection_identifier"
+        static let serviceType: String = "spacewars-mpc"
         
         // Debug information
         static let debugShowFPS: Bool = false

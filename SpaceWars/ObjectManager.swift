@@ -73,5 +73,14 @@ class ObjectManager {
         return objectDictionary[id]
     }
     
-    
+    public func touchesOverlay(_ touchLocation: CGPoint) -> Bool {
+        if(overlay != nil) {
+            for node in overlay!.nodes(at: touchLocation) {
+                if(overlay!.children.contains(node)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

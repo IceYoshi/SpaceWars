@@ -19,8 +19,8 @@ class FireButton: SKNode {
     override init() {
         super.init()
         
-        self.name = "FireButton"
         self.setScale(0.6)
+        self.alpha = 0.6
         
         self.addChild(createButton())
         self.isUserInteractionEnabled = true
@@ -33,6 +33,7 @@ class FireButton: SKNode {
     private func createButton() -> SKSpriteNode {
         let sButton = SKSpriteNode(imageNamed: "button_fire.png")
         sButton.size = CGSize(width: 128, height: 128)
+        sButton.name = "FireButton"
         return sButton
     }
     

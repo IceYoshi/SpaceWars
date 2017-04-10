@@ -18,6 +18,7 @@ class PlayerCamera: SKCameraNode {
         
         self.name = "PlayerCamera"
         self.setScale(Global.Constants.defaultZoomLevel)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,7 +28,7 @@ class PlayerCamera: SKCameraNode {
     public func setTarget(obj: SKNode) {
         self.targetObject = obj
     }
-    
+        
 }
 
 extension PlayerCamera: NeedsPhysicsUpdateProtocol {

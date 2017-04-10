@@ -30,7 +30,6 @@ class Joystick: SKNode {
         
         super.init()
         
-        self.name = "Joystick"
         self.sDPad = self.createDPad()
         self.addChild(self.sDPad!)
         
@@ -49,6 +48,7 @@ class Joystick: SKNode {
     func createDPad() -> SKSpriteNode {
         let sDPad = SKSpriteNode(imageNamed: "dpad.png")
         sDPad.size = CGSize(width: 128, height: 128)
+        sDPad.name = "Joystick"
         return sDPad
     }
     
@@ -56,7 +56,7 @@ class Joystick: SKNode {
         let sJoystick = SKSpriteNode(imageNamed: "joystick.png")
         sJoystick.size = CGSize(width: 64, height: 64)
         sJoystick.constraints = [SKConstraint.distance(SKRange(upperLimit: sJoystick.size.width), to: CGPoint.zero, in: self)]
-        
+        sJoystick.name = "Joystick"
         return sJoystick
     }
     

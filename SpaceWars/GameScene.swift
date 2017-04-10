@@ -17,14 +17,17 @@ protocol NeedsPhysicsUpdateProtocol {
 
 class GameScene: SKScene {
     
+    private var viewSize: CGSize
+    
     private var objectManager: ObjectManager?
     private var playerCamera: PlayerCamera?
     
     private var updateDelegates = [NeedsUpdateProtocol?]()
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
-    init(_ screenSize: CGSize) {
-        super.init(size: screenSize)
+    init(_ viewSize: CGSize) {
+        self.viewSize = viewSize
+        super.init(size: viewSize)
         
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
@@ -32,10 +35,10 @@ class GameScene: SKScene {
         
         self.name = "GameScene"
         
-        objectManager = ObjectManager(World(), Background(), Overlay(screenSize: screenSize), PlayerCamera())
+        objectManager = ObjectManager(World(), Background(), Overlay(screenSize: viewSize), PlayerCamera())
         objectManager?.attachTo(scene: self)
         
-        createObjects(screenSize, .rect, Global.Constants.spacefieldSize)
+        createObjects(viewSize, .rect, Global.Constants.spacefieldSize)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,7 +79,10 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        let gestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(self.didPerformPinchGesture(recognizer:)))
+        let gestureRecognizer = UIPinchGestureRecognizer(
+            target: self,
+            action: #selector(self.didPerformPinchGesture(recognizer:)))
+        gestureRecognizer.cancelsTouchesInView = false
         self.view?.addGestureRecognizer(gestureRecognizer)
     }
     
@@ -107,19 +113,23 @@ class GameScene: SKScene {
     
     func didPerformPinchGesture(recognizer: UIPinchGestureRecognizer) {
         if camera != nil && recognizer.numberOfTouches == 2 {
-            /*
-            for i in 0...recognizer.numberOfTouches - 1 {
-                let touchLocation = recognizer.location(ofTouch: i, in: self.view)
-                let objects = self.nodes(at: touchLocation)
-                for node in objects {
-                    if node.name == "Overlay" {
+            
+            if(objectManager != nil && recognizer.state == .began) {
+                // Check whether the touch locations are on top of an Overlay element
+                for i in 0...recognizer.numberOfTouches - 1 {
+                    var touchLocation = recognizer.location(ofTouch: i, in: self.view)
+                    touchLocation.y = viewSize.height - touchLocation.y
+                    
+                    if(objectManager!.touchesOverlay(touchLocation)) {
+                        // Interrupt current pinch gesture
+                        recognizer.isEnabled = false
+                        recognizer.isEnabled = true
                         return
                     }
                 }
             }
-            */
             
-            if recognizer.state == .changed {
+            if(recognizer.state == .changed) {
                 let scaleMultiplier = 2 - recognizer.scale
                 let newScale = max(Global.Constants.minZoomLevel, min(Global.Constants.maxZoomLevel, scaleMultiplier * camera!.xScale))
                 camera!.setScale(newScale)
