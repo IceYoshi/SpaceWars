@@ -15,7 +15,7 @@ protocol NeedsPhysicsUpdateProtocol {
     func didSimulatePhysics()
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     private var viewSize: CGSize
     
@@ -32,6 +32,7 @@ class GameScene: SKScene {
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
         self.physicsWorld.contactDelegate = self
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         
         self.name = "GameScene"
         
@@ -50,31 +51,45 @@ class GameScene: SKScene {
             let idCounter = IDCounter()
             
             // World
-            objectManager?.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: fieldSize))
+            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: fieldSize))
             
-            objectManager?.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(fieldSize.width)), y: Int.rand(0, Int(fieldSize.height))), spawn_pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2)))
+            objectManager!.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(fieldSize.width)), y: Int.rand(0, Int(fieldSize.height))), spawn_pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2)))
             
-            objectManager?.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2), fieldShape: fieldShape, fieldSize: fieldSize))
+            objectManager!.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2), fieldShape: fieldShape, fieldSize: fieldSize))
             
             // Background
-            objectManager?.assignToBackground(obj: StarField(fieldSize: fieldSize))
+            objectManager!.assignToBackground(obj: StarField(fieldSize: fieldSize))
             
             // Overlay
             let joystick = Joystick(deadZone: 0.1)
-            let joystickPadding = joystick.calculateAccumulatedFrame()
-            joystick.position = CGPoint(x: joystickPadding.width, y: joystickPadding.height)
-            objectManager?.assignToOverlay(obj: joystick)
+            let padding = joystick.calculateAccumulatedFrame()
+            joystick.position = CGPoint(x: padding.width, y: padding.height)
+            objectManager!.assignToOverlay(obj: joystick)
             
             let fireButton = FireButton()
-            let buttonPadding = fireButton.calculateAccumulatedFrame()
-            fireButton.position = CGPoint(x: screenSize.width - buttonPadding.width, y: buttonPadding.height)
-            objectManager?.assignToOverlay(obj: fireButton)
+            fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
+            objectManager!.assignToOverlay(obj: fireButton)
             
             // Setup delegates
-            objectManager?.player?.controller = joystick
-            self.addNeedsUpdateDelegate(delegate: objectManager?.player)
-            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager?.camera)
-            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager?.background)
+            if let player = objectManager!.player {
+                player.controller = joystick
+                player.torpedoContainer = objectManager!.world
+                fireButton.register(delegate: player)
+                self.addNeedsUpdateDelegate(delegate: player)
+                
+                let healthBar = BarIndicator(displayName: "Health", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
+                healthBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2)
+                objectManager!.assignToOverlay(obj: healthBar)
+                player.hpIndicator = healthBar
+                
+                let energyBar = BarIndicator(displayName: "Energy", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
+                energyBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2 - 20)
+                objectManager!.assignToOverlay(obj: energyBar)
+                player.ammoIndicator = energyBar
+            }
+            
+            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.camera)
+            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.background)
         }
     }
     
@@ -83,18 +98,29 @@ class GameScene: SKScene {
             target: self,
             action: #selector(self.didPerformPinchGesture(recognizer:)))
         gestureRecognizer.cancelsTouchesInView = false
+        gestureRecognizer.delegate = self
         self.view?.addGestureRecognizer(gestureRecognizer)
     }
     
     override func update(_ currentTime: TimeInterval) {
-        for delegate in updateDelegates {
-            delegate?.update()
+        let delegates = updateDelegates
+        for (i, delegate) in delegates.enumerated() {
+            if(delegate != nil) {
+                delegate!.update()
+            } else {
+                updateDelegates.remove(at: i)
+            }
         }
     }
     
     override func didSimulatePhysics() {
-        for delegate in physicUpdateDelegates {
-            delegate?.didSimulatePhysics()
+        let delegates = physicUpdateDelegates
+        for (i, delegate) in delegates.enumerated() {
+            if(delegate != nil) {
+                delegate!.didSimulatePhysics()
+            } else {
+                physicUpdateDelegates.remove(at: i)
+            }
         }
     }
     
@@ -111,9 +137,19 @@ class GameScene: SKScene {
         
     }
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        var touchLocation = touch.location(in: self.view)
+        touchLocation.y = viewSize.height - touchLocation.y
+        
+        if(objectManager!.touchesOverlay(touchLocation)) {
+            return false
+        }
+        return true
+    }
+    
     func didPerformPinchGesture(recognizer: UIPinchGestureRecognizer) {
         if camera != nil && recognizer.numberOfTouches == 2 {
-            
+            /*
             if(objectManager != nil && recognizer.state == .began) {
                 // Check whether the touch locations are on top of an Overlay element
                 for i in 0...recognizer.numberOfTouches - 1 {
@@ -128,6 +164,7 @@ class GameScene: SKScene {
                     }
                 }
             }
+        */
             
             if(recognizer.state == .changed) {
                 let scaleMultiplier = 2 - recognizer.scale

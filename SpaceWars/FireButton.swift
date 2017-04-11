@@ -9,7 +9,7 @@
 import SpriteKit
 
 protocol FireButtonProtocol {
-    func didClick()
+    func didFire()
 }
 
 class FireButton: SKNode {
@@ -43,7 +43,7 @@ class FireButton: SKNode {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for delegate in delegates {
-            delegate?.didClick()
+            delegate?.didFire()
         }
     }
     

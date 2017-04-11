@@ -23,7 +23,7 @@ class Blackhole: GameObject {
         
         let radius = CGFloat(config["size"]["r"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
-        let strength = Float(config["strength"].intValue)
+        let strength = config["strength"].floatValue
         let minRange = Float(config["min_range"].intValue)
         let maxRange = Float(config["max_range"].intValue)
         
@@ -43,6 +43,7 @@ class Blackhole: GameObject {
         gravityNode.minimumRadius = minRange
         gravityNode.region = SKRegion(radius: maxRange)
         gravityNode.strength = strength
+        gravityNode.falloff = 0.7
         sBlackhole.addChild(gravityNode)
         
         self.addChild(sBlackhole)

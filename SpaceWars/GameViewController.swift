@@ -24,6 +24,9 @@ class GameViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        skView.isExclusiveTouch = false
+        skView.isMultipleTouchEnabled = true
+        
         skView.showsFPS = Global.Constants.debugShowFPS
         skView.showsNodeCount = Global.Constants.debugShowNodeCount
         skView.showsPhysics = Global.Constants.debugShowPhysics
@@ -35,6 +38,7 @@ class GameViewController: UIViewController {
         skView.presentScene(scene)
         
         //testMessage()
+        
         
     }
 
@@ -51,6 +55,7 @@ class GameViewController: UIViewController {
         
         cp.interpret(data)
     }
+    
 }
 
 

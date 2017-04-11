@@ -13,17 +13,30 @@ import SpriteKit
 class Spaceship: GameObject {
     
     public var controller: JoystickControllerProtocol?
+    public var hpIndicator: BarIndicatorProtocol?
+    public var ammoIndicator: BarIndicatorProtocol?
+    
+    public var torpedoContainer: SKNode?
     private var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
     private var dmg: Int
     fileprivate var speed_max: Int
     fileprivate var acc: Int
-    private var hp_max: Int
-    private var hp: Int
-    private var ammo: [Int]
+    private(set) var hp_max: Int
+    private(set) var hp: Int
+    fileprivate var ammo: [Int]
     private var ammo_min: Int
     private var ammo_max: Int
+    
+    public var ammoCount: Int {
+        return ammo.count
+    }
+    public var ammoCountMax: Int {
+        return self.ammo_max - self.ammo_min + 1
+    }
+    
+    fileprivate var activeTorpedoes = [NeedsUpdateProtocol?]()
     
     init(config: JSON, type: GameObjectType, tex: SKTexture) {
         self.dmg = config["dmg"].intValue
@@ -139,6 +152,34 @@ extension Spaceship: NeedsUpdateProtocol {
             }
             
             self.physicsBody!.velocity = newVelocity
+        }
+        
+        updateTorpedoes()
+    }
+    
+    private func updateTorpedoes() {
+        let torpedoes = self.activeTorpedoes
+        for (i, torpedo) in torpedoes.enumerated() {
+            if(torpedo != nil) {
+                torpedo!.update()
+            } else {
+                self.activeTorpedoes.remove(at: i)
+            }
+        }
+    }
+    
+}
+
+extension Spaceship: FireButtonProtocol {
+    
+    func didFire() {
+        if(torpedoContainer != nil) {
+            if let id = self.ammo.popLast() {
+                let torpedo = Torpedo(id: id, pos: self.position, rot: self.zRotation)
+                self.activeTorpedoes.append(torpedo)
+                torpedoContainer!.addChild(torpedo)
+                ammoIndicator?.value = self.ammoCount
+            }
         }
     }
     

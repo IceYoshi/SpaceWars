@@ -15,8 +15,8 @@ class Global {
         static let serviceType: String = "spacewars-mpc"
         
         // Debug information
-        static let debugShowFPS: Bool = false
-        static let debugShowNodeCount: Bool = false
+        static let debugShowFPS: Bool = true
+        static let debugShowNodeCount: Bool = true
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
@@ -26,6 +26,10 @@ class Global {
         static let spaceshipAcceleration: CGFloat = 10
         static let spaceshipLinearDamping: CGFloat = 0.9
         static let spaceshipSize: CGSize = CGSize(width: 108, height: 132)
+        
+        static let torpedoSize: CGSize = CGSize(width: 20, height: 80)
+        static let torpedoVelocity: CGFloat = 3000
+        static let torpedoAlphaDecay: CGFloat = 0.03
         
         static let maxShieldLevel: Int = 10
         
@@ -37,6 +41,7 @@ class Global {
         
         static let blackholeCategory: UInt32 = 0x1 << 0
         static let spaceshipCategory: UInt32 = 0x1 << 1
+        static let torpedoCategory: UInt32 = 0x1 << 2
     }
     
     static let textureDictionary: [String: SKTexture] = [
@@ -47,6 +52,7 @@ class Global {
         "spaceship_cpu_master.png": SKTexture(imageNamed: "spaceship_cpu_master.png"),
         "spaceship_cpu_slave.png": SKTexture(imageNamed: "spaceship_cpu_slave.png"),
         "parallax-stars.png": SKTexture(imageNamed: "parallax-stars.png"),
-        "blackhole.png": SKTexture(imageNamed: "blackhole.png")
+        "blackhole.png": SKTexture(imageNamed: "blackhole.png"),
+        "laserbeam.png": SKTexture(imageNamed: "laserbeam.png")
     ]
 }

@@ -26,8 +26,10 @@
 		2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */; };
 		2734B1C51E9AE39700EB71C2 /* FireButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C41E9AE39700EB71C2 /* FireButton.swift */; };
 		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
+		2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2796F3781E9BFA7F006411AC /* Torpedo.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
+		27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */; };
 		27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */; };
 		27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */; };
 		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
@@ -66,8 +68,10 @@
 		2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectManager.swift; sourceTree = "<group>"; };
 		2734B1C41E9AE39700EB71C2 /* FireButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireButton.swift; sourceTree = "<group>"; };
 		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
+		2796F3781E9BFA7F006411AC /* Torpedo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torpedo.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarIndicator.swift; sourceTree = "<group>"; };
 		27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 			children = (
 				27B8E02A1E740397003A12DE /* Joystick.swift */,
 				2734B1C41E9AE39700EB71C2 /* FireButton.swift */,
+				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
 			);
 			name = control;
 			sourceTree = "<group>";
@@ -156,12 +161,12 @@
 		2719C9EA1E991795009D57B3 /* ship */ = {
 			isa = PBXGroup;
 			children = (
+				2719C9EB1E991801009D57B3 /* Spaceship.swift */,
 				2719C9DE1E9916F8009D57B3 /* HumanShip.swift */,
 				2719C9E01E99171A009D57B3 /* RobotShip.swift */,
+				2719C9E21E99172C009D57B3 /* SkeletonShip.swift */,
 				2719C9E61E991764009D57B3 /* CPUSlaveShip.swift */,
 				2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */,
-				2719C9EB1E991801009D57B3 /* Spaceship.swift */,
-				2719C9E21E99172C009D57B3 /* SkeletonShip.swift */,
 			);
 			name = ship;
 			sourceTree = "<group>";
@@ -169,9 +174,10 @@
 		27B5F30C1E6C342C00F05F72 /* object */ = {
 			isa = PBXGroup;
 			children = (
-				2719C9EA1E991795009D57B3 /* ship */,
 				2719C9DC1E99153D009D57B3 /* GameObject.swift */,
 				270D971B1E9A4AB500FFA117 /* Blackhole.swift */,
+				2796F3781E9BFA7F006411AC /* Torpedo.swift */,
+				2719C9EA1E991795009D57B3 /* ship */,
 			);
 			name = object;
 			sourceTree = "<group>";
@@ -206,8 +212,8 @@
 		27D913031E6D98230030EFAC /* extra */ = {
 			isa = PBXGroup;
 			children = (
-				27B5F30A1E6C335A00F05F72 /* Extensions.swift */,
 				27D9130A1E6DBBE70030EFAC /* Global.swift */,
+				27B5F30A1E6C335A00F05F72 /* Extensions.swift */,
 				27CABFEC1E99418200CE0717 /* IDCounter.swift */,
 				2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */,
 			);
@@ -217,8 +223,8 @@
 		27D913041E6D98400030EFAC /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				271980DE1E73230F006A058A /* GameScene.swift */,
 				27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */,
+				271980DE1E73230F006A058A /* GameScene.swift */,
 			);
 			name = scene;
 			sourceTree = "<group>";
@@ -325,10 +331,12 @@
 				270D971C1E9A4AB500FFA117 /* Blackhole.swift in Sources */,
 				2719C9E11E99171A009D57B3 /* RobotShip.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
+				2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,
 				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
+				27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
 				27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */,
 				27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */,
