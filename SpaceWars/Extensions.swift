@@ -125,6 +125,10 @@ public extension CGPoint {
     static func /=(left: inout CGPoint, right: CGVector) {
         left = left / right
     }
+    
+    func distanceTo(_ p: CGPoint) -> CGFloat {
+        return CGVector(dx: self.x - p.x, dy: self.y - p.y).length()
+    }
 }
 
 public extension CGRect {

@@ -19,7 +19,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     private var viewSize: CGSize
     
-    private var objectManager: ObjectManager?
+    fileprivate var objectManager: ObjectManager?
     private var playerCamera: PlayerCamera?
     
     private var updateDelegates = [NeedsUpdateProtocol?]()
@@ -36,29 +36,34 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         
         self.name = "GameScene"
         
-        objectManager = ObjectManager(World(), Background(), Overlay(screenSize: viewSize), PlayerCamera())
+        objectManager = ObjectManager(Global.Constants.spacefieldSize, World(), Background(), Overlay(screenSize: viewSize), PlayerCamera())
         objectManager?.attachTo(scene: self)
         
-        createObjects(viewSize, .rect, Global.Constants.spacefieldSize)
+        createObjects(viewSize, .rect)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createObjects(_ screenSize: CGSize, _ fieldShape: SpacefieldShape, _ fieldSize: CGSize) {
+    private func createObjects(_ screenSize: CGSize, _ fieldShape: SpacefieldShape) {
         if(objectManager != nil) {
             let idCounter = IDCounter()
             
             // World
-            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: fieldSize))
+            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
             
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: CGPoint(x: Int.rand(0, Int(fieldSize.width)), y: Int.rand(0, Int(fieldSize.height))), spawn_pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2)))
+            objectManager!.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
             
-            objectManager!.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: fieldSize.width/2, y: fieldSize.height/2), fieldShape: fieldShape, fieldSize: fieldSize))
+            for _ in 1...20 {
+                let randNum = Int.rand(136, 172)
+                objectManager!.assignToWorld(obj: Dilithium(idCounter: idCounter, ammoGain: 10, pos: objectManager!.getFreeRandomPosition(), size: CGSize(width: randNum, height: randNum), rot: 0))
+            }
+            
+            objectManager!.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2), fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
             
             // Background
-            objectManager!.assignToBackground(obj: StarField(fieldSize: fieldSize))
+            objectManager!.assignToBackground(obj: StarField(fieldSize: objectManager!.fieldSize))
             
             // Overlay
             let joystick = Joystick(deadZone: 0.1)
@@ -77,12 +82,12 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 fireButton.register(delegate: player)
                 self.addNeedsUpdateDelegate(delegate: player)
                 
-                let healthBar = BarIndicator(displayName: "Health", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
+                let healthBar = BarIndicator(displayName: "Shield", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
                 healthBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2)
                 objectManager!.assignToOverlay(obj: healthBar)
                 player.hpIndicator = healthBar
                 
-                let energyBar = BarIndicator(displayName: "Energy", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
+                let energyBar = BarIndicator(displayName: "Ammo", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
                 energyBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2 - 20)
                 objectManager!.assignToOverlay(obj: energyBar)
                 player.ammoIndicator = energyBar
@@ -197,41 +202,44 @@ extension GameScene: SKPhysicsContactDelegate {
         if !flag && contact.bodyA.categoryBitMask == Global.Constants.spaceshipCategory && contact.bodyB.categoryBitMask == Global.Constants.blackholeCategory {
             flag = true
             
-            let spaceship = contact.bodyA.node as? Spaceship
-            let blackhole = contact.bodyB.node
-            let fieldnode = blackhole?.children.first as? SKFieldNode
-            
-            spaceship?.controller?.enabled = false
-            spaceship?.physicsBody?.angularVelocity = 10
-            spaceship?.physicsBody?.angularDamping = 0
-            
-            spaceship?.run(SKAction.group([
-                SKAction.scale(by: 0.25, duration: 2),
-                SKAction.fadeOut(withDuration: 2)
-                ])) {
-                fieldnode?.strength = 0
-                contact.bodyB.categoryBitMask = 0
-                blackhole?.run(SKAction.fadeOut(withDuration: 2)) {
-                    blackhole?.run(SKAction.wait(forDuration: 3)) {
-                        blackhole?.run(SKAction.fadeIn(withDuration: 2)) {
-                            fieldnode?.strength = 6
-                            contact.bodyB.categoryBitMask = Global.Constants.blackholeCategory
+            if let spaceship = contact.bodyA.node as? Spaceship {
+                let blackhole = contact.bodyB.node
+                let fieldnode = blackhole?.children.first as? SKFieldNode
+                
+                spaceship.controller?.enabled = false
+                spaceship.setHP(value: spaceship.hp - 40)
+                spaceship.physicsBody?.angularVelocity = 10
+                spaceship.physicsBody?.angularDamping = 0
+                
+                spaceship.run(SKAction.group([
+                    SKAction.scale(by: 0.25, duration: 2),
+                    SKAction.fadeOut(withDuration: 2)
+                    ])) {
+                        fieldnode?.strength = 0
+                        contact.bodyB.categoryBitMask = 0
+                        blackhole?.run(SKAction.fadeOut(withDuration: 2)) {
+                            blackhole?.run(SKAction.wait(forDuration: 3)) {
+                                blackhole?.run(SKAction.fadeIn(withDuration: 2)) {
+                                    fieldnode?.strength = 6
+                                    contact.bodyB.categoryBitMask = Global.Constants.blackholeCategory
+                                }
+                            }
                         }
-                    }
+                        spaceship.physicsBody?.angularDamping = 1
+                        spaceship.physicsBody?.angularVelocity = 2
+                        spaceship.physicsBody?.velocity = CGVector.zero
+                        spaceship.run(SKAction.group([
+                            SKAction.move(to: CGPoint(x: self.objectManager!.fieldSize.width/2, y: self.objectManager!.fieldSize.height/2), duration: 1),
+                            SKAction.scale(by: 4, duration: 1)
+                            ])) {
+                                spaceship.controller?.enabled = true
+                                spaceship.run(SKAction.fadeIn(withDuration: 1)) {
+                                    spaceship.physicsBody?.angularVelocity = 0
+                                    flag = false
+                                }
+                        }
                 }
-                spaceship?.physicsBody?.angularDamping = 1
-                spaceship?.physicsBody?.angularVelocity = 2
-                spaceship?.physicsBody?.velocity = CGVector.zero
-                spaceship!.run(SKAction.group([
-                    SKAction.move(to: CGPoint.zero, duration: 1),
-                    SKAction.scale(by: 4, duration: 1)
-                ])) {
-                    spaceship?.controller?.enabled = true
-                    spaceship?.run(SKAction.fadeIn(withDuration: 1)) {
-                        spaceship?.physicsBody?.angularVelocity = 0
-                        flag = false
-                    }
-                }
+
             }
         }
     }

@@ -10,6 +10,8 @@ import SpriteKit
 
 class ObjectManager {
     
+    private(set) var fieldSize: CGSize
+    
     public var world: World?
     public var background: Background?
     public var overlay: Overlay?
@@ -19,7 +21,8 @@ class ObjectManager {
 
     private var objectDictionary = [Int: GameObject]()
     
-    init(_ world: World?, _ background: Background?, _ overlay: Overlay?, _ camera: PlayerCamera?) {
+    init(_ fieldSize: CGSize, _ world: World?, _ background: Background?, _ overlay: Overlay?, _ camera: PlayerCamera?) {
+        self.fieldSize = fieldSize
         self.world = world
         self.background = background
         self.overlay = overlay
@@ -77,6 +80,34 @@ class ObjectManager {
         if(overlay != nil) {
             if(overlay!.nodes(at: touchLocation).count > 0) {
                 return true
+            }
+        }
+        return false
+    }
+    
+    public func getRandomPosition() -> CGPoint {
+        let reducedFieldSize = self.fieldSize - Double(Global.Constants.spawnDistanceThreshold)
+        return CGPoint(x: Int.rand(0, Int(reducedFieldSize.width)),
+                       y: Int.rand(0, Int(reducedFieldSize.height)))
+    }
+    
+    public func getFreeRandomPosition() -> CGPoint {
+        var pos = getRandomPosition()
+        if(world != nil) {
+            while(touchesGameObject(pos)) {
+                pos = getRandomPosition()
+            }
+        }
+        return pos
+    }
+    
+    public func touchesGameObject(_ p: CGPoint) -> Bool {
+        if(world != nil) {
+            for node in world!.children {
+                if(node as? GameObject != nil &&
+                    node.position.distanceTo(p) < Global.Constants.spawnDistanceThreshold) {
+                    return true
+                }
             }
         }
         return false

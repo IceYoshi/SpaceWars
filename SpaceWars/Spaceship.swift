@@ -133,6 +133,7 @@ class Spaceship: GameObject {
     public func setHP(value: Int) {
         self.hp = min(value, self.hp_max)
         updateShield()
+        hpIndicator?.value = self.hp
     }
     
 }
