@@ -11,7 +11,7 @@ import SpriteKit
 class CPUMasterShip: Spaceship {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .human, tex: Global.textureDictionary["spaceship_cpu_master.png"]!)
+        super.init(config: config, type: .human, tex: Global.textureDictionary[.master]!)
     }
     
     convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {

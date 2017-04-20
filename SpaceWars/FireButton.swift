@@ -19,7 +19,7 @@ class FireButton: SKNode {
     override init() {
         super.init()
         
-        self.setScale(0.6)
+        self.setScale(0.5)
         self.alpha = 0.6
         
         self.addChild(createButton())

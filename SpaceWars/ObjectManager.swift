@@ -87,8 +87,8 @@ class ObjectManager {
     
     public func getRandomPosition() -> CGPoint {
         let reducedFieldSize = self.fieldSize - Double(Global.Constants.spawnDistanceThreshold)
-        return CGPoint(x: Int.rand(0, Int(reducedFieldSize.width)),
-                       y: Int.rand(0, Int(reducedFieldSize.height)))
+        return CGPoint(x: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.width)),
+                       y: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.height)))
     }
     
     public func getFreeRandomPosition() -> CGPoint {

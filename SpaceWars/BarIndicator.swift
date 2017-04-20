@@ -36,6 +36,7 @@ class BarIndicator: SKNode {
         
         self.addChild(createBackground())
         self.addChild(self.bar!)
+        self.addChild(self.createShading())
         self.addChild(createForeground())
         self.addChild(self.label!)
         
@@ -59,6 +60,18 @@ class BarIndicator: SKNode {
         sBackground.fillColor = .darkGray
         sBackground.lineWidth = 2
         return sBackground
+    }
+    
+    private func createShading() -> SKShapeNode {
+        let h = size.height / 2
+        
+        let sShading = SKShapeNode(rectOf: CGSize(width: size.width, height: h))
+        sShading.strokeColor = .black
+        sShading.fillColor = .black
+        sShading.alpha = 0.3
+        sShading.lineWidth = 0
+        sShading.position = CGPoint(x: 0, y: -(size.height - h)/2)
+        return sShading
     }
     
     private func createBar() -> SKShapeNode {

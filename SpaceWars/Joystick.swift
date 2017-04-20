@@ -36,7 +36,7 @@ class Joystick: SKNode {
         self.sJoystick = self.createJoystick()
         self.addChild(self.sJoystick!)
         
-        self.setScale(0.6)
+        self.setScale(0.5)
         
         self.isUserInteractionEnabled = true
     }

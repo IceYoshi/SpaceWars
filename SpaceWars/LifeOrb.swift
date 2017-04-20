@@ -1,34 +1,34 @@
 //
-//  Dilithium.swift
+//  LifeOrb.swift
 //  SpaceWars
 //
-//  Created by Mike Pereira on 13/04/2017.
+//  Created by Mike Pereira on 20/04/2017.
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
 import SpriteKit
 
-class Dilithium: GameObject {
+class LifeOrb: GameObject {
     
-    public let ammo_gain: Int
+    public let hp_gain: Int
     
     required init(_ config: JSON) {
-        self.ammo_gain = config["ammo_gain"].intValue
+        self.hp_gain = config["hp_gain"].intValue
         
-        super.init(config["id"].intValue, "dilithium", .dilithium)
+        super.init(config["id"].intValue, "life_orb", .life_orb)
         
         let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
-        self.addChild(createDilithium(size))
+        self.addChild(createLifeOrb(size))
         self.position = pos
         self.zRotation = CGFloat(rot)
         
-        self.physicsBody = SKPhysicsBody(texture: Global.textureDictionary[.dilithium]!, size: size)
+        self.physicsBody = SKPhysicsBody(texture: Global.textureDictionary[.life_orb]!, size: size)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.collisionBitMask = 0
-        self.physicsBody!.categoryBitMask = Global.Constants.dilithiumCategory
+        self.physicsBody!.categoryBitMask = Global.Constants.lifeorbCategory
         self.physicsBody!.contactTestBitMask = 0
         self.physicsBody!.fieldBitMask = 0
     }
@@ -41,7 +41,7 @@ class Dilithium: GameObject {
         
         self.init([
             "id":idCounter.nextID(),
-            "ammo_gain":20 * Global.mean(size: CGSize(width: w, height: h),
+            "hp_gain":30 * Global.mean(size: CGSize(width: w, height: h),
                                          sizeMax: CGSize(width: maxWidth, height: maxHeight)),
             "pos":[
                 "x":pos.x,
@@ -59,8 +59,8 @@ class Dilithium: GameObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createDilithium(_ size: CGSize) -> SKSpriteNode {
-        return SKSpriteNode(texture: Global.textureDictionary[.dilithium]!, size: size)
+    private func createLifeOrb(_ size: CGSize) -> SKSpriteNode {
+        return SKSpriteNode(texture: Global.textureDictionary[.life_orb]!, size: size)
     }
     
     public func remove() {

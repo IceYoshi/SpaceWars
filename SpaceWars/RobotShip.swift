@@ -11,7 +11,7 @@ import SpriteKit
 class RobotShip: Spaceship {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .human, tex: Global.textureDictionary["spaceship_robot.png"]!)
+        super.init(config: config, type: .human, tex: Global.textureDictionary[.robot]!)
     }
     
     convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {

@@ -8,8 +8,6 @@
 
 import SpriteKit
 
-
-
 class Spaceship: GameObject {
     
     public var controller: JoystickControllerProtocol?
@@ -25,9 +23,9 @@ class Spaceship: GameObject {
     fileprivate var acc: Int
     private(set) var hp_max: Int
     private(set) var hp: Int
-    fileprivate var ammo: [Int]
-    private var ammo_min: Int
-    private var ammo_max: Int
+    fileprivate var ammo = Set<Int>()
+    fileprivate var ammo_min: Int
+    fileprivate var ammo_max: Int
     
     public var ammoCount: Int {
         return ammo.count
@@ -46,10 +44,9 @@ class Spaceship: GameObject {
         self.hp = config["hp"].intValue
         
         if let ammo_available = config["ammo"]["available"].arrayObject as? [Int] {
-            self.ammo = ammo_available
-        } else {
-            self.ammo = [Int]()
+            self.ammo.formUnion(ammo_available)
         }
+        
         self.ammo_min = config["ammo"]["min"].intValue
         self.ammo_max = config["ammo"]["max"].intValue
         
@@ -70,7 +67,7 @@ class Spaceship: GameObject {
         self.physicsBody!.linearDamping = CGFloat(damping)
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
-        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory
+        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.velocity = vel
         
@@ -111,7 +108,7 @@ class Spaceship: GameObject {
         if (self.hp <= 0) {
             return nil
         }
-        let sShield = SKSpriteNode(texture: Global.textureDictionary["shield.png"]!, size: sShip!.size * 1.3)
+        let sShield = SKSpriteNode(texture: Global.textureDictionary[.shield]!, size: sShip!.size * 1.3)
         sShield.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
         sShield.colorBlendFactor = 1 - CGFloat(self.hp) / CGFloat(self.hp_max)
         return sShield
@@ -134,6 +131,14 @@ class Spaceship: GameObject {
         self.hp = min(value, self.hp_max)
         updateShield()
         hpIndicator?.value = self.hp
+    }
+    
+    public func changeHP(value: Int) {
+        self.setHP(value: self.hp + value)
+    }
+    
+    public func addAmmo(ids: Set<Int>) {
+        self.ammo.formUnion(ids)
     }
     
 }
@@ -175,12 +180,38 @@ extension Spaceship: FireButtonProtocol {
     
     func didFire() {
         if(torpedoContainer != nil) {
-            if let id = self.ammo.popLast() {
+            if let id = self.ammo.first {
+                self.ammo.remove(id)
                 let torpedo = Torpedo(id: id, pos: self.position, rot: self.zRotation)
                 self.activeTorpedoes.append(torpedo)
                 torpedoContainer!.addChild(torpedo)
                 ammoIndicator?.value = self.ammoCount
             }
+        }
+    }
+    
+}
+
+extension Spaceship: ContactDelegate {
+    
+    func contactWith(_ object: GameObject) {
+        if let obj = object as? Dilithium {
+            var missingAmmo = Set(self.ammo_min...self.ammo_max).subtracting(self.ammo)
+            while(missingAmmo.count > obj.ammo_gain) {
+                missingAmmo.removeFirst()
+            }
+            self.addAmmo(ids: missingAmmo)
+            ammoIndicator?.value = self.ammoCount
+            
+            obj.remove()
+        } else if let obj = object as? LifeOrb {
+            self.changeHP(value: obj.hp_gain)
+            
+            obj.remove()
+        } else if let obj = object as? Blackhole {
+            self.changeHP(value: -obj.dmg)
+            
+            obj.animateWith(self)
         }
     }
     

@@ -53,11 +53,14 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             // World
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
             
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 300, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
+            objectManager!.assignToWorld(obj: Blackhole(idCounter: idCounter, radius: 75, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
             
-            for _ in 1...20 {
-                let randNum = Int.rand(136, 172)
-                objectManager!.assignToWorld(obj: Dilithium(idCounter: idCounter, ammoGain: 10, pos: objectManager!.getFreeRandomPosition(), size: CGSize(width: randNum, height: randNum), rot: 0))
+            for _ in 1...10 {
+                objectManager!.assignToWorld(obj: Dilithium(idCounter: idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi)))
+            }
+            
+            for _ in 1...10 {
+                objectManager!.assignToWorld(obj: LifeOrb(idCounter: idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi)))
             }
             
             objectManager!.assignPlayer(player: HumanShip(idCounter: idCounter, playerName: "Mike", pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2), fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
@@ -77,6 +80,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             // Setup delegates
             if let player = objectManager!.player {
+                objectManager!.background?.setParallaxReference(ref: player)
                 player.controller = joystick
                 player.torpedoContainer = objectManager!.world
                 fireButton.register(delegate: player)
@@ -153,24 +157,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     func didPerformPinchGesture(recognizer: UIPinchGestureRecognizer) {
-        if camera != nil && recognizer.numberOfTouches == 2 {
-            /*
-            if(objectManager != nil && recognizer.state == .began) {
-                // Check whether the touch locations are on top of an Overlay element
-                for i in 0...recognizer.numberOfTouches - 1 {
-                    var touchLocation = recognizer.location(ofTouch: i, in: self.view)
-                    touchLocation.y = viewSize.height - touchLocation.y
-                    
-                    if(objectManager!.touchesOverlay(touchLocation)) {
-                        // Interrupt current pinch gesture
-                        recognizer.isEnabled = false
-                        recognizer.isEnabled = true
-                        return
-                    }
-                }
-            }
-        */
-            
+        if camera != nil && recognizer.numberOfTouches == 2 {            
             if(recognizer.state == .changed) {
                 let scaleMultiplier = 2 - recognizer.scale
                 let newScale = max(Global.Constants.minZoomLevel, min(Global.Constants.maxZoomLevel, scaleMultiplier * camera!.xScale))
@@ -193,61 +180,21 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
 }
 
-var flag = false
+protocol ContactDelegate {
+    func contactWith(_ object: GameObject)
+}
 
 extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
-        
-        if !flag && contact.bodyA.categoryBitMask == Global.Constants.spaceshipCategory && contact.bodyB.categoryBitMask == Global.Constants.blackholeCategory {
-            flag = true
-            
-            if let spaceship = contact.bodyA.node as? Spaceship {
-                let blackhole = contact.bodyB.node
-                let fieldnode = blackhole?.children.first as? SKFieldNode
-                
-                spaceship.controller?.enabled = false
-                spaceship.setHP(value: spaceship.hp - 40)
-                spaceship.physicsBody?.angularVelocity = 10
-                spaceship.physicsBody?.angularDamping = 0
-                
-                spaceship.run(SKAction.group([
-                    SKAction.scale(by: 0.25, duration: 2),
-                    SKAction.fadeOut(withDuration: 2)
-                    ])) {
-                        fieldnode?.strength = 0
-                        contact.bodyB.categoryBitMask = 0
-                        blackhole?.run(SKAction.fadeOut(withDuration: 2)) {
-                            blackhole?.run(SKAction.wait(forDuration: 3)) {
-                                blackhole?.run(SKAction.fadeIn(withDuration: 2)) {
-                                    fieldnode?.strength = 6
-                                    contact.bodyB.categoryBitMask = Global.Constants.blackholeCategory
-                                }
-                            }
-                        }
-                        spaceship.physicsBody?.angularDamping = 1
-                        spaceship.physicsBody?.angularVelocity = 2
-                        spaceship.physicsBody?.velocity = CGVector.zero
-                        spaceship.run(SKAction.group([
-                            SKAction.move(to: CGPoint(x: self.objectManager!.fieldSize.width/2, y: self.objectManager!.fieldSize.height/2), duration: 1),
-                            SKAction.scale(by: 4, duration: 1)
-                            ])) {
-                                spaceship.controller?.enabled = true
-                                spaceship.run(SKAction.fadeIn(withDuration: 1)) {
-                                    spaceship.physicsBody?.angularVelocity = 0
-                                    flag = false
-                                }
-                        }
-                }
-
-            }
+        if let obj = contact.bodyB.node as? GameObject {
+            (contact.bodyA.node as? ContactDelegate)?.contactWith(obj)
+        }
+        if let obj = contact.bodyA.node as? GameObject {
+            (contact.bodyB.node as? ContactDelegate)?.contactWith(obj)
         }
     }
     
-    func didEnd(_ contact: SKPhysicsContact) {
-        if contact.bodyA.categoryBitMask == Global.Constants.spaceshipCategory && contact.bodyB.categoryBitMask == Global.Constants.blackholeCategory {
-            
-        }
-    }
+    func didEnd(_ contact: SKPhysicsContact) {}
     
 }

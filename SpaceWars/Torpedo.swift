@@ -39,7 +39,7 @@ class Torpedo: GameObject {
     }
     
     private func createTorpedo(_ pos: CGPoint, _ rot: CGFloat, _ size: CGSize) -> SKSpriteNode {
-        let sTorpedo = SKSpriteNode(texture: Global.textureDictionary["laserbeam.png"]!, size: size)
+        let sTorpedo = SKSpriteNode(texture: Global.textureDictionary[.laserbeam]!, size: size)
         sTorpedo.position = pos
         sTorpedo.zRotation = rot
         
