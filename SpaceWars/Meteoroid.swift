@@ -1,5 +1,5 @@
 //
-//  LifeOrb.swift
+//  Meteoroid.swift
 //  SpaceWars
 //
 //  Created by Mike Pereira on 20/04/2017.
@@ -8,53 +8,37 @@
 
 import SpriteKit
 
-class LifeOrb: GameObject {
+class Meteoroid: GameObject {
     
-    public let hp_gain: Int
+    public let dmg: Int
+    public let hp: Int
+    public let hp_max: Int
+    public let spwawnRate: CGFloat
     
     private var delegates = [ItemRemovedDelegate?]()
     
-    required init(_ config: JSON) {
-        self.hp_gain = config["hp_gain"].intValue
+    init(config: JSON, type: GameObjectType, tex: SKTexture) {
+        self.dmg = config["dmg"].intValue
+        self.hp = config["hp"].intValue
+        self.hp_max = config["hp_max"].intValue
+        self.spwawnRate = CGFloat(config["spawn_rate"].floatValue)
         
-        super.init(config["id"].intValue, "life_orb", .life_orb)
+        super.init(config["id"].intValue, "meteoroid", type)
         
         let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
-        self.addChild(createLifeOrb(size))
+        self.addChild(createMeteoroid(tex, size))
         self.position = pos
         self.zRotation = CGFloat(rot)
         
-        self.physicsBody = SKPhysicsBody(texture: Global.textureDictionary[.life_orb]!, size: size)
+        self.physicsBody = SKPhysicsBody(texture: tex, size: size)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.collisionBitMask = 0
-        self.physicsBody!.categoryBitMask = Global.Constants.lifeorbCategory
+        self.physicsBody!.categoryBitMask = Global.Constants.meteoroidCategory
         self.physicsBody!.contactTestBitMask = 0
         self.physicsBody!.fieldBitMask = 0
-    }
-    
-    convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {
-        let maxWidth = CGFloat(72)
-        let maxHeight = CGFloat(maxWidth)/CGFloat(0.72)
-        let w = max(min(CGFloat(width), maxWidth), 36)
-        let h = CGFloat(w)/CGFloat(0.72)
-        
-        self.init([
-            "id":idCounter.nextID(),
-            "hp_gain":30 * Global.mean(size: CGSize(width: w, height: h),
-                                         sizeMax: CGSize(width: maxWidth, height: maxHeight)),
-            "pos":[
-                "x":pos.x,
-                "y":pos.y
-            ],
-            "size":[
-                "w":w,
-                "h":h
-            ],
-            "rot":rot
-            ])
     }
     
     public func addDelegate(delegate: ItemRemovedDelegate) {
@@ -65,8 +49,8 @@ class LifeOrb: GameObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createLifeOrb(_ size: CGSize) -> SKSpriteNode {
-        return SKSpriteNode(texture: Global.textureDictionary[.life_orb]!, size: size)
+    private func createMeteoroid(_ tex: SKTexture, _ size: CGSize) -> SKSpriteNode {
+        return SKSpriteNode(texture: tex, size: size)
     }
     
     public func remove() {

@@ -218,7 +218,6 @@ public extension Int {
             lower = lowerBound
             upper = upperBound
         }
-        
         return Int( arc4random_uniform( UInt32(upper - lower + 1) ) + UInt32(lower) )
     }
     

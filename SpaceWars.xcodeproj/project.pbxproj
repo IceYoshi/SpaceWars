@@ -31,6 +31,9 @@
 		2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2796F3781E9BFA7F006411AC /* Torpedo.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
+		27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B752D91EA960BD001CFD51 /* Meteoroid.swift */; };
+		27B752DC1EA960D0001CFD51 /* SmallMeteoroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B752DB1EA960D0001CFD51 /* SmallMeteoroid.swift */; };
+		27B752DE1EA960E2001CFD51 /* BigMeteoroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B752DD1EA960E2001CFD51 /* BigMeteoroid.swift */; };
 		27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */; };
 		27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */; };
 		27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */; };
@@ -75,6 +78,9 @@
 		2796F3781E9BFA7F006411AC /* Torpedo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torpedo.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		27B752D91EA960BD001CFD51 /* Meteoroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meteoroid.swift; sourceTree = "<group>"; };
+		27B752DB1EA960D0001CFD51 /* SmallMeteoroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallMeteoroid.swift; sourceTree = "<group>"; };
+		27B752DD1EA960E2001CFD51 /* BigMeteoroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BigMeteoroid.swift; sourceTree = "<group>"; };
 		27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BarIndicator.swift; sourceTree = "<group>"; };
 		27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
@@ -178,6 +184,7 @@
 		27B5F30C1E6C342C00F05F72 /* object */ = {
 			isa = PBXGroup;
 			children = (
+				27B752DF1EA960ED001CFD51 /* meteoroid */,
 				2719C9DC1E99153D009D57B3 /* GameObject.swift */,
 				270D971B1E9A4AB500FFA117 /* Blackhole.swift */,
 				2796F3781E9BFA7F006411AC /* Torpedo.swift */,
@@ -186,6 +193,16 @@
 				2719C9EA1E991795009D57B3 /* ship */,
 			);
 			name = object;
+			sourceTree = "<group>";
+		};
+		27B752DF1EA960ED001CFD51 /* meteoroid */ = {
+			isa = PBXGroup;
+			children = (
+				27B752D91EA960BD001CFD51 /* Meteoroid.swift */,
+				27B752DB1EA960D0001CFD51 /* SmallMeteoroid.swift */,
+				27B752DD1EA960E2001CFD51 /* BigMeteoroid.swift */,
+			);
+			name = meteoroid;
 			sourceTree = "<group>";
 		};
 		27B8BDD61E893173007D8EF7 /* mpc */ = {
@@ -343,6 +360,7 @@
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,
 				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
+				27B752DC1EA960D0001CFD51 /* SmallMeteoroid.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
 				27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
@@ -352,6 +370,8 @@
 				2719C9E31E99172C009D57B3 /* SkeletonShip.swift in Sources */,
 				2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */,
 				2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */,
+				27B752DE1EA960E2001CFD51 /* BigMeteoroid.swift in Sources */,
+				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,

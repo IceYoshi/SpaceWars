@@ -11,6 +11,9 @@ import SpriteKit
 class ObjectManager {
     
     private(set) var fieldSize: CGSize
+    private(set) var fieldShape: SpacefieldShape
+    
+    public var idCounter: IDCounter
     
     public var world: World?
     public var background: Background?
@@ -21,8 +24,12 @@ class ObjectManager {
 
     private var objectDictionary = [Int: GameObject]()
     
-    init(_ fieldSize: CGSize, _ world: World?, _ background: Background?, _ overlay: Overlay?, _ camera: PlayerCamera?) {
+    init(fieldSize: CGSize, fieldShape: SpacefieldShape, world: World?, background: Background?, overlay: Overlay?, camera: PlayerCamera?) {
+        
+        self.idCounter = IDCounter()
+        
         self.fieldSize = fieldSize
+        self.fieldShape = fieldShape
         self.world = world
         self.background = background
         self.overlay = overlay

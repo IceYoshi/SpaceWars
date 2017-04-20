@@ -67,7 +67,7 @@ class Spaceship: GameObject {
         self.physicsBody!.linearDamping = CGFloat(damping)
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
-        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory
+        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory | Global.Constants.meteoroidCategory
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.velocity = vel
         
@@ -128,7 +128,7 @@ class Spaceship: GameObject {
     }
     
     public func setHP(value: Int) {
-        self.hp = min(value, self.hp_max)
+        self.hp = max(min(value, self.hp_max), 0)
         updateShield()
         hpIndicator?.value = self.hp
     }
@@ -212,6 +212,10 @@ extension Spaceship: ContactDelegate {
             self.changeHP(value: -obj.dmg)
             
             obj.animateWith(self)
+        } else if let obj = object as? Meteoroid {
+            self.changeHP(value: -obj.dmg)
+            
+            obj.remove()
         }
     }
     

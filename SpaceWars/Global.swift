@@ -12,7 +12,7 @@ class Global {
     
     struct Constants {
         // ConnectionManager settings
-        static let serviceType: String = "spacewars-mpc"
+        static let serviceType: String = "mcspace-mpcdmv1"
         
         // Debug information
         static let debugShowFPS: Bool = true
@@ -46,6 +46,7 @@ class Global {
         static let torpedoCategory: UInt32 = 0x1 << 2
         static let dilithiumCategory: UInt32 = 0x1 << 3
         static let lifeorbCategory: UInt32 = 0x1 << 4
+        static let meteoroidCategory: UInt32 = 0x1 << 5
     }
     
     enum Texture: String {

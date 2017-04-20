@@ -12,6 +12,8 @@ class Dilithium: GameObject {
     
     public let ammo_gain: Int
     
+    private var delegates = [ItemRemovedDelegate?]()
+    
     required init(_ config: JSON) {
         self.ammo_gain = config["ammo_gain"].intValue
         
@@ -55,6 +57,10 @@ class Dilithium: GameObject {
             ])
     }
     
+    public func addDelegate(delegate: ItemRemovedDelegate) {
+        delegates.append(delegate)
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -71,6 +77,9 @@ class Dilithium: GameObject {
             ])) {
                 self.removeAllChildren()
                 self.removeFromParent()
+                for delegate in self.delegates {
+                    delegate?.didRemove(obj: self)
+                }
         }
     }
     
