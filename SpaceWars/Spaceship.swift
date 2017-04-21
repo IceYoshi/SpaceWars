@@ -61,6 +61,7 @@ class Spaceship: GameObject {
         
         self.position = pos
         self.zRotation = CGFloat(rot)
+        self.zPosition = 1
         
         self.physicsBody = SKPhysicsBody(texture: tex, size: size)
         self.physicsBody!.affectedByGravity = false

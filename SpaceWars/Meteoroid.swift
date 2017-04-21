@@ -15,6 +15,8 @@ class Meteoroid: GameObject {
     public let hp_max: Int
     public let spwawnRate: CGFloat
     
+    private var sMeteoroid: SKSpriteNode?
+    
     private var delegates = [ItemRemovedDelegate?]()
     
     init(config: JSON, type: GameObjectType, tex: SKTexture) {
@@ -29,7 +31,8 @@ class Meteoroid: GameObject {
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
-        self.addChild(createMeteoroid(tex, size))
+        self.sMeteoroid = createMeteoroid(tex, size)
+        self.addChild(self.sMeteoroid!)
         self.position = pos
         self.zRotation = CGFloat(rot)
         
@@ -55,16 +58,22 @@ class Meteoroid: GameObject {
     
     public func remove() {
         self.physicsBody = nil
-        self.run(SKAction.group([
-            SKAction.scale(by: 3, duration: 0.5),
-            SKAction.fadeOut(withDuration: 0.5)
-            ])) {
+        if let sprite = self.sMeteoroid {
+            sprite.run(SKAction.animate(with: Global.getExplosionAnimation(), timePerFrame: 0.033)) {
                 self.removeAllChildren()
                 self.removeFromParent()
                 for delegate in self.delegates {
                     delegate?.didRemove(obj: self)
                 }
+            }
+        } else {
+            self.removeAllChildren()
+            self.removeFromParent()
+            for delegate in self.delegates {
+                delegate?.didRemove(obj: self)
+            }
         }
+        
     }
     
 }

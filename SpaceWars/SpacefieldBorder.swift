@@ -21,7 +21,7 @@ class SpacefieldBorder: GameEnvironment {
         
         super.init("spacefield-\(shape)", .spacefield)
         
-        var sBorder: SKShapeNode? = nil
+        var sBorder: SKShapeNode?
         
         switch shape {
         case SpacefieldShape.rect.rawValue:
@@ -63,7 +63,7 @@ class SpacefieldBorder: GameEnvironment {
                 ],
                 "pos":[
                     "x":fieldSize.width,
-                    "y": fieldSize.height
+                    "y": fieldSize.width
                 ]
                 ])
         }

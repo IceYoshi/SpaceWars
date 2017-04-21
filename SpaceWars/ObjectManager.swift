@@ -21,6 +21,16 @@ class ObjectManager {
     
     private(set) var player: Spaceship?
     private(set) var camera: PlayerCamera?
+    
+    public var centerPoint: CGPoint {
+        get {
+            if(self.fieldShape == .rect) {
+                return CGPoint(x: self.fieldSize.width, y: self.fieldSize.height)/2
+            } else {
+                return CGPoint(x: self.fieldSize.width, y: self.fieldSize.width)
+            }
+        }
+    }
 
     private var objectDictionary = [Int: GameObject]()
     
@@ -93,26 +103,39 @@ class ObjectManager {
     }
     
     public func getRandomPosition() -> CGPoint {
-        let reducedFieldSize = self.fieldSize - Double(Global.Constants.spawnDistanceThreshold)
-        return CGPoint(x: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.width)),
-                       y: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.height)))
+        var pos: CGPoint?
+        if(self.fieldShape == .rect) {
+            let reducedFieldSize = self.fieldSize - Double(Global.Constants.spawnDistanceThreshold)
+            pos = CGPoint(x: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.width)),
+                           y: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(reducedFieldSize.height)))
+        } else {
+            repeat {
+                pos = CGPoint(x: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(fieldSize.width)*2),
+                              y: Int.rand(Global.Constants.spawnDistanceThreshold/2, Int(fieldSize.width)*2))
+            } while(pos!.distanceTo(self.centerPoint) > (fieldSize.width - CGFloat(Global.Constants.spawnDistanceThreshold)/2))
+        }
+        return pos!
     }
     
     public func getFreeRandomPosition() -> CGPoint {
         var pos = getRandomPosition()
         if(world != nil) {
-            while(touchesGameObject(pos)) {
+            // With every failed positioning try, lower the minimal distance threshold
+            // in order to decrease execution time on an overfilled space field
+            var offset: Int = 0
+            while(isCloseToGameObject(pos, Global.Constants.spawnDistanceThreshold - offset)) {
                 pos = getRandomPosition()
+                offset += 5
             }
         }
         return pos
     }
     
-    public func touchesGameObject(_ p: CGPoint) -> Bool {
+    public func isCloseToGameObject(_ p: CGPoint, _ threshold: Int) -> Bool {
         if(world != nil) {
             for node in world!.children {
                 if(node as? GameObject != nil &&
-                    node.position.distanceTo(p) < Global.Constants.spawnDistanceThreshold) {
+                    node.position.distanceTo(p) < threshold) {
                     return true
                 }
             }

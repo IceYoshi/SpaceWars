@@ -20,18 +20,12 @@ class Global {
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
-        static let spacefieldSize: CGSize = CGSize(width: 3000, height: 2000)
-        
-        static let spaceshipMaxSpeed: CGFloat = 700
-        static let spaceshipAcceleration: CGFloat = 10
-        static let spaceshipLinearDamping: CGFloat = 0.9
-        static let spaceshipSize: CGSize = CGSize(width: 108, height: 132)
+        static let spacefieldSize: CGSize = CGSize(width: 1000, height: 2000)
+        static let spacefieldShape: SpacefieldShape = .circle
         
         static let torpedoSize: CGSize = CGSize(width: 20, height: 80)
         static let torpedoVelocity: CGFloat = 3000
         static let torpedoAlphaDecay: CGFloat = 0.03
-        
-        static let maxShieldLevel: Int = 10
         
         static let maxZoomLevel: CGFloat = 5.0
         static let minZoomLevel: CGFloat = 1.5
@@ -70,24 +64,33 @@ class Global {
     }
     
     static let textureDictionary: [Texture: SKTexture] = [
-        Texture.blackhole: SKTexture(imageNamed: "blackhole.png"),
-        Texture.button_fire: SKTexture(imageNamed: "button_fire.png"),
-        Texture.dpad: SKTexture(imageNamed: "dpad.png"),
-        Texture.dilithium: SKTexture(imageNamed: "dilithium.png"),
-        Texture.joystick: SKTexture(imageNamed: "joystick.png"),
-        Texture.laserbeam: SKTexture(imageNamed: "laserbeam.png"),
-        Texture.life_orb: SKTexture(imageNamed: "life_orb.png"),
-        Texture.meteoroid1: SKTexture(imageNamed: "meteoroid1.png"),
-        Texture.meteoroid2: SKTexture(imageNamed: "meteoroid2.png"),
-        Texture.stars: SKTexture(imageNamed: "parallax-stars.png"),
-        Texture.shield: SKTexture(imageNamed: "shield.png"),
-        Texture.human: SKTexture(imageNamed: "spaceship_human.png"),
-        Texture.robot: SKTexture(imageNamed: "spaceship_robot.png"),
-        Texture.skeleton: SKTexture(imageNamed: "spaceship_skeleton.png"),
-        Texture.master: SKTexture(imageNamed: "spaceship_cpu_master.png"),
-        Texture.slave: SKTexture(imageNamed: "spaceship_cpu_slave.png"),
-        Texture.space_station: SKTexture(imageNamed: "spacestation.png")
+        Texture.blackhole: SKTexture(imageNamed: Texture.blackhole.rawValue),
+        Texture.button_fire: SKTexture(imageNamed: Texture.button_fire.rawValue),
+        Texture.dpad: SKTexture(imageNamed: Texture.dpad.rawValue),
+        Texture.dilithium: SKTexture(imageNamed: Texture.dilithium.rawValue),
+        Texture.joystick: SKTexture(imageNamed: Texture.joystick.rawValue),
+        Texture.laserbeam: SKTexture(imageNamed: Texture.laserbeam.rawValue),
+        Texture.life_orb: SKTexture(imageNamed: Texture.life_orb.rawValue),
+        Texture.meteoroid1: SKTexture(imageNamed: Texture.meteoroid1.rawValue),
+        Texture.meteoroid2: SKTexture(imageNamed: Texture.meteoroid2.rawValue),
+        Texture.stars: SKTexture(imageNamed: Texture.stars.rawValue),
+        Texture.shield: SKTexture(imageNamed: Texture.shield.rawValue),
+        Texture.human: SKTexture(imageNamed: Texture.human.rawValue),
+        Texture.robot: SKTexture(imageNamed: Texture.robot.rawValue),
+        Texture.skeleton: SKTexture(imageNamed: Texture.skeleton.rawValue),
+        Texture.master: SKTexture(imageNamed: Texture.master.rawValue),
+        Texture.slave: SKTexture(imageNamed: Texture.slave.rawValue),
+        Texture.space_station: SKTexture(imageNamed: Texture.space_station.rawValue)
     ]
+    
+    static func getExplosionAnimation() -> [SKTexture] {
+        let explosionAtlas = SKTextureAtlas(named: "explosion")
+        var explosionFrames = [SKTexture]()
+        for i in 0...19 {
+            explosionFrames.append(explosionAtlas.textureNamed("explosion-frame\(i).png"))
+        }
+        return explosionFrames
+    }
     
     static func mean(w: CGFloat, h: CGFloat, wMax: CGFloat, hMax: CGFloat) -> CGFloat {
         return sqrt(CGFloat(w*h)/CGFloat(wMax*hMax))

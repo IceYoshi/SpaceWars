@@ -14,6 +14,7 @@ class World: SKNode {
         super.init()
         
         self.name = "World"
+        self.zPosition = 0
     }
     
     required init?(coder aDecoder: NSCoder) {

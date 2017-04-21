@@ -36,20 +36,22 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         
         self.name = "GameScene"
         
-        objectManager = ObjectManager(fieldSize: Global.Constants.spacefieldSize, fieldShape: .rect, world: World(), background: Background(), overlay: Overlay(screenSize: viewSize), camera: PlayerCamera())
+        objectManager = ObjectManager(fieldSize: Global.Constants.spacefieldSize, fieldShape: Global.Constants.spacefieldShape, world: World(), background: Background(), overlay: Overlay(screenSize: viewSize), camera: PlayerCamera())
         objectManager?.attachTo(scene: self)
         
-        createObjects(viewSize, .rect)
+        createObjects(viewSize)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createObjects(_ screenSize: CGSize, _ fieldShape: SpacefieldShape) {
+    private func createObjects(_ screenSize: CGSize) {
         if(objectManager != nil) {
             // World
-            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
+            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            
+            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
             objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 75, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
             
@@ -76,8 +78,6 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 objectManager?.assignToWorld(obj: meteoroid)
                 meteoroid.addDelegate(delegate: self)
             }
-            
-            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2), fieldShape: fieldShape, fieldSize: objectManager!.fieldSize))
             
             // Background
             objectManager!.assignToBackground(obj: StarField(fieldSize: objectManager!.fieldSize))
