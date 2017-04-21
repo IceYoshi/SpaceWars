@@ -58,7 +58,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
             objectManager!.assignToOverlay(obj: fireButton)
             
-            let minimap = MiniMap(size: screenSize/4, fieldSize: objectManager!.fieldSize, fieldShape: objectManager!.fieldShape)
+            let minimap = MiniMap(size: screenSize/3, fieldSize: objectManager!.fieldSize, fieldShape: objectManager!.fieldShape)
             let offset = minimap.calculateAccumulatedFrame()/2
             minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
             
@@ -66,41 +66,41 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             // World
             objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
-            minimap.addObject(ref: objectManager!.player!, color: .red, zPos: 1)
+            minimap.addObject(ref: objectManager!.player!, tex: .human, weight: 2.5)
             
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
             let blackhole = Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2))
             objectManager!.assignToWorld(obj: blackhole)
-            minimap.addObject(ref: blackhole, color: .black)
+            minimap.addObject(ref: blackhole, tex: .blackhole, weight: 2)
             
             for _ in 1...5 {
                 let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: dilithium)
                 dilithium.addDelegate(delegate: self)
-                minimap.addObject(ref: dilithium, color: .purple)
+                minimap.addObject(ref: dilithium, tex: .dilithium)
             }
             
             for _ in 1...5 {
                 let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: lifeOrb)
                 lifeOrb.addDelegate(delegate: self)
-                minimap.addObject(ref: lifeOrb, color: .blue)
+                minimap.addObject(ref: lifeOrb, tex: .life_orb)
             }
             
             for _ in 1...5 {
                 let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: meteoroid)
                 meteoroid.addDelegate(delegate: self)
-                minimap.addObject(ref: meteoroid, color: .lightGray)
+                minimap.addObject(ref: meteoroid, tex: .meteoroid1)
             }
             
             for _ in 1...5 {
                 let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: meteoroid)
                 meteoroid.addDelegate(delegate: self)
-                minimap.addObject(ref: meteoroid, color: .lightGray)
+                minimap.addObject(ref: meteoroid, tex: .meteoroid2, weight: 2)
             }
             
             // Background

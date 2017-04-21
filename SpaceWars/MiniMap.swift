@@ -43,7 +43,7 @@ class MiniMap: SKNode {
         
         self.sBackground = createBackground(actualSize, shape: fieldShape)
         self.addChild(sBackground!)
-        self.alpha = 0.8
+        self.alpha = 0.7
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,26 +52,27 @@ class MiniMap: SKNode {
     
     private func createBackground(_ size: CGSize, shape: SpacefieldShape) -> SKShapeNode {
         let sBackground = shape == .rect ? SKShapeNode(rectOf: size) : SKShapeNode(circleOfRadius: size.width)
-        sBackground.strokeColor = .red
+        sBackground.strokeColor = .lightGray
         sBackground.lineWidth = 1
-        sBackground.glowWidth = 2
+        //sBackground.glowWidth = 2
         sBackground.fillColor = .darkGray
         return sBackground
     }
     
-    public func addObject(ref: SKNode, color: UIColor, zPos: CGFloat) {
-        self.addStaticObject(ref: ref, color: color, zPos: zPos)
+    public func addObject(ref: SKNode, tex: Global.Texture, weight: CGFloat) {
+        self.addStaticObject(ref: ref, tex: tex, weight: weight)
         self.movingObjects.append(ref)
     }
     
-    public func addObject(ref: SKNode, color: UIColor) {
-        self.addObject(ref: ref, color: color, zPos: 0)
+    public func addObject(ref: SKNode, tex: Global.Texture) {
+        self.addObject(ref: ref, tex: tex, weight: 1)
     }
     
-    public func addStaticObject(ref: SKNode, color: UIColor, zPos: CGFloat) {
-        let shape = createShape()
-        shape.zPosition = zPos
+    public func addStaticObject(ref: SKNode, tex: Global.Texture, weight: CGFloat) {
+        let shape = createSprite(tex)
+        shape.zPosition = weight
         shape.position = self.convert(ref.position)
+        shape.setScale(weight)
         self.objectDictionary[ref] = shape
         self.addChild(shape)
     }
@@ -81,8 +82,8 @@ class MiniMap: SKNode {
         return self.fieldShape == .rect ? convertedPoint - self.size/2 : convertedPoint - self.size
     }
     
-    private func createShape() -> SKSpriteNode {
-        return SKSpriteNode(texture: Global.textureDictionary[.button_fire], size: CGSize(width: 5, height: 5))
+    private func createSprite(_ tex: Global.Texture) -> SKSpriteNode {
+        return SKSpriteNode(texture: Global.textureDictionary[tex], size: CGSize(width: 8, height: 8))
     }
     
 }
@@ -91,7 +92,9 @@ extension MiniMap: NeedsPhysicsUpdateProtocol {
     
     func didSimulatePhysics() {
         for object in movingObjects {
-            objectDictionary[object]?.position = self.convert(object.position)
+            let sprite = objectDictionary[object]
+            sprite?.position = self.convert(object.position)
+            sprite?.zRotation = object.zRotation
         }
     }
     
