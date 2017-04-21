@@ -48,40 +48,6 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     private func createObjects(_ screenSize: CGSize) {
         if(objectManager != nil) {
-            // World
-            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
-            
-            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
-            
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 75, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
-            
-            for _ in 1...10 {
-                let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: dilithium)
-                dilithium.addDelegate(delegate: self)
-            }
-            
-            for _ in 1...10 {
-                let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: lifeOrb)
-                lifeOrb.addDelegate(delegate: self)
-            }
-            
-            for _ in 1...5 {
-                let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addDelegate(delegate: self)
-            }
-            
-            for _ in 1...5 {
-                let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addDelegate(delegate: self)
-            }
-            
-            // Background
-            objectManager!.assignToBackground(obj: StarField(fieldSize: objectManager!.fieldSize))
-            
             // Overlay
             let joystick = Joystick(deadZone: 0.1)
             let padding = joystick.calculateAccumulatedFrame()
@@ -91,6 +57,55 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             let fireButton = FireButton()
             fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
             objectManager!.assignToOverlay(obj: fireButton)
+            
+            let minimap = MiniMap(size: screenSize/4, fieldSize: objectManager!.fieldSize, fieldShape: objectManager!.fieldShape)
+            let offset = minimap.calculateAccumulatedFrame()/2
+            minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
+            
+            objectManager!.assignToOverlay(obj: minimap)
+            
+            // World
+            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            minimap.addObject(ref: objectManager!.player!, color: .red, zPos: 1)
+            
+            
+            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            
+            let blackhole = Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2))
+            objectManager!.assignToWorld(obj: blackhole)
+            minimap.addObject(ref: blackhole, color: .black)
+            
+            for _ in 1...5 {
+                let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
+                objectManager?.assignToWorld(obj: dilithium)
+                dilithium.addDelegate(delegate: self)
+                minimap.addObject(ref: dilithium, color: .purple)
+            }
+            
+            for _ in 1...5 {
+                let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
+                objectManager?.assignToWorld(obj: lifeOrb)
+                lifeOrb.addDelegate(delegate: self)
+                minimap.addObject(ref: lifeOrb, color: .blue)
+            }
+            
+            for _ in 1...5 {
+                let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
+                objectManager?.assignToWorld(obj: meteoroid)
+                meteoroid.addDelegate(delegate: self)
+                minimap.addObject(ref: meteoroid, color: .lightGray)
+            }
+            
+            for _ in 1...5 {
+                let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
+                objectManager?.assignToWorld(obj: meteoroid)
+                meteoroid.addDelegate(delegate: self)
+                minimap.addObject(ref: meteoroid, color: .lightGray)
+            }
+            
+            // Background
+            objectManager!.assignToBackground(obj: StarField(fieldSize: objectManager!.fieldSize))
+            
             
             // Setup delegates
             if let player = objectManager!.player {
@@ -113,6 +128,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.camera)
             self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.background)
+            self.addNeedsPhysicsUpdateDelegate(delegate: minimap)
         }
     }
     

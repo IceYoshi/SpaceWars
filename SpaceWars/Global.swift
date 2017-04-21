@@ -20,7 +20,9 @@ class Global {
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
-        static let spacefieldSize: CGSize = CGSize(width: 1000, height: 2000)
+        // If the field shape is a circle, the width value will be used as
+        // the radius of the circle. The height value is simply ignored.
+        static let spacefieldSize: CGSize = CGSize(width: 2000, height: 1000)
         static let spacefieldShape: SpacefieldShape = .circle
         
         static let torpedoSize: CGSize = CGSize(width: 20, height: 80)

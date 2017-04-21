@@ -29,6 +29,7 @@
 		273678BA1E9FEE4D0055A643 /* Dilithium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273678B91E9FEE4C0055A643 /* Dilithium.swift */; };
 		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
 		2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2796F3781E9BFA7F006411AC /* Torpedo.swift */; };
+		27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27992DB51EAA363F00DF24A7 /* MiniMap.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
 		27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B752D91EA960BD001CFD51 /* Meteoroid.swift */; };
@@ -76,6 +77,7 @@
 		273678B91E9FEE4C0055A643 /* Dilithium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dilithium.swift; sourceTree = "<group>"; };
 		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
 		2796F3781E9BFA7F006411AC /* Torpedo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torpedo.swift; sourceTree = "<group>"; };
+		27992DB51EAA363F00DF24A7 /* MiniMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniMap.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B752D91EA960BD001CFD51 /* Meteoroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meteoroid.swift; sourceTree = "<group>"; };
@@ -128,7 +130,7 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
-				270D971A1E9A437000FFA117 /* control */,
+				270D971A1E9A437000FFA117 /* hud */,
 				270D97191E9A428500FFA117 /* environment */,
 				27CABFE91E99233300CE0717 /* lib */,
 				27B8BDD61E893173007D8EF7 /* mpc */,
@@ -158,14 +160,15 @@
 			name = environment;
 			sourceTree = "<group>";
 		};
-		270D971A1E9A437000FFA117 /* control */ = {
+		270D971A1E9A437000FFA117 /* hud */ = {
 			isa = PBXGroup;
 			children = (
 				27B8E02A1E740397003A12DE /* Joystick.swift */,
 				2734B1C41E9AE39700EB71C2 /* FireButton.swift */,
 				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
+				27992DB51EAA363F00DF24A7 /* MiniMap.swift */,
 			);
-			name = control;
+			name = hud;
 			sourceTree = "<group>";
 		};
 		2719C9EA1E991795009D57B3 /* ship */ = {
@@ -339,6 +342,7 @@
 				2719C9DD1E99153D009D57B3 /* GameObject.swift in Sources */,
 				27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */,
 				2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */,
+				27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */,
 				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
 				270D97181E9A385600FFA117 /* GameEnvironment.swift in Sources */,
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
