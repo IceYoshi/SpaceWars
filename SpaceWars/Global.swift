@@ -25,9 +25,10 @@ class Global {
         static let spacefieldSize: CGSize = CGSize(width: 2000, height: 4000)
         static let spacefieldShape: SpacefieldShape = .circle
         
-        static let torpedoSize: CGSize = CGSize(width: 20, height: 80)
+        static let torpedoSize: CGSize = CGSize(width: 30, height: 90)
         static let torpedoVelocity: CGFloat = 3000
         static let torpedoAlphaDecay: CGFloat = 0.03
+        static let shootDelay: Double = 0.3
         
         static let maxZoomLevel: CGFloat = 5.0
         static let minZoomLevel: CGFloat = 1.5

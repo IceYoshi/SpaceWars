@@ -35,6 +35,7 @@ class Spaceship: GameObject {
     }
     
     fileprivate var activeTorpedoes = [Torpedo]()
+    fileprivate var canShoot: Bool = true
     
     init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
@@ -222,13 +223,20 @@ extension Spaceship: NeedsUpdateProtocol {
 extension Spaceship: FireButtonProtocol {
     
     func didFire() {
-        if(torpedoContainer != nil) {
+        if(torpedoContainer != nil && canShoot) {
             if let id = self.ammo.first {
-                self.ammo.remove(id)
-                let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
-                self.activeTorpedoes.append(torpedo)
-                torpedoContainer!.addChild(torpedo)
-                ammoIndicator?.value = self.ammoCount
+                let disableShootAction = SKAction.run { self.canShoot = false }
+                let enableShootAction = SKAction.run { self.canShoot = true }
+                let waitAction = SKAction.wait(forDuration: Global.Constants.shootDelay)
+                let shootAction = SKAction.run {
+                    self.ammo.remove(id)
+                    let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
+                    self.activeTorpedoes.append(torpedo)
+                    self.torpedoContainer!.addChild(torpedo)
+                    self.ammoIndicator?.value = self.ammoCount
+                }
+                
+                self.run(SKAction.sequence([disableShootAction, shootAction, waitAction, enableShootAction]))
             }
         }
     }
