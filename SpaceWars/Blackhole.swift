@@ -76,7 +76,7 @@ class Blackhole: GameObject {
     }
     
     private func createBlackhole(_ radius: CGFloat) -> SKSpriteNode {
-        let sBlackhole = SKSpriteNode(texture: Global.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))/*
+        let sBlackhole = SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))/*
         sBlackhole.physicsBody = SKPhysicsBody()
         sBlackhole.physicsBody!.affectedByGravity = false
         sBlackhole.physicsBody!.angularDamping = 0

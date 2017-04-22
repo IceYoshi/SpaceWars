@@ -8,24 +8,14 @@
 
 import SpriteKit
 
-enum GameObjectType {
-    case
-    // Spaceships
-    human, robot, skeleton, cpu_master, cpu_slave,
-    // Meteoroids
-    meteoroid1, meteoroid2,
-    // Life/Energy gains
-    life_orb, dilithium,
-    // Other objects
-    blackhole, torpedo
-}
-
 class GameObject: SKNode {
     
     private(set) var id: Int
-    private(set) var type: GameObjectType
+    private(set) var type: TextureType
     
-    init(_ id: Int, _ name: String, _ type: GameObjectType) {
+    internal var delegates = [ItemRemovedDelegate?]()
+    
+    init(_ id: Int, _ name: String, _ type: TextureType) {
         self.id = id
         self.type = type
         super.init()
@@ -35,6 +25,10 @@ class GameObject: SKNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func addDelegate(delegate: ItemRemovedDelegate) {
+        delegates.append(delegate)
     }
     
 }

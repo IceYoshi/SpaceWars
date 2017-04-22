@@ -11,7 +11,7 @@ import SpriteKit
 class SmallMeteoroid: Meteoroid {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .meteoroid1, tex: Global.textureDictionary[.meteoroid1]!)
+        super.init(config: config, type: .meteoroid_small)
     }
     
     convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {

@@ -36,7 +36,7 @@ class Spaceship: GameObject {
     
     fileprivate var activeTorpedoes = [NeedsUpdateProtocol?]()
     
-    init(config: JSON, type: GameObjectType, tex: SKTexture) {
+    init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
         self.speed_max = config["speed"].intValue
         self.acc = config["acc"].intValue
@@ -63,7 +63,7 @@ class Spaceship: GameObject {
         self.zRotation = CGFloat(rot)
         self.zPosition = 1
         
-        self.physicsBody = SKPhysicsBody(texture: tex, size: size)
+        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[type]!, size: size)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.linearDamping = CGFloat(damping)
         self.physicsBody!.angularDamping = 0
@@ -89,7 +89,7 @@ class Spaceship: GameObject {
             print("Received unexpected spacefield shape: \(fieldShape)")
         }
         
-        self.sShip = createShip(tex, size)
+        self.sShip = createShip(GameTexture.textureDictionary[type]!, size)
         self.addChild(sShip!)
         self.sShield = createShield()
         if(sShield != nil) {
@@ -109,7 +109,7 @@ class Spaceship: GameObject {
         if (self.hp <= 0) {
             return nil
         }
-        let sShield = SKSpriteNode(texture: Global.textureDictionary[.shield]!, size: sShip!.size * 1.3)
+        let sShield = SKSpriteNode(texture: GameTexture.textureDictionary[.shield]!, size: sShip!.size * 1.3)
         sShield.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
         sShield.colorBlendFactor = 1 - CGFloat(self.hp) / CGFloat(self.hp_max)
         return sShield

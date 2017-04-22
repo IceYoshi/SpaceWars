@@ -11,7 +11,7 @@ import SpriteKit
 class HumanShip: Spaceship {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .human, tex: Global.textureDictionary[.human]!)
+        super.init(config: config, type: .human)
     }
     
     convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {

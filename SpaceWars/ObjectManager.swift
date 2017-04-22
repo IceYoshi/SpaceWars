@@ -21,6 +21,7 @@ class ObjectManager {
     
     private(set) var player: Spaceship?
     private(set) var camera: PlayerCamera?
+    private(set) var minimap: MiniMap?
     
     public var centerPoint: CGPoint {
         get {
@@ -66,6 +67,31 @@ class ObjectManager {
         }
     }
     
+    public func assignMinimap(map: MiniMap) {
+        self.minimap = map
+        
+        for (_, obj) in objectDictionary {
+            self.assignToMinimap(obj: obj)
+        }
+        
+        self.assignToOverlay(obj: map)
+    }
+    
+    public func assignToMinimap(obj: GameObject) {
+        var w: CGFloat = 1
+        var u: Bool = false
+        if let _ = obj as? Spaceship {
+            u = true
+            w = 2.5
+        }
+        switch obj.type {
+            case .blackhole: u = true; w = 2.4
+            case .meteoroid_big: w = 2
+            default: break
+        }
+        self.minimap?.addItem(ref: obj, needsUpdate: u, weight: w)
+    }
+    
     public func assignPlayer(player: Spaceship) {
         self.player = player
         self.camera?.setTarget(obj: player)
@@ -74,6 +100,7 @@ class ObjectManager {
     
     public func assignToWorld(obj: GameObject) {
         objectDictionary[obj.id] = obj
+        assignToMinimap(obj: obj)
         world?.addChild(obj)
     }
     

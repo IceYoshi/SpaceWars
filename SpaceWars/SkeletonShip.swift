@@ -11,7 +11,7 @@ import SpriteKit
 class SkeletonShip: Spaceship {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .human, tex: Global.textureDictionary[.skeleton]!)
+        super.init(config: config, type: .skeleton)
     }
     
     convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {

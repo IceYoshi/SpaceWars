@@ -12,8 +12,6 @@ class Dilithium: GameObject {
     
     public let ammo_gain: Int
     
-    private var delegates = [ItemRemovedDelegate?]()
-    
     required init(_ config: JSON) {
         self.ammo_gain = config["ammo_gain"].intValue
         
@@ -27,7 +25,7 @@ class Dilithium: GameObject {
         self.position = pos
         self.zRotation = CGFloat(rot)
         
-        self.physicsBody = SKPhysicsBody(texture: Global.textureDictionary[.dilithium]!, size: size)
+        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[.dilithium]!, size: size)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.categoryBitMask = Global.Constants.dilithiumCategory
@@ -57,16 +55,12 @@ class Dilithium: GameObject {
             ])
     }
     
-    public func addDelegate(delegate: ItemRemovedDelegate) {
-        delegates.append(delegate)
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     private func createDilithium(_ size: CGSize) -> SKSpriteNode {
-        return SKSpriteNode(texture: Global.textureDictionary[.dilithium]!, size: size)
+        return SKSpriteNode(texture: GameTexture.textureDictionary[.dilithium]!, size: size)
     }
     
     public func remove() {

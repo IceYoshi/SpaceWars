@@ -13,7 +13,7 @@ class Torpedo: GameObject {
     fileprivate var sTorpedo: SKSpriteNode?
     
     required init(_ config: JSON) {
-        super.init(config["id"].intValue, "Torpedo", .torpedo)
+        super.init(config["id"].intValue, "Torpedo", .laserbeam)
         
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
@@ -39,7 +39,7 @@ class Torpedo: GameObject {
     }
     
     private func createTorpedo(_ pos: CGPoint, _ rot: CGFloat, _ size: CGSize) -> SKSpriteNode {
-        let sTorpedo = SKSpriteNode(texture: Global.textureDictionary[.laserbeam]!, size: size)
+        let sTorpedo = SKSpriteNode(texture: GameTexture.textureDictionary[.laserbeam]!, size: size)
         sTorpedo.position = pos
         sTorpedo.zRotation = rot
         

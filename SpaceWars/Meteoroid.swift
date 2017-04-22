@@ -17,9 +17,7 @@ class Meteoroid: GameObject {
     
     private var sMeteoroid: SKSpriteNode?
     
-    private var delegates = [ItemRemovedDelegate?]()
-    
-    init(config: JSON, type: GameObjectType, tex: SKTexture) {
+    init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
         self.hp = config["hp"].intValue
         self.hp_max = config["hp_max"].intValue
@@ -31,21 +29,17 @@ class Meteoroid: GameObject {
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
-        self.sMeteoroid = createMeteoroid(tex, size)
+        self.sMeteoroid = createMeteoroid(GameTexture.textureDictionary[type]!, size)
         self.addChild(self.sMeteoroid!)
         self.position = pos
         self.zRotation = CGFloat(rot)
         
-        self.physicsBody = SKPhysicsBody(texture: tex, size: size)
+        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[type]!, size: size)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.categoryBitMask = Global.Constants.meteoroidCategory
         self.physicsBody!.contactTestBitMask = 0
         self.physicsBody!.fieldBitMask = 0
-    }
-    
-    public func addDelegate(delegate: ItemRemovedDelegate) {
-        delegates.append(delegate)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -59,7 +53,7 @@ class Meteoroid: GameObject {
     public func remove() {
         self.physicsBody = nil
         if let sprite = self.sMeteoroid {
-            sprite.run(SKAction.animate(with: Global.getExplosionAnimation(), timePerFrame: 0.033)) {
+            sprite.run(SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)) {
                 self.removeAllChildren()
                 self.removeFromParent()
                 for delegate in self.delegates {

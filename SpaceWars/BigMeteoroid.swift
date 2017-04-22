@@ -12,7 +12,7 @@ import SpriteKit
 class BigMeteoroid: Meteoroid {
     
     required init(_ config: JSON) {
-        super.init(config: config, type: .meteoroid2, tex: Global.textureDictionary[.meteoroid2]!)
+        super.init(config: config, type: .meteoroid_big)
     }
     
     convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {

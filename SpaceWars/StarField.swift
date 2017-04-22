@@ -33,7 +33,7 @@ class StarField: GameEnvironment {
     }
     
     private func createStarBackground(_ scale: CGFloat) -> SKSpriteNode {
-        let sStars = SKSpriteNode(texture: Global.textureDictionary[.stars]!)
+        let sStars = SKSpriteNode(texture: GameTexture.textureDictionary[.stars]!)
         sStars.setScale(scale)
         return sStars
     }

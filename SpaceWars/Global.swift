@@ -45,54 +45,9 @@ class Global {
         static let meteoroidCategory: UInt32 = 0x1 << 5
     }
     
-    enum Texture: String {
-        case blackhole = "blackhole.png",
-        button_fire = "button_fire.png",
-        dpad = "dpad.png",
-        dilithium = "dilithium.png",
-        joystick = "joystick.png",
-        laserbeam = "laserbeam.png",
-        life_orb = "life_orb.png",
-        meteoroid1 = "meteoroid1.png",
-        meteoroid2 = "meteoroid2.png",
-        stars = "parallax-stars.png",
-        shield = "shield.png",
-        human = "spaceship_human.png",
-        robot = "spaceship_robot.png",
-        skeleton = "spaceship_skeleton.png",
-        master = "spaceship_cpu_master.png",
-        slave = "spaceship_cpu_slave.png",
-        space_station = "spacestation.png"
-    }
     
-    static let textureDictionary: [Texture: SKTexture] = [
-        Texture.blackhole: SKTexture(imageNamed: Texture.blackhole.rawValue),
-        Texture.button_fire: SKTexture(imageNamed: Texture.button_fire.rawValue),
-        Texture.dpad: SKTexture(imageNamed: Texture.dpad.rawValue),
-        Texture.dilithium: SKTexture(imageNamed: Texture.dilithium.rawValue),
-        Texture.joystick: SKTexture(imageNamed: Texture.joystick.rawValue),
-        Texture.laserbeam: SKTexture(imageNamed: Texture.laserbeam.rawValue),
-        Texture.life_orb: SKTexture(imageNamed: Texture.life_orb.rawValue),
-        Texture.meteoroid1: SKTexture(imageNamed: Texture.meteoroid1.rawValue),
-        Texture.meteoroid2: SKTexture(imageNamed: Texture.meteoroid2.rawValue),
-        Texture.stars: SKTexture(imageNamed: Texture.stars.rawValue),
-        Texture.shield: SKTexture(imageNamed: Texture.shield.rawValue),
-        Texture.human: SKTexture(imageNamed: Texture.human.rawValue),
-        Texture.robot: SKTexture(imageNamed: Texture.robot.rawValue),
-        Texture.skeleton: SKTexture(imageNamed: Texture.skeleton.rawValue),
-        Texture.master: SKTexture(imageNamed: Texture.master.rawValue),
-        Texture.slave: SKTexture(imageNamed: Texture.slave.rawValue),
-        Texture.space_station: SKTexture(imageNamed: Texture.space_station.rawValue)
-    ]
     
-    static func getExplosionAnimation() -> [SKTexture] {
-        let explosionAtlas = SKTextureAtlas(named: "explosion")
-        var explosionFrames = [SKTexture]()
-        for i in 0...19 {
-            explosionFrames.append(explosionAtlas.textureNamed("explosion-frame\(i).png"))
-        }
-        return explosionFrames
-    }
+    
     
     static func mean(w: CGFloat, h: CGFloat, wMax: CGFloat, hMax: CGFloat) -> CGFloat {
         return sqrt(CGFloat(w*h)/CGFloat(wMax*hMax))

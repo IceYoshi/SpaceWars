@@ -53,28 +53,41 @@ class MiniMap: SKNode {
     private func createBackground(_ size: CGSize, shape: SpacefieldShape) -> SKShapeNode {
         let sBackground = shape == .rect ? SKShapeNode(rectOf: size) : SKShapeNode(circleOfRadius: size.width)
         sBackground.strokeColor = .lightGray
-        sBackground.lineWidth = 1
-        //sBackground.glowWidth = 2
+        sBackground.lineWidth = 2
         sBackground.fillColor = .darkGray
         return sBackground
     }
     
-    public func addObject(ref: SKNode, tex: Global.Texture, weight: CGFloat) {
-        self.addStaticObject(ref: ref, tex: tex, weight: weight)
+    public func addItem(ref: GameObject) {
+        self.addItem(ref: ref, needsUpdate: false, weight: 1)
+    }
+    
+    public func addItem(ref: GameObject, needsUpdate: Bool) {
+        self.addItem(ref: ref, needsUpdate: needsUpdate, weight: 1)
+    }
+    
+    public func addItem(ref: GameObject, needsUpdate: Bool, weight: CGFloat) {
+        if(needsUpdate) {
+            self.addItem(ref: ref, weight: weight)
+        } else {
+            self.addStaticItem(ref: ref, weight: weight)
+        }
+        
+    }
+    
+    public func addItem(ref: GameObject, weight: CGFloat) {
+        self.addStaticItem(ref: ref, weight: weight)
         self.movingObjects.append(ref)
     }
     
-    public func addObject(ref: SKNode, tex: Global.Texture) {
-        self.addObject(ref: ref, tex: tex, weight: 1)
-    }
-    
-    public func addStaticObject(ref: SKNode, tex: Global.Texture, weight: CGFloat) {
-        let shape = createSprite(tex)
+    public func addStaticItem(ref: GameObject, weight: CGFloat) {
+        let shape = createSprite(ref.type)
         shape.zPosition = weight
         shape.position = self.convert(ref.position)
         shape.setScale(weight)
         self.objectDictionary[ref] = shape
         self.addChild(shape)
+        ref.addDelegate(delegate: self)
     }
     
     public func convert(_ p: CGPoint) -> CGPoint {
@@ -82,8 +95,8 @@ class MiniMap: SKNode {
         return self.fieldShape == .rect ? convertedPoint - self.size/2 : convertedPoint - self.size
     }
     
-    private func createSprite(_ tex: Global.Texture) -> SKSpriteNode {
-        return SKSpriteNode(texture: Global.textureDictionary[tex], size: CGSize(width: 8, height: 8))
+    private func createSprite(_ type: TextureType) -> SKSpriteNode {
+        return SKSpriteNode(texture: GameTexture.textureDictionary[type], size: CGSize(width: 8, height: 8))
     }
     
 }
@@ -96,6 +109,17 @@ extension MiniMap: NeedsPhysicsUpdateProtocol {
             sprite?.position = self.convert(object.position)
             sprite?.zRotation = object.zRotation
         }
+    }
+    
+}
+
+extension MiniMap: ItemRemovedDelegate {
+    
+    func didRemove(obj: GameObject) {
+        self.objectDictionary[obj]?.removeFromParent()
+        self.objectDictionary.removeValue(forKey: obj)
+        
+        self.movingObjects = self.movingObjects.filter({ $0 != obj })
     }
     
 }
