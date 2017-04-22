@@ -50,4 +50,13 @@ class GameObject: SKNode {
         clickDelegates = clickDelegates.filter({ $0 !== delegate })
     }
     
+    public func remove() {
+        self.physicsBody = nil
+        self.removeAllChildren()
+        self.removeFromParent()
+        for delegate in self.removeDelegates {
+            delegate?.didRemove(obj: self)
+        }
+    }
+    
 }

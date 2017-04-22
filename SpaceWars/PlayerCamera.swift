@@ -30,6 +30,13 @@ class PlayerCamera: SKCameraNode {
         self.name = "PlayerCamera"
         self.setScale(Global.Constants.defaultZoomLevel)
         
+        self.physicsBody = SKPhysicsBody()
+        self.physicsBody!.affectedByGravity = false
+        self.physicsBody!.linearDamping = 3
+        self.physicsBody!.collisionBitMask = 0
+        self.physicsBody!.categoryBitMask = 0
+        self.physicsBody!.contactTestBitMask = 0
+        self.physicsBody!.fieldBitMask = 0
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -42,6 +49,7 @@ extension PlayerCamera: NeedsPhysicsUpdateProtocol {
     
     func didSimulatePhysics() {
         if(targetObject != nil) {
+            self.physicsBody?.velocity = CGVector.zero
             self.position = targetObject!.position
             let alpha = 15
             let beta = 1
@@ -51,6 +59,8 @@ extension PlayerCamera: NeedsPhysicsUpdateProtocol {
                 
             self.position += weightedOffset
             oldOffset = weightedOffset
+        } else {
+            oldOffset = CGVector.zero
         }
     }
     

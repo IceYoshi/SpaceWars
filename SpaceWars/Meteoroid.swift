@@ -10,10 +10,10 @@ import SpriteKit
 
 class Meteoroid: GameObject {
     
-    public let dmg: Int
-    public let hp: Int
-    public let hp_max: Int
-    public let spwawnRate: CGFloat
+    private(set) var dmg: Int
+    private(set) var hp: Int
+    private(set) var hp_max: Int
+    private(set) var spwawnRate: CGFloat
     
     private var sMeteoroid: SKSpriteNode?
     
@@ -47,13 +47,37 @@ class Meteoroid: GameObject {
     }
     
     private func createMeteoroid(_ tex: SKTexture, _ size: CGSize) -> SKSpriteNode {
-        return SKSpriteNode(texture: tex, size: size)
+        let sMeteoroid =  SKSpriteNode(texture: tex, size: size)
+        sMeteoroid.color = UIColor(red: 1, green: 0, blue: 0, alpha: 1)
+        sMeteoroid.colorBlendFactor = 0.4 - CGFloat(self.hp) / (CGFloat(self.hp_max) * 2.5)
+        return sMeteoroid
     }
     
-    public func remove() {
+    public func updateSprite() {
+        self.sMeteoroid?.colorBlendFactor = 0.4 - CGFloat(self.hp) / (CGFloat(self.hp_max) * 2.5)
+    }
+    
+    public func setHP(value: Int) {
+        self.hp = max(min(value, self.hp_max), 0)
+        if(self.hp <= 0) {
+            self.remove()
+        } else {
+            updateSprite()
+        }
+    }
+    
+    public func changeHP(value: Int) {
+        self.setHP(value: self.hp + value)
+    }
+    
+    override public func remove() {
         self.physicsBody = nil
         if let sprite = self.sMeteoroid {
-            sprite.run(SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)) {
+            
+            sprite.run(SKAction.group([
+                SKAction.run { sprite.colorBlendFactor = 0; sprite.setScale(1.5) },
+                SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)
+            ])) {
                 self.removeAllChildren()
                 self.removeFromParent()
                 for delegate in self.removeDelegates {

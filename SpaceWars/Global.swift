@@ -22,7 +22,7 @@ class Global {
         
         // If the field shape is a circle, the width value will be used as
         // the radius of the circle. The height value is simply ignored.
-        static let spacefieldSize: CGSize = CGSize(width: 2000, height: 1000)
+        static let spacefieldSize: CGSize = CGSize(width: 2000, height: 4000)
         static let spacefieldShape: SpacefieldShape = .circle
         
         static let torpedoSize: CGSize = CGSize(width: 20, height: 80)
@@ -43,11 +43,8 @@ class Global {
         static let dilithiumCategory: UInt32 = 0x1 << 3
         static let lifeorbCategory: UInt32 = 0x1 << 4
         static let meteoroidCategory: UInt32 = 0x1 << 5
+        static let stationCategory: UInt32 = 0x1 << 6
     }
-    
-    
-    
-    
     
     static func mean(w: CGFloat, h: CGFloat, wMax: CGFloat, hMax: CGFloat) -> CGFloat {
         return sqrt(CGFloat(w*h)/CGFloat(wMax*hMax))

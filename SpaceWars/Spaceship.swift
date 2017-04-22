@@ -18,14 +18,14 @@ class Spaceship: GameObject {
     private var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
-    private var dmg: Int
+    fileprivate var dmg: Int
     fileprivate var speed_max: Int
     fileprivate var acc: Int
     private(set) var hp_max: Int
     private(set) var hp: Int
     fileprivate var ammo = Set<Int>()
-    fileprivate var ammo_min: Int
-    fileprivate var ammo_max: Int
+    private(set) var ammo_min: Int
+    private(set) var ammo_max: Int
     
     public var ammoCount: Int {
         return ammo.count
@@ -34,7 +34,7 @@ class Spaceship: GameObject {
         return self.ammo_max - self.ammo_min + 1
     }
     
-    fileprivate var activeTorpedoes = [NeedsUpdateProtocol?]()
+    fileprivate var activeTorpedoes = [Torpedo]()
     
     init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
@@ -148,7 +148,7 @@ class Spaceship: GameObject {
         self.ammo.formUnion(ids)
     }
     
-    public func remove() {
+    override public func remove() {
         self.controller = nil
         self.physicsBody = nil
         self.hp = 0
@@ -160,7 +160,10 @@ class Spaceship: GameObject {
         self.ammoIndicator?.value = self.ammoCount
         
         if let sprite = self.sShip {
-            sprite.run(SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)) {
+            sprite.run(SKAction.group([
+                SKAction.run { sprite.setScale(1.5) },
+                SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)
+                ])) {
                 self.removeAllChildren()
                 self.removeFromParent()
                 for delegate in self.removeDelegates {
@@ -200,15 +203,14 @@ extension Spaceship: NeedsUpdateProtocol {
             
             self.physicsBody!.velocity = newVelocity
         }
-        
         updateTorpedoes()
     }
     
     private func updateTorpedoes() {
         let torpedoes = self.activeTorpedoes
         for (i, torpedo) in torpedoes.enumerated() {
-            if(torpedo != nil) {
-                torpedo!.update()
+            if(torpedo.alpha > 0) {
+                torpedo.update()
             } else {
                 self.activeTorpedoes.remove(at: i)
             }
@@ -223,7 +225,7 @@ extension Spaceship: FireButtonProtocol {
         if(torpedoContainer != nil) {
             if let id = self.ammo.first {
                 self.ammo.remove(id)
-                let torpedo = Torpedo(id: id, pos: self.position, rot: self.zRotation)
+                let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
                 self.activeTorpedoes.append(torpedo)
                 torpedoContainer!.addChild(torpedo)
                 ammoIndicator?.value = self.ammoCount

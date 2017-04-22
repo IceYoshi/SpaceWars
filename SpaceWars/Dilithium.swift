@@ -63,7 +63,7 @@ class Dilithium: GameObject {
         return SKSpriteNode(texture: GameTexture.textureDictionary[.dilithium]!, size: size)
     }
     
-    public func remove() {
+    override public func remove() {
         self.physicsBody = nil
         self.run(SKAction.group([
             SKAction.scale(by: 3, duration: 0.5),

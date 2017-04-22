@@ -63,7 +63,7 @@ class LifeOrb: GameObject {
         return SKSpriteNode(texture: GameTexture.textureDictionary[.life_orb]!, size: size)
     }
     
-    public func remove() {
+    override public func remove() {
         self.physicsBody = nil
         self.run(SKAction.group([
             SKAction.scale(by: 3, duration: 0.5),

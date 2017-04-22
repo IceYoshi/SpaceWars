@@ -64,6 +64,22 @@ class ObjectManager {
             self.camera!.removeFromParent()
             scene.camera = self.camera
             scene.addChild(self.camera!)
+            constrainCamera()
+        }
+    }
+    
+    public func constrainCamera() {
+        let offset = CGFloat(700)
+        switch self.fieldShape {
+        case .rect:
+            camera?.constraints = [
+                SKConstraint.positionX(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.width + offset))),
+                SKConstraint.positionY(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.height + offset)))
+            ]
+        case .circle:
+            camera?.constraints = [
+                SKConstraint.distance(SKRange(upperLimit: fieldSize.width * 2 - offset), to: self.centerPoint)
+            ]
         }
     }
     
@@ -85,6 +101,7 @@ class ObjectManager {
             w = 2.5
         }
         switch obj.type {
+            case .space_station: u = true; w = 2.4
             case .blackhole: u = true; w = 2.4
             case .meteoroid_big: w = 2
             default: break

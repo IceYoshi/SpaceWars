@@ -64,11 +64,12 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             objectManager!.assignMinimap(map: minimap)
             
             // World
-            let robotShip = RobotShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            objectManager!.assignToWorld(obj: robotShip)
             
-            let humanShip = HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            objectManager!.assignPlayer(player: humanShip)
+            objectManager?.assignToWorld(obj: Spacestation(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), size: CGSize(width: 200, height: 200), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi)))
+            
+            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            
+            objectManager!.assignToWorld(obj: RobotShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
@@ -189,11 +190,17 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     func didPerformPanGesture(recognizer: UIPanGestureRecognizer) {
-        if (camera != nil && recognizer.numberOfTouches == 1 && objectManager?.player == nil) {
-            objectManager?.camera?.targetObject = nil
-            let translation = recognizer.translation(in: self.view) * Double(camera!.xScale)
-            camera!.position += CGPoint(x: -translation.x, y: translation.y)
-            recognizer.setTranslation(CGPoint.zero, in: self.view)
+        if (camera != nil && objectManager?.player == nil) {
+            if(recognizer.state == .changed || recognizer.state == .began) {
+                objectManager?.camera?.targetObject = nil
+                let t = recognizer.translation(in: self.view) * Double(camera!.xScale)
+                camera!.position += CGPoint(x: -t.x, y: t.y)
+                recognizer.setTranslation(CGPoint.zero, in: self.view)
+                camera!.physicsBody?.velocity = CGVector.zero
+            } else if(recognizer.state == .cancelled || recognizer.state == .ended) {
+                let v = recognizer.velocity(in: self.view) * Double(camera!.xScale)
+                camera!.physicsBody?.velocity = CGVector(dx: -v.x, dy: v.y)
+            }
         }
     }
     
