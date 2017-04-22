@@ -71,7 +71,7 @@ class LifeOrb: GameObject {
             ])) {
                 self.removeAllChildren()
                 self.removeFromParent()
-                for delegate in self.delegates {
+                for delegate in self.removeDelegates {
                     delegate?.didRemove(obj: self)
                 }
         }

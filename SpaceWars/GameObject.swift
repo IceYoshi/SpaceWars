@@ -8,12 +8,19 @@
 
 import SpriteKit
 
+protocol GameObjectClickDelegate: class {
+    
+    func didClick(obj: GameObject)
+    
+}
+
 class GameObject: SKNode {
     
     private(set) var id: Int
     private(set) var type: TextureType
     
-    internal var delegates = [ItemRemovedDelegate?]()
+    internal var removeDelegates = [ItemRemovedDelegate?]()
+    internal var clickDelegates = [GameObjectClickDelegate?]()
     
     init(_ id: Int, _ name: String, _ type: TextureType) {
         self.id = id
@@ -27,8 +34,20 @@ class GameObject: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func addDelegate(delegate: ItemRemovedDelegate) {
-        delegates.append(delegate)
+    public func addItemRemoveDelegate(_ delegate: ItemRemovedDelegate) {
+        removeDelegates.append(delegate)
+    }
+    
+    public func removeItemRemoveDelegate(_ delegate: ItemRemovedDelegate) {
+        removeDelegates = removeDelegates.filter({ $0 !== delegate })
+    }
+    
+    public func addClickDelegate(_ delegate: GameObjectClickDelegate) {
+        clickDelegates.append(delegate)
+    }
+    
+    public func removeClickDelegate(_ delegate: GameObjectClickDelegate) {
+        clickDelegates = clickDelegates.filter({ $0 !== delegate })
     }
     
 }

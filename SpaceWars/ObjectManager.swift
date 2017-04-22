@@ -19,7 +19,7 @@ class ObjectManager {
     public var background: Background?
     public var overlay: Overlay?
     
-    private(set) var player: Spaceship?
+    fileprivate(set) var player: Spaceship?
     private(set) var camera: PlayerCamera?
     private(set) var minimap: MiniMap?
     
@@ -94,14 +94,16 @@ class ObjectManager {
     
     public func assignPlayer(player: Spaceship) {
         self.player = player
-        self.camera?.setTarget(obj: player)
+        self.camera?.targetObject = player
         assignToWorld(obj: player)
+        player.addItemRemoveDelegate(self)
     }
     
     public func assignToWorld(obj: GameObject) {
         objectDictionary[obj.id] = obj
         assignToMinimap(obj: obj)
         world?.addChild(obj)
+        obj.addClickDelegate(self)
     }
     
     public func assignToWorld(obj: GameEnvironment) {
@@ -169,4 +171,32 @@ class ObjectManager {
         }
         return false
     }
+}
+
+extension ObjectManager: ItemRemovedDelegate {
+    
+    func didRemove(obj: GameObject) {
+        self.player = nil
+    }
+    
+}
+
+extension ObjectManager: GameObjectClickDelegate {
+    
+    func didClick(obj: GameObject) {
+        if(self.player == nil) {
+            self.camera?.targetObject = obj
+        }
+    }
+    
+}
+
+extension ObjectManager: NeedsPhysicsUpdateProtocol {
+    
+    func didSimulatePhysics() {
+        self.camera?.didSimulatePhysics()
+        self.background?.didSimulatePhysics()
+        self.minimap?.didSimulatePhysics()
+    }
+    
 }

@@ -64,8 +64,11 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             objectManager!.assignMinimap(map: minimap)
             
             // World
-            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            let robotShip = RobotShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            objectManager!.assignToWorld(obj: robotShip)
             
+            let humanShip = HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            objectManager!.assignPlayer(player: humanShip)
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
@@ -74,25 +77,25 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             for _ in 1...5 {
                 let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: dilithium)
-                dilithium.addDelegate(delegate: self)
+                dilithium.addItemRemoveDelegate(self)
             }
             
             for _ in 1...5 {
                 let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: lifeOrb)
-                lifeOrb.addDelegate(delegate: self)
+                lifeOrb.addItemRemoveDelegate(self)
             }
             
             for _ in 1...5 {
                 let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addDelegate(delegate: self)
+                meteoroid.addItemRemoveDelegate(self)
             }
             
             for _ in 1...5 {
                 let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
                 objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addDelegate(delegate: self)
+                meteoroid.addItemRemoveDelegate(self)
             }
             
             // Background
@@ -118,9 +121,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 player.ammoIndicator = energyBar
             }
             
-            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.camera)
-            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager!.background)
-            self.addNeedsPhysicsUpdateDelegate(delegate: minimap)
+            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
         }
     }
     
@@ -131,6 +132,13 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         gestureRecognizer.cancelsTouchesInView = false
         gestureRecognizer.delegate = self
         self.view?.addGestureRecognizer(gestureRecognizer)
+        
+        let panRecognizer = UIPanGestureRecognizer(
+            target: self,
+            action: #selector(self.didPerformPanGesture(recognizer:)))
+        panRecognizer.cancelsTouchesInView = false
+        panRecognizer.delegate = self
+        self.view?.addGestureRecognizer(panRecognizer)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -155,18 +163,9 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         var touchLocation = touch.location(in: self.view)
@@ -186,6 +185,15 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 camera!.setScale(newScale)
                 recognizer.scale = 1.0
             }
+        }
+    }
+    
+    func didPerformPanGesture(recognizer: UIPanGestureRecognizer) {
+        if (camera != nil && recognizer.numberOfTouches == 1 && objectManager?.player == nil) {
+            objectManager?.camera?.targetObject = nil
+            let translation = recognizer.translation(in: self.view) * Double(camera!.xScale)
+            camera!.position += CGPoint(x: -translation.x, y: translation.y)
+            recognizer.setTranslation(CGPoint.zero, in: self.view)
         }
     }
     
@@ -221,7 +229,7 @@ extension GameScene: SKPhysicsContactDelegate {
     
 }
 
-protocol ItemRemovedDelegate {
+protocol ItemRemovedDelegate: class {
     
     func didRemove(obj: GameObject)
     
@@ -233,15 +241,15 @@ extension GameScene: ItemRemovedDelegate {
         if let _ = obj as? Dilithium {
             let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
             objectManager?.assignToWorld(obj: dilithium)
-            dilithium.addDelegate(delegate: self)
+            dilithium.addItemRemoveDelegate(self)
         } else if let _ = obj as? LifeOrb {
             let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
             objectManager?.assignToWorld(obj: lifeOrb)
-            lifeOrb.addDelegate(delegate: self)
+            lifeOrb.addItemRemoveDelegate(self)
         } else if let _ = obj as? SmallMeteoroid {
             let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
             objectManager?.assignToWorld(obj: meteoroid)
-            meteoroid.addDelegate(delegate: self)
+            meteoroid.addItemRemoveDelegate(self)
         } else if let obj = obj as? BigMeteoroid {
             if(CGFloat.rand(0, 1) <= obj.spwawnRate) {
                 let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: obj.position, width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
@@ -249,7 +257,7 @@ extension GameScene: ItemRemovedDelegate {
             }
             let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
             objectManager?.assignToWorld(obj: meteoroid)
-            meteoroid.addDelegate(delegate: self)
+            meteoroid.addItemRemoveDelegate(self)
         }
     }
     

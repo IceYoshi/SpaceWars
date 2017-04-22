@@ -56,14 +56,14 @@ class Meteoroid: GameObject {
             sprite.run(SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)) {
                 self.removeAllChildren()
                 self.removeFromParent()
-                for delegate in self.delegates {
+                for delegate in self.removeDelegates {
                     delegate?.didRemove(obj: self)
                 }
             }
         } else {
             self.removeAllChildren()
             self.removeFromParent()
-            for delegate in self.delegates {
+            for delegate in self.removeDelegates {
                 delegate?.didRemove(obj: self)
             }
         }

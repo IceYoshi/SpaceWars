@@ -87,7 +87,7 @@ class MiniMap: SKNode {
         shape.setScale(weight)
         self.objectDictionary[ref] = shape
         self.addChild(shape)
-        ref.addDelegate(delegate: self)
+        ref.addItemRemoveDelegate(self)
     }
     
     public func convert(_ p: CGPoint) -> CGPoint {

@@ -35,6 +35,19 @@ public extension CGSize {
         left = left / right
     }
     
+    static func +(left: CGSize, right: CGRect) -> CGSize {
+        return CGSize(width: left.width + right.width, height: left.height + right.height)
+    }
+    static func -(left: CGSize, right: CGRect) -> CGSize {
+        return CGSize(width: left.width - right.width, height: left.height - right.height)
+    }
+    static func *(left: CGSize, right: CGRect) -> CGSize {
+        return CGSize(width: left.width * right.width, height: left.height * right.height)
+    }
+    static func /(left: CGSize, right: CGRect) -> CGSize {
+        return CGSize(width: left.width / right.width, height: left.height / right.height)
+    }
+    
     static func +(left: CGSize, right: Double) -> CGSize {
         return CGSize(width: left.width + CGFloat(right), height: left.height + CGFloat(right))
     }
@@ -99,6 +112,19 @@ public extension CGPoint {
     }
     static func /(left: CGPoint, right: Double) -> CGPoint {
         return CGPoint(x: left.x / CGFloat(right), y: left.y / CGFloat(right))
+    }
+    
+    static func +=(left: inout CGPoint, right: Double) {
+        left = left + right
+    }
+    static func -=(left: inout CGPoint, right: Double) {
+        left = left - right
+    }
+    static func *=(left: inout CGPoint, right: Double) {
+        left = left * right
+    }
+    static func /=(left: inout CGPoint, right: Double) {
+        left = left / right
     }
     
     static func +(left: CGPoint, right: CGSize) -> CGPoint {

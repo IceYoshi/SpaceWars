@@ -95,6 +95,8 @@ class Spaceship: GameObject {
         if(sShield != nil) {
             self.addChild(sShield!)
         }
+        
+        self.isUserInteractionEnabled = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -129,9 +131,13 @@ class Spaceship: GameObject {
     }
     
     public func setHP(value: Int) {
-        self.hp = max(min(value, self.hp_max), 0)
-        updateShield()
-        hpIndicator?.value = self.hp
+        if(self.hp <= 0 && value < 0) {
+            self.remove()
+        } else {
+            self.hp = max(min(value, self.hp_max), 0)
+            updateShield()
+            hpIndicator?.value = self.hp
+        }
     }
     
     public func changeHP(value: Int) {
@@ -140,6 +146,40 @@ class Spaceship: GameObject {
     
     public func addAmmo(ids: Set<Int>) {
         self.ammo.formUnion(ids)
+    }
+    
+    public func remove() {
+        self.controller = nil
+        self.physicsBody = nil
+        self.hp = 0
+        self.sShield?.removeFromParent()
+        self.sShield = nil
+        self.ammo.removeAll()
+        
+        self.hpIndicator?.value = self.hp
+        self.ammoIndicator?.value = self.ammoCount
+        
+        if let sprite = self.sShip {
+            sprite.run(SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)) {
+                self.removeAllChildren()
+                self.removeFromParent()
+                for delegate in self.removeDelegates {
+                    delegate?.didRemove(obj: self)
+                }
+            }
+        } else {
+            self.removeAllChildren()
+            self.removeFromParent()
+            for delegate in self.removeDelegates {
+                delegate?.didRemove(obj: self)
+            }
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for delegate in clickDelegates {
+            delegate?.didClick(obj: self)
+        }
     }
     
 }
@@ -215,6 +255,10 @@ extension Spaceship: ContactDelegate {
             obj.animateWith(self)
         } else if let obj = object as? Meteoroid {
             self.changeHP(value: -obj.dmg)
+            
+            obj.remove()
+        } else if let obj = object as? Spaceship {
+            self.remove()
             
             obj.remove()
         }

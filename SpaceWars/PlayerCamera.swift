@@ -10,7 +10,18 @@ import SpriteKit
 
 class PlayerCamera: SKCameraNode {
     
-    fileprivate var targetObject: SKNode?
+    public var targetObject: GameObject? {
+        get {
+            return target
+        }
+        set(value) {
+            target?.removeItemRemoveDelegate(self)
+            value?.addItemRemoveDelegate(self)
+            target = value
+        }
+    }
+    
+    private var target: GameObject?
     fileprivate var oldOffset = CGVector.zero
     
     override init() {
@@ -24,29 +35,31 @@ class PlayerCamera: SKCameraNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    public func setTarget(obj: SKNode) {
-        self.targetObject = obj
-    }
         
 }
 
 extension PlayerCamera: NeedsPhysicsUpdateProtocol {
     
     func didSimulatePhysics() {
-        if targetObject != nil {
+        if(targetObject != nil) {
             self.position = targetObject!.position
-            if let playerVelocity = targetObject?.physicsBody?.velocity {
-                let alpha = 10
-                let beta = 1
+            let alpha = 15
+            let beta = 1
                 
-                let newOffset = playerVelocity * self.xScale / 8
-                let weightedOffset = (oldOffset * alpha + newOffset * beta) / (alpha + beta)
+            let newOffset = (targetObject?.physicsBody?.velocity ?? CGVector.zero) * self.xScale / 8
+            let weightedOffset = (oldOffset * alpha + newOffset * beta) / (alpha + beta)
                 
-                self.position += weightedOffset
-                oldOffset = weightedOffset
-            }
+            self.position += weightedOffset
+            oldOffset = weightedOffset
         }
+    }
+    
+}
+
+extension PlayerCamera: ItemRemovedDelegate {
+    
+    func didRemove(obj: GameObject) {
+        self.targetObject = nil
     }
     
 }
