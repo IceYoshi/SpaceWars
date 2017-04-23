@@ -14,6 +14,8 @@ protocol FireButtonProtocol {
 
 class FireButton: SKNode {
     
+    private var sButton: SKSpriteNode?
+    
     private var delegates = [FireButtonProtocol?]()
     
     override init() {
@@ -22,7 +24,8 @@ class FireButton: SKNode {
         self.setScale(0.5)
         self.alpha = 0.6
         
-        self.addChild(createButton())
+        self.sButton = createButton()
+        self.addChild(self.sButton!)
         self.isUserInteractionEnabled = true
     }
     
@@ -34,6 +37,8 @@ class FireButton: SKNode {
         let sButton = SKSpriteNode(imageNamed: "button_fire.png")
         sButton.size = CGSize(width: 128, height: 128)
         sButton.name = "FireButton"
+        sButton.color = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        sButton.colorBlendFactor = 0
         return sButton
     }
     
@@ -42,9 +47,18 @@ class FireButton: SKNode {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.sButton?.colorBlendFactor = 0.3
         for delegate in delegates {
             delegate?.didFire()
         }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.sButton?.colorBlendFactor = 0
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.sButton?.colorBlendFactor = 0
     }
     
 }
