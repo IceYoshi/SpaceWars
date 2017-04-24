@@ -52,6 +52,7 @@
 		27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130A1E6DBBE70030EFAC /* Global.swift */; };
 		27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */; };
 		27E589141EAB4C120096247F /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E589131EAB4C120096247F /* Textures.swift */; };
+		27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9C1C91EAC904F00B39165 /* CPUController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +103,7 @@
 		27D9130A1E6DBBE70030EFAC /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
 		27E589131EAB4C120096247F /* Textures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
+		27F9C1C91EAC904F00B39165 /* CPUController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +258,7 @@
 				27CABFEC1E99418200CE0717 /* IDCounter.swift */,
 				2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */,
 				27E589131EAB4C120096247F /* Textures.swift */,
+				27F9C1C91EAC904F00B39165 /* CPUController.swift */,
 			);
 			name = extra;
 			sourceTree = "<group>";
@@ -389,6 +392,7 @@
 				2719C9E31E99172C009D57B3 /* SkeletonShip.swift in Sources */,
 				2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */,
 				2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */,
+				27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */,
 				27B752DE1EA960E2001CFD51 /* BigMeteoroid.swift in Sources */,
 				27E589141EAB4C120096247F /* Textures.swift in Sources */,
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,

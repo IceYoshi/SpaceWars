@@ -69,7 +69,9 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            objectManager!.assignToWorld(obj: RobotShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
+            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
+            objectManager!.assignShip(ship: cpuEnemy)
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
@@ -107,9 +109,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             if let player = objectManager!.player {
                 objectManager!.background?.setParallaxReference(ref: player)
                 player.controller = joystick
-                player.torpedoContainer = objectManager!.world
                 fireButton.register(delegate: player)
-                self.addNeedsUpdateDelegate(delegate: player)
                 
                 let healthBar = BarIndicator(displayName: "Shield", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
                 healthBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2)
@@ -122,6 +122,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
                 player.ammoIndicator = energyBar
             }
             
+            self.addNeedsUpdateDelegate(delegate: objectManager)
             self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
         }
     }

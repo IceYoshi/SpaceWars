@@ -23,6 +23,8 @@ class ObjectManager {
     private(set) var camera: PlayerCamera?
     private(set) var minimap: MiniMap?
     
+    fileprivate var spaceships = [Spaceship]()
+    
     public var centerPoint: CGPoint {
         get {
             if(self.fieldShape == .rect) {
@@ -112,8 +114,14 @@ class ObjectManager {
     public func assignPlayer(player: Spaceship) {
         self.player = player
         self.camera?.targetObject = player
-        assignToWorld(obj: player)
+        self.assignShip(ship: player)
         player.addItemRemoveDelegate(self)
+    }
+    
+    public func assignShip(ship: Spaceship) {
+        ship.torpedoContainer = world
+        self.spaceships.append(ship)
+        assignToWorld(obj: ship)
     }
     
     public func assignToWorld(obj: GameObject) {
@@ -203,6 +211,16 @@ extension ObjectManager: GameObjectClickDelegate {
     func didClick(obj: GameObject) {
         if(self.player == nil) {
             self.camera?.targetObject = obj
+        }
+    }
+    
+}
+
+extension ObjectManager: NeedsUpdateProtocol {
+    
+    func update() {
+        for ship in self.spaceships {
+            ship.update()
         }
     }
     

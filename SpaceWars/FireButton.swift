@@ -9,7 +9,8 @@
 import SpriteKit
 
 protocol FireButtonProtocol {
-    func didFire()
+    func buttonClickBegan()
+    func buttonClickEnded()
 }
 
 class FireButton: SKNode {
@@ -49,16 +50,22 @@ class FireButton: SKNode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0.3
         for delegate in delegates {
-            delegate?.didFire()
+            delegate?.buttonClickBegan()
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0
+        for delegate in delegates {
+            delegate?.buttonClickEnded()
+        }
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0
+        for delegate in delegates {
+            delegate?.buttonClickEnded()
+        }
     }
     
 }

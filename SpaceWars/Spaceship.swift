@@ -13,6 +13,7 @@ class Spaceship: GameObject {
     public var controller: JoystickControllerProtocol?
     public var hpIndicator: BarIndicatorProtocol?
     public var ammoIndicator: BarIndicatorProtocol?
+    public var infiniteShoot: Bool = false
     
     public var torpedoContainer: SKNode?
     private var sShip: SKSpriteNode?
@@ -36,6 +37,8 @@ class Spaceship: GameObject {
     
     fileprivate var activeTorpedoes = [Torpedo]()
     fileprivate var canShoot: Bool = true
+    fileprivate var isAutoShooting: Bool = false
+    
     
     init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
@@ -180,6 +183,47 @@ class Spaceship: GameObject {
         }
     }
     
+    func shoot() {
+        if(torpedoContainer != nil && canShoot) {
+            self.canShoot = false
+            let waitAction = SKAction.wait(forDuration: Global.Constants.shootDelay)
+            if let id = self.ammo.first {
+                let shootAction = SKAction.run {
+                    if(!self.infiniteShoot) {
+                        self.ammo.remove(id)
+                    }
+                    let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
+                    self.activeTorpedoes.append(torpedo)
+                    self.torpedoContainer!.addChild(torpedo)
+                    self.ammoIndicator?.value = self.ammoCount
+                }
+                
+                self.run(SKAction.sequence([shootAction, waitAction])) {
+                    self.canShoot = true
+                    if(self.isAutoShooting) {
+                        self.shoot()
+                    }
+                }
+            } else if(self.isAutoShooting) {
+                self.run(waitAction) {
+                    self.canShoot = true
+                    if(self.isAutoShooting) {
+                        self.shoot()
+                    }
+                }
+            }
+        }
+    }
+    
+    func enableAutoShoot() {
+        self.isAutoShooting = true
+        self.shoot()
+    }
+    
+    func disableAutoShoot() {
+        self.isAutoShooting = false
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for delegate in clickDelegates {
             delegate?.didClick(obj: self)
@@ -222,23 +266,12 @@ extension Spaceship: NeedsUpdateProtocol {
 
 extension Spaceship: FireButtonProtocol {
     
-    func didFire() {
-        if(torpedoContainer != nil && canShoot) {
-            if let id = self.ammo.first {
-                let disableShootAction = SKAction.run { self.canShoot = false }
-                let enableShootAction = SKAction.run { self.canShoot = true }
-                let waitAction = SKAction.wait(forDuration: Global.Constants.shootDelay)
-                let shootAction = SKAction.run {
-                    self.ammo.remove(id)
-                    let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
-                    self.activeTorpedoes.append(torpedo)
-                    self.torpedoContainer!.addChild(torpedo)
-                    self.ammoIndicator?.value = self.ammoCount
-                }
-                
-                self.run(SKAction.sequence([disableShootAction, shootAction, waitAction, enableShootAction]))
-            }
-        }
+    func buttonClickBegan() {
+        self.enableAutoShoot()
+    }
+    
+    func buttonClickEnded() {
+        self.disableAutoShoot()
     }
     
 }
