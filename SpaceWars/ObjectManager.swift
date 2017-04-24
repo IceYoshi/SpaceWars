@@ -113,6 +113,7 @@ class ObjectManager {
     
     public func assignPlayer(player: Spaceship) {
         self.player = player
+        player.showIndicators = false
         self.camera?.targetObject = player
         self.assignShip(ship: player)
         player.addItemRemoveDelegate(self)

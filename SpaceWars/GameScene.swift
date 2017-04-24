@@ -69,7 +69,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "Enemy", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
             cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
             objectManager!.assignShip(ship: cpuEnemy)
             

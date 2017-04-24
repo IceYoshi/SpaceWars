@@ -11,14 +11,31 @@ import SpriteKit
 class BarIndicator: SKNode {
     
     private var displayName: String?
-    fileprivate var currentValue: Int
-    fileprivate var maxValue: Int
+    fileprivate var currentValue: Int?
+    fileprivate var maxValue: Int?
     private var size: CGSize
     private var highColor: UIColor
     private var lowColor: UIColor?
     
     private var bar: SKShapeNode?
     private var label: SKLabelNode?
+    
+    init(displayName: String, size: CGSize, color: UIColor) {
+        self.displayName = displayName
+        self.size = size
+        self.highColor = color
+        
+        super.init()
+        
+        self.bar = createBar()
+        self.label = createText()
+        updateBar()
+        
+        self.addChild(self.bar!)
+        self.addChild(self.label!)
+        
+        self.alpha = 0.6
+    }
     
     init(displayName: String?, currentValue: Int, maxValue: Int, size: CGSize, highColor: UIColor, lowColor: UIColor?) {
         self.displayName = displayName
@@ -103,19 +120,21 @@ class BarIndicator: SKNode {
     }
     
     fileprivate func updateBar() {
-        let scale = CGFloat(self.currentValue) / CGFloat(self.maxValue)
-        self.bar?.xScale = scale
-        let lowBar = self.bar?.children.first as? SKShapeNode
-        lowBar?.alpha = 1 - scale
-        
-        self.bar?.position = CGPoint(x: -size.width / 2 * (1 - scale), y: 0)
-        
-        if(self.displayName != nil) {
-            self.label?.text = "\(self.displayName!): \(self.currentValue)/\(self.maxValue)"
-        } else {
-            self.label?.text = "\(self.currentValue)/\(self.maxValue)"
+        if(self.maxValue != nil && self.currentValue != nil) {
+            let scale = CGFloat(self.currentValue!) / CGFloat(self.maxValue!)
+            self.bar?.xScale = scale
+            let lowBar = self.bar?.children.first as? SKShapeNode
+            lowBar?.alpha = 1 - scale
+            
+            self.bar?.position = CGPoint(x: -size.width / 2 * (1 - scale), y: 0)
+            if(self.displayName != nil) {
+                self.label?.text = "\(self.displayName!): \(self.currentValue!)/\(self.maxValue!)"
+            } else {
+                self.label?.text = "\(self.currentValue!)/\(self.maxValue!)"
+            }
+        } else if(self.displayName != nil){
+            self.label?.text = "\(self.displayName!)"
         }
-        
     }
     
 }
@@ -128,11 +147,13 @@ extension BarIndicator: BarIndicatorProtocol {
     
     var value: Int {
         get {
-            return self.currentValue
+            return self.currentValue ?? -1
         }
         set(value) {
-            self.currentValue = max(0, min(value, self.maxValue))
-            self.updateBar()
+            if(self.maxValue != nil) {
+                self.currentValue = max(0, min(value, self.maxValue!))
+                self.updateBar()
+            }
         }
     }
     

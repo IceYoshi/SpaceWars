@@ -11,8 +11,11 @@ import SpriteKit
 class Spaceship: GameObject {
     
     public var controller: JoystickControllerProtocol?
+    
+    public var nameIndicator: BarIndicatorProtocol?
     public var hpIndicator: BarIndicatorProtocol?
     public var ammoIndicator: BarIndicatorProtocol?
+    
     public var infiniteShoot: Bool = false
     
     public var torpedoContainer: SKNode?
@@ -23,8 +26,16 @@ class Spaceship: GameObject {
     fileprivate var speed_max: Int
     fileprivate var acc: Int
     private(set) var hp_max: Int
-    private(set) var hp: Int
-    fileprivate var ammo = Set<Int>()
+    private(set) var hp: Int {
+        didSet {
+            hpIndicator?.value = hp
+        }
+    }
+    fileprivate var ammo = Set<Int>() {
+        didSet {
+            ammoIndicator?.value = ammoCount
+        }
+    }
     private(set) var ammo_min: Int
     private(set) var ammo_max: Int
     
@@ -39,6 +50,30 @@ class Spaceship: GameObject {
     fileprivate var canShoot: Bool = true
     fileprivate var isAutoShooting: Bool = false
     
+    override var zRotation: CGFloat {
+        get {
+            return sShip?.zRotation ?? 0
+        }
+        set(value) {
+            sShip?.zRotation = value
+        }
+    }
+    
+    public var showIndicators: Bool = true {
+        didSet {
+            if(showIndicators) {
+                if let sprite = sShip {
+                    self.addIndicators(sprite.size)
+                }
+            } else {
+                self.children.forEach({
+                    if let indicator = $0 as? BarIndicator {
+                        indicator.removeFromParent()
+                    }
+                })
+            }
+        }
+    }
     
     init(config: JSON, type: TextureType) {
         self.dmg = config["dmg"].intValue
@@ -97,10 +132,12 @@ class Spaceship: GameObject {
         self.addChild(sShip!)
         self.sShield = createShield()
         if(sShield != nil) {
-            self.addChild(sShield!)
+            sShip?.addChild(sShield!)
         }
         
         self.isUserInteractionEnabled = true
+        
+        self.addIndicators(size * 1.3)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -112,7 +149,7 @@ class Spaceship: GameObject {
     }
     
     private func createShield() -> SKSpriteNode? {
-        if (self.hp <= 0) {
+        if (self.hp <= 0 || sShip == nil) {
             return nil
         }
         let sShield = SKSpriteNode(texture: GameTexture.textureDictionary[.shield]!, size: sShip!.size * 1.3)
@@ -125,13 +162,35 @@ class Spaceship: GameObject {
         if(self.hp > 0) {
             if(sShield == nil) {
                 sShield = createShield()
-                self.addChild(sShield!)
+                sShip?.addChild(sShield!)
             }
             sShield?.colorBlendFactor = 1 - CGFloat(self.hp) / CGFloat(self.hp_max)
         } else if(sShield != nil) {
-            self.removeChildren(in: [sShield!])
+            sShield?.removeFromParent()
             sShield = nil
         }
+    }
+    
+    private func addIndicators(_ size: CGSize) {
+        let w: CGFloat = max(size.width, size.height)
+        let h: CGFloat = min(size.width, size.height)/6
+        
+        if(self.name != nil) {
+            let nameBar = BarIndicator(displayName: self.name!, size: CGSize(width: w, height: h), color: .clear)
+            nameBar.position = CGPoint(x: 0, y: (w + h) / 2 + 2 * h)
+            self.nameIndicator = nameBar
+            self.addChild(nameBar)
+        }
+        
+        let healthBar = BarIndicator(displayName: nil, currentValue: self.hp, maxValue: self.hp_max, size: CGSize(width: w, height: h), highColor: .green, lowColor: .red)
+        healthBar.position = CGPoint(x: 0, y: (w + h) / 2 + h)
+        self.hpIndicator = healthBar
+        self.addChild(healthBar)
+        
+        let energyBar = BarIndicator(displayName: nil, currentValue: self.ammoCount, maxValue: self.ammoCountMax, size: CGSize(width: w, height: h), highColor: .blue, lowColor: nil)
+        energyBar.position = CGPoint(x: 0, y: (w + h) / 2)
+        self.ammoIndicator = energyBar
+        self.addChild(energyBar)
     }
     
     public func setHP(value: Int) {
@@ -140,7 +199,6 @@ class Spaceship: GameObject {
         } else {
             self.hp = max(min(value, self.hp_max), 0)
             updateShield()
-            hpIndicator?.value = self.hp
         }
     }
     
@@ -156,14 +214,12 @@ class Spaceship: GameObject {
         self.controller = nil
         self.physicsBody = nil
         self.hp = 0
+        self.ammo.removeAll()
         self.sShield?.removeFromParent()
         self.sShield = nil
-        self.ammo.removeAll()
-        
-        self.hpIndicator?.value = self.hp
-        self.ammoIndicator?.value = self.ammoCount
         
         if let sprite = self.sShip {
+            self.children.filter({ $0 != sprite }).forEach({ $0.removeFromParent() })
             sprite.run(SKAction.group([
                 SKAction.run { sprite.setScale(1.5) },
                 SKAction.animate(with: GameTexture.getExplosionFrames(), timePerFrame: 0.033)
@@ -195,7 +251,6 @@ class Spaceship: GameObject {
                     let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
                     self.activeTorpedoes.append(torpedo)
                     self.torpedoContainer!.addChild(torpedo)
-                    self.ammoIndicator?.value = self.ammoCount
                 }
                 
                 self.run(SKAction.sequence([shootAction, waitAction])) {
@@ -285,7 +340,6 @@ extension Spaceship: ContactDelegate {
                 missingAmmo.removeFirst()
             }
             self.addAmmo(ids: missingAmmo)
-            ammoIndicator?.value = self.ammoCount
             
             obj.remove()
         } else if let obj = object as? LifeOrb {
