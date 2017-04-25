@@ -216,6 +216,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             physicUpdateDelegates.append(delegate)
         }
     }
+    
 }
 
 protocol ContactDelegate {

@@ -10,7 +10,6 @@ import SpriteKit
 
 class MiniMap: SKNode {
     
-    private var sBackground: SKShapeNode?
     private var size: CGSize
     private var fieldSize: CGSize
     private var fieldShape: SpacefieldShape
@@ -41,8 +40,7 @@ class MiniMap: SKNode {
         
         self.name = "MiniMap"
         
-        self.sBackground = createBackground(actualSize, shape: fieldShape)
-        self.addChild(sBackground!)
+        self.addChild(Global.cache(shape: createBackground(actualSize, shape: fieldShape)))
         self.alpha = 0.7
     }
     
@@ -50,12 +48,15 @@ class MiniMap: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createBackground(_ size: CGSize, shape: SpacefieldShape) -> SKShapeNode {
+    private func createBackground(_ size: CGSize, shape: SpacefieldShape) -> SKEffectNode {
         let sBackground = shape == .rect ? SKShapeNode(rectOf: size) : SKShapeNode(circleOfRadius: size.width)
         sBackground.strokeColor = .lightGray
         sBackground.lineWidth = 2
         sBackground.fillColor = .darkGray
-        return sBackground
+        let cache = SKEffectNode()
+        cache.addChild(sBackground)
+        cache.shouldRasterize = true
+        return cache
     }
     
     public func addItem(ref: GameObject) {
@@ -81,12 +82,12 @@ class MiniMap: SKNode {
     }
     
     public func addStaticItem(ref: GameObject, weight: CGFloat) {
-        let shape = createSprite(ref.type)
-        shape.zPosition = weight
-        shape.position = self.convert(ref.position)
-        shape.setScale(weight)
-        self.objectDictionary[ref] = shape
-        self.addChild(shape)
+        let sprite = createSprite(ref.type)
+        sprite.zPosition = weight
+        sprite.position = self.convert(ref.position)
+        sprite.setScale(weight)
+        self.objectDictionary[ref] = sprite
+        self.addChild(sprite)
         ref.addItemRemoveDelegate(self)
     }
     

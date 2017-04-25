@@ -58,4 +58,17 @@ class Global {
     static func mean(size: CGSize, sizeMax: CGSize) -> CGFloat {
         return mean(w: size.width, h: size.height, wMax: sizeMax.width, hMax: sizeMax.height)
     }
+    
+    static func cache(shape: SKNode) -> SKEffectNode {
+        return cache(shapes: [shape])
+    }
+    
+    static func cache(shapes: [SKNode]) -> SKEffectNode {
+        let cache = SKEffectNode()
+        for shape in shapes {
+            cache.addChild(shape)
+        }
+        cache.shouldRasterize = true
+        return cache
+    }
 }

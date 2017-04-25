@@ -31,10 +31,10 @@ class BarIndicator: SKNode {
         self.label = createText()
         updateBar()
         
-        self.addChild(self.bar!)
-        self.addChild(self.label!)
+        let cache = Global.cache(shapes: [self.bar!, self.label!])
+        cache.alpha = 0.6
         
-        self.alpha = 0.6
+        self.addChild(cache)
     }
     
     init(displayName: String?, currentValue: Int, maxValue: Int, size: CGSize, highColor: UIColor, lowColor: UIColor?) {
@@ -51,13 +51,10 @@ class BarIndicator: SKNode {
         self.label = createText()
         updateBar()
         
-        self.addChild(createBackground())
-        self.addChild(self.bar!)
-        self.addChild(self.createShading())
-        self.addChild(createForeground())
-        self.addChild(self.label!)
+        let cache = Global.cache(shapes: [createBackground(), self.bar!, self.createShading(), createForeground(), self.label!])
+        cache.alpha = 0.6
         
-        self.alpha = 0.6
+        self.addChild(cache)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +79,7 @@ class BarIndicator: SKNode {
     private func createShading() -> SKShapeNode {
         let h = size.height / 2
         
-        let sShading = SKShapeNode(rectOf: CGSize(width: size.width, height: h))
+        let sShading = SKShapeNode(rectOf: CGSize(width: size.width, height: h), cornerRadius: 5)
         sShading.strokeColor = .black
         sShading.fillColor = .black
         sShading.alpha = 0.3
