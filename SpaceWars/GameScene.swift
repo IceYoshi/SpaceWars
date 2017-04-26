@@ -69,13 +69,13 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
-            objectManager!.assignShip(ship: cpuEnemy)
+            //let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            //cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
+            //objectManager!.assignShip(ship: cpuEnemy)
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: CGPoint(x: objectManager!.fieldSize.width/2, y: objectManager!.fieldSize.height/2)))
+            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
             
             for _ in 1...5 {
                 let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
@@ -226,11 +226,13 @@ protocol ContactDelegate {
 extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if let obj = contact.bodyB.node as? GameObject {
-            (contact.bodyA.node as? ContactDelegate)?.contactWith(obj)
-        }
-        if let obj = contact.bodyA.node as? GameObject {
-            (contact.bodyB.node as? ContactDelegate)?.contactWith(obj)
+        if(contact.bodyA.categoryBitMask != 0 && contact.bodyB.categoryBitMask != 0) {
+            if let obj = contact.bodyB.node as? GameObject {
+                (contact.bodyA.node as? ContactDelegate)?.contactWith(obj)
+            }
+            if let obj = contact.bodyA.node as? GameObject {
+                (contact.bodyB.node as? ContactDelegate)?.contactWith(obj)
+            }
         }
     }
     

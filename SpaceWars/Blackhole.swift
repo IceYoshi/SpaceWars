@@ -13,17 +13,22 @@ class Blackhole: GameObject {
     public let dmg: Int
     private var delay: Int
     private var spawnPoint: CGPoint
+    private var strength: Float
+    fileprivate var animationDuration: Double
+    
+    fileprivate var fieldnode: SKFieldNode?
     
     required init(_ config: JSON) {
         self.dmg = config["dmg"].intValue
         self.delay = config["delay"].intValue
         self.spawnPoint = CGPoint(x: config["spawn_pos"]["x"].intValue, y: config["spawn_pos"]["y"].intValue)
+        self.strength = config["strength"].floatValue
+        self.animationDuration = config["delay"].doubleValue
         
         super.init(config["id"].intValue, "blackhole", .blackhole)
         
         let radius = CGFloat(config["size"]["r"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
-        let strength = config["strength"].floatValue
         let minRange = Float(config["min_range"].intValue)
         let maxRange = Float(config["max_range"].intValue)
         
@@ -38,6 +43,7 @@ class Blackhole: GameObject {
         self.physicsBody!.categoryBitMask = Global.Constants.blackholeCategory
         self.physicsBody!.contactTestBitMask = 0
         self.physicsBody!.collisionBitMask = 0
+        self.physicsBody!.fieldBitMask = 0
         
         let gravityNode = SKFieldNode.radialGravityField()
         gravityNode.minimumRadius = minRange
@@ -45,6 +51,7 @@ class Blackhole: GameObject {
         gravityNode.strength = strength
         gravityNode.falloff = 0.7
         sBlackhole.addChild(gravityNode)
+        self.fieldnode = gravityNode
         
         self.addChild(sBlackhole)
     }
@@ -52,10 +59,10 @@ class Blackhole: GameObject {
     convenience init(idCounter: IDCounter, radius: CGFloat, pos: CGPoint, spawn_pos: CGPoint) {
         self.init([
             "id":idCounter.nextID(),
-            "strength":6,
+            "strength":8 * Global.mean(r: radius, rMax: 300),
             "min_range":radius / 3,
             "max_range":radius * 3,
-            "dmg":30,
+            "dmg":80 * Global.mean(r: radius, rMax: 300),
             "delay":5,
             "spawn_pos":[
                 "x":spawn_pos.x,
@@ -76,50 +83,68 @@ class Blackhole: GameObject {
     }
     
     private func createBlackhole(_ radius: CGFloat) -> SKSpriteNode {
-        let sBlackhole = SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))/*
-        sBlackhole.physicsBody = SKPhysicsBody()
-        sBlackhole.physicsBody!.affectedByGravity = false
-        sBlackhole.physicsBody!.angularDamping = 0
-        sBlackhole.physicsBody!.angularVelocity = 1
-        sBlackhole.physicsBody!.categoryBitMask = 0
-        sBlackhole.physicsBody!.contactTestBitMask = 0
-        sBlackhole.physicsBody!.collisionBitMask = 0*/
-        return sBlackhole
+        return SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))
     }
     
     public func animateWith(_ spaceship: Spaceship) {
-        let fieldnode = self.children.first as? SKFieldNode
+        let blackholeCategory = self.physicsBody?.categoryBitMask
+        let spaceshipCategory = spaceship.physicsBody?.categoryBitMask
         
-        spaceship.controller?.enabled = false
-        spaceship.physicsBody?.angularVelocity = 10
-        spaceship.physicsBody?.angularDamping = 0
         self.physicsBody?.categoryBitMask = 0
+        spaceship.controller?.enabled = false
+    
+        let blinkAction = SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.2, duration: 0.4),
+            SKAction.fadeAlpha(to: 1, duration: 0.4)
+            ])
         
-        spaceship.run(SKAction.group([
-            SKAction.scale(by: 0.25, duration: 2),
-            SKAction.fadeOut(withDuration: 2)
-            ])) {
-                fieldnode?.strength = 0
-                self.run(SKAction.fadeOut(withDuration: 2)) {
-                    self.run(SKAction.wait(forDuration: 3)) {
-                        self.run(SKAction.fadeIn(withDuration: 2)) {
-                            fieldnode?.strength = 6
-                            self.physicsBody?.categoryBitMask = Global.Constants.blackholeCategory
-                        }
-                    }
-                }
-                spaceship.physicsBody?.angularDamping = 1
-                spaceship.physicsBody?.angularVelocity = 2
+        let invulnerabilityAction = SKAction.repeat(blinkAction, count: 3)
+        
+        let fadeOutSpaceshipAction = SKAction.group([
+            SKAction.scale(by: 0.25, duration: self.animationDuration * 0.4),
+            SKAction.fadeOut(withDuration: self.animationDuration * 0.4)
+        ])
+        
+        let fadeInSpaceshipAction = SKAction.group([
+            SKAction.scale(by: 4, duration: self.animationDuration * 0.2),
+            SKAction.fadeIn(withDuration: self.animationDuration * 0.2),
+            invulnerabilityAction
+        ])
+        
+        let blackholeFadeInOutAction = SKAction.sequence([
+            SKAction.run { self.fieldnode?.strength = 0 },
+            SKAction.fadeOut(withDuration: self.animationDuration * 0.1),
+            SKAction.wait(forDuration: self.animationDuration * 0.3),
+            SKAction.fadeIn(withDuration: self.animationDuration * 0.2),
+            SKAction.run {
+                self.fieldnode?.strength = self.strength
+                self.physicsBody?.categoryBitMask = blackholeCategory!
+            }
+        ])
+        
+        let spaceshipMoveAction = SKAction.sequence([
+            SKAction.run {
+                self.run(blackholeFadeInOutAction)
+                spaceship.physicsBody?.categoryBitMask = 0;
                 spaceship.physicsBody?.velocity = CGVector.zero
-                spaceship.run(SKAction.group([
-                    SKAction.move(to: CGPoint(x: 0, y: 0), duration: 1),
-                    SKAction.scale(by: 4, duration: 1)
-                    ])) {
-                        spaceship.controller?.enabled = true
-                        spaceship.run(SKAction.fadeIn(withDuration: 1)) {
-                            spaceship.physicsBody?.angularVelocity = 0
-                        }
-                }
-        }
+            },
+            SKAction.move(to: self.spawnPoint, duration: self.animationDuration * 0.2),
+            SKAction.run { spaceship.controller?.enabled = true },
+            fadeInSpaceshipAction,
+            SKAction.run { spaceship.physicsBody?.categoryBitMask = spaceshipCategory! }
+        ])
+        
+        let pullInAction = SKAction.sequence([
+                SKAction.run { spaceship.rotateSprite(rotDuration: 0.5) },
+                fadeOutSpaceshipAction,
+                SKAction.run { spaceship.resetSpriteRotation() }
+            ])
+        
+        spaceship.run(SKAction.sequence([
+            pullInAction,
+            spaceshipMoveAction
+        ]))
+        
     }
+    
 }

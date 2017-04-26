@@ -145,7 +145,14 @@ class Spaceship: GameObject {
     }
     
     private func createShip(_ tex: SKTexture, _ size: CGSize) -> SKSpriteNode {
-        return SKSpriteNode(texture: tex, size: size)
+        let sShip = SKSpriteNode(texture: tex, size: size)/*
+        sShip.physicsBody = SKPhysicsBody()
+        sShip.physicsBody.
+        sShip.physicsBody!.affectedByGravity = false
+        sShip.physicsBody!.categoryBitMask = 0
+        sShip.physicsBody!.contactTestBitMask = 0
+        sShip.physicsBody!.fieldBitMask = 0*/
+        return sShip
     }
     
     private func createShield() -> SKSpriteNode? {
@@ -169,6 +176,15 @@ class Spaceship: GameObject {
             sShield?.removeFromParent()
             sShield = nil
         }
+    }
+    
+    public func rotateSprite(rotDuration: Double) {
+        sShip?.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat.pi, duration: rotDuration/2)))
+    }
+    
+    public func resetSpriteRotation() {
+        sShip?.removeAllActions()
+        sShip?.zRotation = 0
     }
     
     private func addIndicators(_ size: CGSize) {
@@ -340,23 +356,22 @@ extension Spaceship: ContactDelegate {
                 missingAmmo.removeFirst()
             }
             self.addAmmo(ids: missingAmmo)
-            
             obj.remove()
+            
         } else if let obj = object as? LifeOrb {
             self.changeHP(value: obj.hp_gain)
-            
             obj.remove()
+            
         } else if let obj = object as? Blackhole {
             self.changeHP(value: -obj.dmg)
-            
             obj.animateWith(self)
+            
         } else if let obj = object as? Meteoroid {
             self.changeHP(value: -obj.dmg)
-            
             obj.remove()
+            
         } else if let obj = object as? Spaceship {
             self.remove()
-            
             obj.remove()
         }
     }
