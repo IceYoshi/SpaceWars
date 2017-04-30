@@ -20,7 +20,7 @@ class ConnectionManager: NSObject {
     private var serviceAdvertiser: MCNearbyServiceAdvertiser?
     private var serviceBrowser: MCNearbyServiceBrowser?
     
-    var delegate: CommandProcessorDelegate?
+    public var delegate: CommandProcessorDelegate?
     
     init(rank: LocalRank, name: String) {
         self.peerID = MCPeerID(displayName: name)
@@ -49,12 +49,12 @@ class ConnectionManager: NSObject {
         return session
     }()
     
-    func stopPairingService() {
+    public func stopPairingService() {
         self.serviceAdvertiser?.stopAdvertisingPeer()
         self.serviceBrowser?.stopBrowsingForPeers()
     }
     
-    func send(data: Data) {
+    public func send(data: Data) {
         NSLog("%@", "send \(String(data: data, encoding: .utf8)!) to \(session.connectedPeers.count) peers")
         
         if(session.connectedPeers.count > 0) {

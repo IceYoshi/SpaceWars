@@ -33,11 +33,13 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         self.backgroundColor = .black
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        self.physicsWorld.speed = 0
         
         self.name = "GameScene"
         
         objectManager = ObjectManager(fieldSize: Global.Constants.spacefieldSize, fieldShape: Global.Constants.spacefieldShape, world: World(), background: Background(), overlay: Overlay(screenSize: viewSize), camera: PlayerCamera())
         objectManager?.attachTo(scene: self)
+        objectManager?.paused = true
         
         createObjects(viewSize)
     }
@@ -64,18 +66,25 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             objectManager!.assignMinimap(map: minimap)
             
             // World
-            
-            objectManager?.assignToWorld(obj: Spacestation(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), size: CGSize(width: 200, height: 200), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi)))
-            
             objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            //let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            //cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
-            //objectManager!.assignShip(ship: cpuEnemy)
+            let spacestation = Spacestation(idCounter: objectManager!.idCounter, ownerID: objectManager!.player!.id, regenerationRate: 15, activeTime: 10, inactiveTime: 60, pos: objectManager!.getFreeRandomPosition(), radius: 100, rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
+            //spacestation.changeColor(.red)
+            objectManager!.assignToWorld(obj: spacestation)
+            
+            /*
+            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
+            objectManager!.assignShip(ship: cpuEnemy)
+            
+            let cpuEnemy2 = CPUMasterShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
+            cpuEnemy2.controller = CPUController(ref: cpuEnemy2, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
+            objectManager!.assignShip(ship: cpuEnemy2)
+             */
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
+            //objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
             
             for _ in 1...5 {
                 let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
@@ -124,6 +133,12 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             self.addNeedsUpdateDelegate(delegate: objectManager)
             self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
+            
+            let countdown = Countdown(startTime: 5)
+            countdown.position = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
+            objectManager!.assignToOverlay(obj: countdown)
+            countdown.register(delegate: self)
+            countdown.start()
         }
     }
     
@@ -236,7 +251,9 @@ extension GameScene: SKPhysicsContactDelegate {
         }
     }
     
-    func didEnd(_ contact: SKPhysicsContact) {}
+    func didEnd(_ contact: SKPhysicsContact) {
+        //self.didBegin(contact)
+    }
     
 }
 
@@ -270,6 +287,15 @@ extension GameScene: ItemRemovedDelegate {
             objectManager?.assignToWorld(obj: meteoroid)
             meteoroid.addItemRemoveDelegate(self)
         }
+    }
+    
+}
+
+extension GameScene: CountdownProtocol {
+    
+    func countdownEnded() {
+        objectManager?.paused = false
+        self.physicsWorld.speed = 1
     }
     
 }

@@ -24,6 +24,7 @@
 		2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9E61E991764009D57B3 /* CPUSlaveShip.swift */; };
 		2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */; };
 		2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9EB1E991801009D57B3 /* Spaceship.swift */; };
+		271F699A1EB62E0200AAC43B /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F69991EB62E0200AAC43B /* Countdown.swift */; };
 		2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */; };
 		2734B1C51E9AE39700EB71C2 /* FireButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C41E9AE39700EB71C2 /* FireButton.swift */; };
 		273678BA1E9FEE4D0055A643 /* Dilithium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273678B91E9FEE4C0055A643 /* Dilithium.swift */; };
@@ -75,6 +76,7 @@
 		2719C9E61E991764009D57B3 /* CPUSlaveShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUSlaveShip.swift; sourceTree = "<group>"; };
 		2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUMasterShip.swift; sourceTree = "<group>"; };
 		2719C9EB1E991801009D57B3 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
+		271F69991EB62E0200AAC43B /* Countdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
 		2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectManager.swift; sourceTree = "<group>"; };
 		2734B1C41E9AE39700EB71C2 /* FireButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireButton.swift; sourceTree = "<group>"; };
 		273678B91E9FEE4C0055A643 /* Dilithium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dilithium.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				2734B1C41E9AE39700EB71C2 /* FireButton.swift */,
 				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
 				27992DB51EAA363F00DF24A7 /* MiniMap.swift */,
+				271F69991EB62E0200AAC43B /* Countdown.swift */,
 			);
 			name = hud;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */,
 				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
 				270D97181E9A385600FFA117 /* GameEnvironment.swift in Sources */,
+				271F699A1EB62E0200AAC43B /* Countdown.swift in Sources */,
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
 				270251F81EA8F41A00C5605A /* LifeOrb.swift in Sources */,

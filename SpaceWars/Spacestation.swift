@@ -10,26 +10,48 @@ import SpriteKit
 
 class Spacestation: GameObject {
     
+    public let ownerID: Int
     public let regenerationRate: Int
-    public let activeTime: Int
-    public let inactiveTime: Int
+    public let activeTime: Double
+    public let inactiveTime: Double
+    public let radius: Int
+    
+    private var enabled: Bool = true {
+        didSet {
+            if(enabled) {
+                self.alpha = 1
+                sStation?.run(SKAction.fadeAlpha(to: 1, duration: 1))
+            } else {
+                sStation?.run(SKAction.fadeAlpha(to: 0, duration: 1)) {
+                    self.alpha = 0
+                }
+            }
+        }
+    }
+    private var isActive: Bool = false
+    private var ownerRef: Spaceship?
+    private var activeTimeCounter: Double = 0
+    private var sStation: SKSpriteNode?
     
     required init(_ config: JSON) {
+        self.ownerID = config["owner"].intValue
         self.regenerationRate = config["rate"].intValue
-        self.activeTime = config["active"].intValue
-        self.inactiveTime = config["inactive"].intValue
+        self.activeTime = config["active"].doubleValue
+        self.inactiveTime = config["inactive"].doubleValue
+        self.radius = config["size"]["r"].intValue
         
         super.init(config["id"].intValue, "Spacestation", .space_station)
         
-        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
+        let size = CGSize(width: radius*2, height: radius*2)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
-        self.addChild(createStation(size))
+        self.sStation = createStation(size)
+        self.addChild(self.sStation!)
         self.position = pos
         self.zRotation = CGFloat(rot)
         
-        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[.space_station]!, size: size)
+        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[.space_station]!, size: size*2)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.categoryBitMask = Global.Constants.stationCategory
@@ -37,19 +59,19 @@ class Spacestation: GameObject {
         self.physicsBody!.fieldBitMask = 0
     }
     
-    convenience init(idCounter: IDCounter, pos: CGPoint, size: CGSize, rot: CGFloat) {
+    convenience init(idCounter: IDCounter, ownerID: Int, regenerationRate: Int, activeTime: Double, inactiveTime: Double, pos: CGPoint, radius: CGFloat, rot: CGFloat) {
         self.init([
             "id":idCounter.nextID(),
-            "rate":15,
-            "active":10,
-            "inactive":60,
+            "owner":ownerID,
+            "rate":regenerationRate,
+            "active":activeTime,
+            "inactive":inactiveTime,
             "pos":[
                 "x":pos.x,
                 "y":pos.y
             ],
             "size":[
-                "w":size.width,
-                "h":size.height
+                "r":radius
             ],
             "rot":rot
             ])
@@ -62,5 +84,55 @@ class Spacestation: GameObject {
     private func createStation(_ size: CGSize) -> SKSpriteNode {
         return SKSpriteNode(texture: GameTexture.textureDictionary[.space_station]!, size: size)
     }
+    
+    public func transfer() {
+        if(self.enabled && !self.isActive && ownerRef != nil) {
+            if(self.activeTimeCounter < self.activeTime) {
+                self.activeTimeCounter += 1
+                self.isActive = true
+                let waitAction = SKAction.wait(forDuration: 1)
+                let transferAction = SKAction.run {
+                    self.ownerRef?.changeHP(value: self.regenerationRate)
+                }
+                self.run(SKAction.sequence([waitAction, transferAction])) {
+                    self.isActive = false
+                    self.transfer()
+                }
+            } else {
+                self.disableTemporarely()
+            }
+        }
+    }
+    
+    public func disableTemporarely() {
+        if(enabled) {
+            self.removeAllActions()
+            self.enabled = false
+            self.activeTimeCounter = 0
+            self.run(SKAction.wait(forDuration: self.inactiveTime)) {
+                self.enabled = true
+                self.transfer()
+            }
+        }
+    }
+    
+    public func startHPTransfer(_ ship: Spaceship) {
+        if(self.ownerID == ship.id) {
+            self.ownerRef = ship
+            self.transfer()
+        } else {
+            self.disableTemporarely()
+        }
+    }
+    
+    public func stopHPTransfer() {
+        self.ownerRef = nil
+    }
+    
+    public func changeColor(_ color: UIColor) {
+        sStation?.color = color
+        sStation?.colorBlendFactor = 1
+    }
+    
     
 }

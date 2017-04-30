@@ -25,6 +25,12 @@ class ObjectManager {
     
     fileprivate var spaceships = [Spaceship]()
     
+    public var paused: Bool = false {
+        didSet {
+            world?.isPaused = paused
+        }
+    }
+    
     public var centerPoint: CGPoint {
         get {
             if(self.fieldShape == .rect) {
@@ -220,8 +226,10 @@ extension ObjectManager: GameObjectClickDelegate {
 extension ObjectManager: NeedsUpdateProtocol {
     
     func update() {
-        for ship in self.spaceships {
-            ship.update()
+        if(!paused) {
+            for ship in self.spaceships {
+                ship.update()
+            }
         }
     }
     

@@ -27,7 +27,7 @@ class Blackhole: GameObject {
         
         super.init(config["id"].intValue, "blackhole", .blackhole)
         
-        let radius = CGFloat(config["size"]["r"].intValue)
+        let radius = config["size"]["r"].intValue
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let minRange = Float(config["min_range"].intValue)
         let maxRange = Float(config["max_range"].intValue)
@@ -36,7 +36,7 @@ class Blackhole: GameObject {
         self.position = pos
         self.zRotation = CGFloat.rand(0, 2*CGFloat.pi)
         
-        self.physicsBody = SKPhysicsBody(circleOfRadius: radius*2/3)
+        self.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(radius)*2/3)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.angularVelocity = 1
@@ -82,7 +82,7 @@ class Blackhole: GameObject {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createBlackhole(_ radius: CGFloat) -> SKSpriteNode {
+    private func createBlackhole(_ radius: Int) -> SKSpriteNode {
         return SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))
     }
     

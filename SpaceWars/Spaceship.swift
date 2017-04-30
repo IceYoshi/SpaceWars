@@ -19,7 +19,7 @@ class Spaceship: GameObject {
     public var infiniteShoot: Bool = false
     
     public var torpedoContainer: SKNode?
-    private var sShip: SKSpriteNode?
+    fileprivate var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
     fileprivate var dmg: Int
@@ -107,7 +107,7 @@ class Spaceship: GameObject {
         self.physicsBody!.linearDamping = CGFloat(damping)
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
-        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory | Global.Constants.meteoroidCategory
+        self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory | Global.Constants.meteoroidCategory | Global.Constants.stationCategory
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.velocity = vel
         
@@ -145,13 +145,7 @@ class Spaceship: GameObject {
     }
     
     private func createShip(_ tex: SKTexture, _ size: CGSize) -> SKSpriteNode {
-        let sShip = SKSpriteNode(texture: tex, size: size)/*
-        sShip.physicsBody = SKPhysicsBody()
-        sShip.physicsBody.
-        sShip.physicsBody!.affectedByGravity = false
-        sShip.physicsBody!.categoryBitMask = 0
-        sShip.physicsBody!.contactTestBitMask = 0
-        sShip.physicsBody!.fieldBitMask = 0*/
+        let sShip = SKSpriteNode(texture: tex, size: size)
         return sShip
     }
     
@@ -189,10 +183,10 @@ class Spaceship: GameObject {
     
     private func addIndicators(_ size: CGSize) {
         let w: CGFloat = max(size.width, size.height)
-        let h: CGFloat = min(size.width, size.height)/6
+        let h: CGFloat = w/6
         
         if(self.name != nil) {
-            let nameBar = BarIndicator(displayName: self.name!, size: CGSize(width: w, height: h), color: .clear)
+            let nameBar = BarIndicator(displayName: self.name!, size: CGSize(width: w, height: h*1.3), color: .clear)
             nameBar.position = CGPoint(x: 0, y: (w + h) / 2 + 2 * h)
             self.nameIndicator = nameBar
             self.addChild(nameBar)
@@ -203,7 +197,7 @@ class Spaceship: GameObject {
         self.hpIndicator = healthBar
         self.addChild(healthBar)
         
-        let energyBar = BarIndicator(displayName: nil, currentValue: self.ammoCount, maxValue: self.ammoCountMax, size: CGSize(width: w, height: h), highColor: .blue, lowColor: nil)
+        let energyBar = BarIndicator(displayName: nil, currentValue: self.ammoCount, maxValue: self.ammoCountMax, size: CGSize(width: w, height: h*0.8), highColor: .blue, lowColor: nil)
         energyBar.position = CGPoint(x: 0, y: (w + h) / 2)
         self.ammoIndicator = energyBar
         self.addChild(energyBar)
@@ -309,15 +303,17 @@ extension Spaceship: NeedsUpdateProtocol {
         if self.physicsBody != nil && (controller?.enabled) ?? false {
             self.zRotation = controller!.angle - CGFloat.pi / 2
             
-            let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
-            let multiplier = self.acc * controller!.thrust
-            var newVelocity = self.physicsBody!.velocity + accelerationVector * multiplier
-            
-            if newVelocity.length() > self.speed_max {
-                newVelocity = newVelocity.normalized() * self.speed_max
+            if(controller!.thrust > 0.3) {
+                let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
+                let multiplier = self.acc * controller!.thrust
+                var newVelocity = self.physicsBody!.velocity + accelerationVector * multiplier
+                
+                if newVelocity.length() > self.speed_max {
+                    newVelocity = newVelocity.normalized() * self.speed_max
+                }
+                
+                self.physicsBody!.velocity = newVelocity
             }
-            
-            self.physicsBody!.velocity = newVelocity
         }
         updateTorpedoes()
     }
@@ -373,6 +369,13 @@ extension Spaceship: ContactDelegate {
         } else if let obj = object as? Spaceship {
             self.remove()
             obj.remove()
+            
+        } else if let obj = object as? Spacestation {
+            if(self.position.distanceTo(obj.position) < obj.radius) {
+                obj.startHPTransfer(self)
+            } else {
+                obj.stopHPTransfer()
+            }
         }
     }
     
