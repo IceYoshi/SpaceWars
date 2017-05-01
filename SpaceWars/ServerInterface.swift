@@ -16,7 +16,7 @@ enum GameState: String {
     playing = "playing"
 }
 
-class ServerInterface {
+class ServerInterface: PeerChangeDelegate {
     
     private var state: GameState = .join
     private var connections = [String: Player]()
@@ -25,35 +25,63 @@ class ServerInterface {
     private var idCounter = IDCounter()
     private var client: ClientInterface
     
-    init(_ name: String) {
-        client = ClientInterface(name, .server)
+    init(_ view: LobbyViewController, _ name: String) {
+        client = ClientInterface(view, name, .server)
         
+        // Override delegates to the connectionManager
         client.connectionManager.commandDelegate = commandProcessor
+        client.connectionManager.peerChangeDelegate = self
+        
         commandProcessor.register(command: NameServerCommand(self))
         
         client.sendName()
     }
     
+    deinit {
+        disconnect()
+    }
+    
+    public func disconnect() {
+        client.disconnect()
+    }
+    
+    public func peerDidChange(_ peers: [MCPeerID]) {
+        let peerIDs = peers.map( { $0.displayName } )
+        
+        for (peerID, player) in connections {
+            if(!peerIDs.contains(peerID) && peerID != UIDevice.current.identifierForVendor!.uuidString) {
+                player.isConnected = false
+            }
+        }
+        
+        sendNames()
+    }
+    
     public func didSendName(name: String, peerID: String) {
         if(state == .join) {
             connections[peerID] = Player(id: idCounter.nextID(), name: name)
-            
-            var response: JSON = [
-                "type":"name",
-                "val":[]
-            ]
-            for (_, player) in connections {
+            sendNames()
+        } else {
+            sendSync(peerID)
+        }
+    }
+    
+    public func sendNames() {
+        var response: JSON = [
+            "type":"name",
+            "val":[]
+        ]
+        for (_, player) in connections {
+            if(player.isConnected) {
                 let val: JSON = [
                     "pid":player.id,
                     "name":player.name
                 ]
                 try? response["val"].merge(with: [val])
             }
-            
-            sendToClients(response, .reliable)
-        } else {
-            sendSync(peerID)
         }
+        
+        sendToClients(response, .reliable)
     }
     
     public func sendSync(_ peerID: String) {

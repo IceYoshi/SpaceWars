@@ -6,23 +6,25 @@
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
-import Foundation
+import MultipeerConnectivity
 
 protocol PeerChangeDelegate {
-    func peerDidChange()
+    func peerDidChange(_ peers: [MCPeerID])
 }
 
 class ClientInterface: PeerChangeDelegate {
     
     private var name: String
     private var rank: LocalRank
+    private var view: LobbyViewController
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
     
     
-    init(_ name: String, _ rank: LocalRank) {
+    init(_ view: LobbyViewController, _ name: String, _ rank: LocalRank) {
         self.name = name
         self.rank = rank
+        self.view = view
         
         connectionManager = ConnectionManager(rank)
         connectionManager.commandDelegate = commandProcessor
@@ -31,9 +33,20 @@ class ClientInterface: PeerChangeDelegate {
         commandProcessor.register(command: NameClientCommand(self))
     }
     
-    public func peerDidChange() {
-        if(rank == .client) {
+    deinit {
+        disconnect()
+    }
+    
+    public func disconnect() {
+        connectionManager.disconnect()
+        didReceivePlayerList([])
+    }
+    
+    public func peerDidChange(_ peers: [MCPeerID]) {
+        if(peers.count > 0) {
             sendName()
+        } else {
+            didReceivePlayerList([])
         }
     }
     
@@ -46,8 +59,8 @@ class ClientInterface: PeerChangeDelegate {
         try? connectionManager.sendToServer(response.rawData(), .reliable)
     }
     
-    public func didReceiveNames(names: [Player]) {
-        print(names)
+    public func didReceivePlayerList(_ players: [Player]) {
+        view.updateConnectionList(players)
     }
 }
 

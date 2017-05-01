@@ -24,7 +24,7 @@ class NameClientCommand: Command {
         for player in data["val"].arrayValue {
             players.append(Player(id: player["pid"].intValue, name: player["name"].stringValue))
         }
-        delegate.didReceiveNames(names: players)
+        delegate.didReceivePlayerList(players)
     }
     
 }

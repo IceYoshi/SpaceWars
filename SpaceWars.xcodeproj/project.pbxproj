@@ -159,11 +159,11 @@
 				27B5F30C1E6C342C00F05F72 /* object */,
 				270C79141E6B54B70045C868 /* AppDelegate.swift */,
 				270C791C1E6B54B70045C868 /* GameViewController.swift */,
-				270C791E1E6B54B70045C868 /* Main.storyboard */,
+				27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */,
 				270C79211E6B54B70045C868 /* Assets.xcassets */,
+				270C791E1E6B54B70045C868 /* Main.storyboard */,
 				270C79231E6B54B70045C868 /* LaunchScreen.storyboard */,
 				270C79261E6B54B70045C868 /* Info.plist */,
-				27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */,
 			);
 			path = SpaceWars;
 			sourceTree = "<group>";

@@ -33,7 +33,7 @@ class ConnectionManager: NSObject {
     }
     
     deinit {
-        stopPairingService()
+        disconnect()
     }
     
     lazy var session: MCSession = {
@@ -41,6 +41,11 @@ class ConnectionManager: NSObject {
         session.delegate = self
         return session
     }()
+    
+    public func disconnect() {
+        stopPairingService()
+        session.disconnect()
+    }
     
     public func startPairingService() {
         switch rank {
@@ -69,7 +74,7 @@ class ConnectionManager: NSObject {
     }
     
     public func sendToPeers(_ data: Data, _ mode: MCSessionSendDataMode) {
-        print("send \(String(data: data, encoding: .utf8)!) to \(session.connectedPeers.count) peers")
+        print("send \(String(data: data, encoding: .utf8)!)")
         
         if(session.connectedPeers.count > 0) {
             do {
@@ -93,7 +98,7 @@ class ConnectionManager: NSObject {
                         try self.session.send(data, toPeers: [peer], with: mode)
                     }
                     catch let error {
-                        //NSLog("%@", "Error while sending: \(error)")
+                        print("Error while sending: \(error)")
                     }
                     break
                 }
@@ -105,59 +110,48 @@ class ConnectionManager: NSObject {
 
 extension ConnectionManager: MCNearbyServiceAdvertiserDelegate {
     
-    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        //NSLog("%@", "didNotStartAdvertisingPeer: \(error)")
-    }
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {}
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        //NSLog("%@", "didReceiveInvitationFromPeer \(peerID)")
         invitationHandler(true, self.session)
     }
 }
 
 extension ConnectionManager: MCNearbyServiceBrowserDelegate {
     
-    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        //NSLog("%@", "didNotStartBrowsingForPeers: \(error)")
-    }
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {}
     
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        //NSLog("%@", "foundPeer: \(peerID)")
-        //NSLog("%@", "invitePeer: \(peerID)")
         browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: 30)
     }
     
-    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        //NSLog("%@", "lostPeer: \(peerID)")
-        
-    }
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {}
 }
 
 extension ConnectionManager: MCSessionDelegate {
     
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        //NSLog("%@", "peer \(peerID) didChangeState: \(state)")
         if(rank == .client && session.connectedPeers.count == 1) {
             stopPairingService()
-            peerChangeDelegate?.peerDidChange()
         }
+        DispatchQueue.main.async() {
+            print("Peer connection changed. Now connected to \(session.connectedPeers.count) peers.")
+            self.peerChangeDelegate?.peerDidChange(session.connectedPeers)
+        }
+        
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        //NSLog("%@", "didReceiveData: \(data)")
-        self.commandDelegate?.interpret(data, peerID.displayName)
+        DispatchQueue.main.async() {
+            print("received \(String(data: data, encoding: .utf8)!)")
+            self.commandDelegate?.interpret(data, peerID.displayName)
+        }
     }
     
-    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-        //NSLog("%@", "didReceiveStream")
-    }
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
     
-    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-        //NSLog("%@", "didStartReceivingResourceWithName")
-    }
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
     
-    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
-        //NSLog("%@", "didFinishReceivingResourceWithName")
-    }
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {}
     
 }

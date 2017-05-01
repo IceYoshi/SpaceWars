@@ -11,10 +11,11 @@ import Foundation
 class Player: CustomStringConvertible {
     public var id: Int
     public var name: String
+    public var isConnected: Bool = true
     
     public var description: String {
         get {
-            return "\(name)(\(id))"
+            return name
         }
     }
     
