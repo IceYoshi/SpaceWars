@@ -6,19 +6,21 @@
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
+/*
 import SpriteKit
 
 class FireCommand: Command {
     
-    private var view: SKView
+    private var delegate: ConnectionInterface
     
-    required init(commandProcessor: CommandProcessor, view: SKView) {
-        self.view = view
+    required init(_ commandProcessor: CommandProcessor, _ delegate: ConnectionInterface) {
+        self.delegate = delegate
         super.init(commandProcessor: commandProcessor, commandName: "fire")
     }
     
-    override func process(_ data: JSON) {
+    override func process(_ data: JSON, _ peerID: String) {
         print("Command: fire received")
     }
     
 }
+*/

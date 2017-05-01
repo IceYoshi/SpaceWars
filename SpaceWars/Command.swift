@@ -10,16 +10,17 @@ import SpriteKit
 
 class Command {
     
-    private let commandProcessor: CommandProcessor
-    private let commandName: String
+    public let commandName: String
     
-    init(commandProcessor: CommandProcessor, commandName: String) {
-        self.commandProcessor = commandProcessor
+    init(commandName: String) {
         self.commandName = commandName
-        commandProcessor.register(key: commandName, command: self)
     }
     
     func process(_ data: JSON) {
+        print("Warning: Command superclass implementation of process() should not have been called.")
+    }
+    
+    func process(_ data: JSON, _ peerID: String) {
         print("Warning: Command superclass implementation of process() should not have been called.")
     }
     

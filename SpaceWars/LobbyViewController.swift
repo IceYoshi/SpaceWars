@@ -15,6 +15,9 @@ class LobbyViewController: UIViewController {
     @IBOutlet weak var nameLabel: UITextField!
     @IBOutlet weak var connectButton: UIButton!
     
+    private var server: ServerInterface?
+    private var client: ClientInterface?
+    
     private var name: String?
     
     override func viewDidLoad() {
@@ -42,10 +45,10 @@ class LobbyViewController: UIViewController {
         if(name != nil) {
             let dialog = UIAlertController(title: "Connect", message: "Are you the host or do you want to join a host?", preferredStyle: .alert)
             dialog.addAction(UIAlertAction(title: "Host", style: .default, handler: { (action: UIAlertAction!) in
-                print("Host")
+                self.server = ServerInterface(self.name!)
             }))
             dialog.addAction(UIAlertAction(title: "Join", style: .default, handler: { (action: UIAlertAction!) in
-                print("Join")
+                self.client = ClientInterface(self.name!, .client)
             }))
             present(dialog, animated: true, completion: nil)
         }

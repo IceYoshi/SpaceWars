@@ -25,6 +25,8 @@
 		2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */; };
 		2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719C9EB1E991801009D57B3 /* Spaceship.swift */; };
 		271F699A1EB62E0200AAC43B /* Countdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F69991EB62E0200AAC43B /* Countdown.swift */; };
+		271F699C1EB686F100AAC43B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F699B1EB686F100AAC43B /* Player.swift */; };
+		271F699E1EB6876600AAC43B /* ServerInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271F699D1EB6876600AAC43B /* ServerInterface.swift */; };
 		2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */; };
 		2734B1C51E9AE39700EB71C2 /* FireButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C41E9AE39700EB71C2 /* FireButton.swift */; };
 		273678BA1E9FEE4D0055A643 /* Dilithium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273678B91E9FEE4C0055A643 /* Dilithium.swift */; };
@@ -43,8 +45,11 @@
 		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
 		27C2E6501E884AB2001A52D5 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E64F1E884AB2001A52D5 /* Command.swift */; };
 		27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */; };
-		27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6541E884AE8001A52D5 /* MoveCommand.swift */; };
-		27C2E6571E884B16001A52D5 /* FireCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6561E884B16001A52D5 /* FireCommand.swift */; };
+		27C2E6551E884AE8001A52D5 /* MoveServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6541E884AE8001A52D5 /* MoveServerCommand.swift */; };
+		27C3A2091EB72B0200337027 /* ClientInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C3A2081EB72B0200337027 /* ClientInterface.swift */; };
+		27C3A20B1EB72F8200337027 /* MoveClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C3A20A1EB72F8200337027 /* MoveClientCommand.swift */; };
+		27C3A20D1EB73B4B00337027 /* NameServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C3A20C1EB73B4B00337027 /* NameServerCommand.swift */; };
+		27C3A20F1EB73B5900337027 /* NameClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C3A20E1EB73B5900337027 /* NameClientCommand.swift */; };
 		27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CABFEA1E99235500CE0717 /* SwiftyJSON.swift */; };
 		27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CABFEC1E99418200CE0717 /* IDCounter.swift */; };
 		27D913021E6D98140030EFAC /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913011E6D98140030EFAC /* World.swift */; };
@@ -77,6 +82,8 @@
 		2719C9E81E99177E009D57B3 /* CPUMasterShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUMasterShip.swift; sourceTree = "<group>"; };
 		2719C9EB1E991801009D57B3 /* Spaceship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spaceship.swift; sourceTree = "<group>"; };
 		271F69991EB62E0200AAC43B /* Countdown.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Countdown.swift; sourceTree = "<group>"; };
+		271F699B1EB686F100AAC43B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		271F699D1EB6876600AAC43B /* ServerInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerInterface.swift; sourceTree = "<group>"; };
 		2734B1C21E9ACDB500EB71C2 /* ObjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectManager.swift; sourceTree = "<group>"; };
 		2734B1C41E9AE39700EB71C2 /* FireButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireButton.swift; sourceTree = "<group>"; };
 		273678B91E9FEE4C0055A643 /* Dilithium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dilithium.swift; sourceTree = "<group>"; };
@@ -95,8 +102,11 @@
 		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		27C2E64F1E884AB2001A52D5 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandProcessor.swift; sourceTree = "<group>"; };
-		27C2E6541E884AE8001A52D5 /* MoveCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveCommand.swift; sourceTree = "<group>"; };
-		27C2E6561E884B16001A52D5 /* FireCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireCommand.swift; sourceTree = "<group>"; };
+		27C2E6541E884AE8001A52D5 /* MoveServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveServerCommand.swift; sourceTree = "<group>"; };
+		27C3A2081EB72B0200337027 /* ClientInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientInterface.swift; sourceTree = "<group>"; };
+		27C3A20A1EB72F8200337027 /* MoveClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveClientCommand.swift; sourceTree = "<group>"; };
+		27C3A20C1EB73B4B00337027 /* NameServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameServerCommand.swift; sourceTree = "<group>"; };
+		27C3A20E1EB73B5900337027 /* NameClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameClientCommand.swift; sourceTree = "<group>"; };
 		27CABFEA1E99235500CE0717 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		27CABFEC1E99418200CE0717 /* IDCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDCounter.swift; sourceTree = "<group>"; };
 		27D913011E6D98140030EFAC /* World.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
@@ -230,6 +240,9 @@
 			isa = PBXGroup;
 			children = (
 				27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */,
+				271F699B1EB686F100AAC43B /* Player.swift */,
+				271F699D1EB6876600AAC43B /* ServerInterface.swift */,
+				27C3A2081EB72B0200337027 /* ClientInterface.swift */,
 			);
 			name = mpc;
 			sourceTree = "<group>";
@@ -239,8 +252,10 @@
 			children = (
 				27C2E64F1E884AB2001A52D5 /* Command.swift */,
 				27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */,
-				27C2E6541E884AE8001A52D5 /* MoveCommand.swift */,
-				27C2E6561E884B16001A52D5 /* FireCommand.swift */,
+				27C2E6541E884AE8001A52D5 /* MoveServerCommand.swift */,
+				27C3A20A1EB72F8200337027 /* MoveClientCommand.swift */,
+				27C3A20C1EB73B4B00337027 /* NameServerCommand.swift */,
+				27C3A20E1EB73B5900337027 /* NameClientCommand.swift */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -366,17 +381,18 @@
 				27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */,
 				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
 				270D97181E9A385600FFA117 /* GameEnvironment.swift in Sources */,
+				27C3A20B1EB72F8200337027 /* MoveClientCommand.swift in Sources */,
 				271F699A1EB62E0200AAC43B /* Countdown.swift in Sources */,
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
 				270251F81EA8F41A00C5605A /* LifeOrb.swift in Sources */,
 				277D47311E74B2B800901D8F /* StarField.swift in Sources */,
 				27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */,
-				27C2E6571E884B16001A52D5 /* FireCommand.swift in Sources */,
 				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
 				27C2E6501E884AB2001A52D5 /* Command.swift in Sources */,
 				273678BA1E9FEE4D0055A643 /* Dilithium.swift in Sources */,
+				27C3A20D1EB73B4B00337027 /* NameServerCommand.swift in Sources */,
 				2734B1C51E9AE39700EB71C2 /* FireButton.swift in Sources */,
 				27D913071E6D98CC0030EFAC /* Background.swift in Sources */,
 				270D971C1E9A4AB500FFA117 /* Blackhole.swift in Sources */,
@@ -390,8 +406,10 @@
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
 				27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
+				271F699E1EB6876600AAC43B /* ServerInterface.swift in Sources */,
 				27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */,
-				27C2E6551E884AE8001A52D5 /* MoveCommand.swift in Sources */,
+				27C3A20F1EB73B5900337027 /* NameClientCommand.swift in Sources */,
+				27C2E6551E884AE8001A52D5 /* MoveServerCommand.swift in Sources */,
 				270D97161E9A37CB00FFA117 /* SpacefieldBorder.swift in Sources */,
 				2719C9E31E99172C009D57B3 /* SkeletonShip.swift in Sources */,
 				2734B1C31E9ACDB500EB71C2 /* ObjectManager.swift in Sources */,
@@ -402,6 +420,8 @@
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
+				27C3A2091EB72B0200337027 /* ClientInterface.swift in Sources */,
+				271F699C1EB686F100AAC43B /* Player.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

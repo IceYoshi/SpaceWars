@@ -9,21 +9,21 @@
 import SpriteKit
 
 protocol CommandProcessorDelegate {
-    func interpret(_ data: Data)
+    func interpret(_ data: Data, _ peerID: String)
 }
 
 class CommandProcessor: CommandProcessorDelegate {
     
     private var commandDictionary = [String: Command]()
     
-    func register(key: String, command: Command) {
-        commandDictionary[key] = command
+    func register(command: Command) {
+        commandDictionary[command.commandName] = command
     }
     
-    func interpret(_ data: Data) {
+    func interpret(_ data: Data, _ peerID: String) {
         let dataJSON = JSON(data: data)
         if let cmd = commandDictionary[dataJSON["type"].stringValue] {
-            cmd.process(dataJSON)
+            cmd.process(dataJSON, peerID)
         } else {
             print("CommandProcessor: Error while processing JSON in the interpretation step.\nReceived data: \(String(data: data, encoding: .utf8)!)")
         }
