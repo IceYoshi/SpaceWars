@@ -305,25 +305,33 @@ public extension Sequence {
 
 extension UIViewController {
     
-    func showToast(message : String) {
-        
-        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-100, width: 150, height: 35))
+    func showToast(message: String) {
+        let width = CGFloat(9 * message.characters.count)
+        let toastLabel = UILabel(frame: CGRect(x: (self.view.frame.size.width - width)/2, y: self.view.frame.size.height-75, width: width, height: 35))
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white
         toastLabel.textAlignment = .center;
         toastLabel.font = UIFont(name: "Montserrat-Light", size: 12.0)
         toastLabel.text = message
-        toastLabel.alpha = 0.0
+        toastLabel.alpha = 0
         toastLabel.layer.cornerRadius = 10;
-        toastLabel.clipsToBounds  =  true
+        toastLabel.clipsToBounds = true
         self.view.addSubview(toastLabel)
         UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-            toastLabel.alpha = 1.0
+            toastLabel.alpha = 1
         }, completion: {(isCompleted) in
             UIView.animate(withDuration: 0.7, delay: 2, options: .curveEaseIn, animations: {
-                toastLabel.alpha = 0.0
+                toastLabel.alpha = 0
             }, completion: {(isCompleted) in
                 toastLabel.removeFromSuperview()
             })
         })
-    } }
+    }
+}
+
+extension UIScrollView {
+    func scrollToTop(animated: Bool) {
+        let offset = CGPoint(x: 0, y: -contentInset.top)
+        setContentOffset(offset, animated: animated)
+    }
+}

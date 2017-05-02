@@ -81,17 +81,16 @@ class ConnectionManager: NSObject {
                 try self.session.send(data, toPeers: session.connectedPeers, with: mode)
             }
             catch let error {
-                //NSLog("%@", "Error while sending: \(error)")
+                print("Error while sending: \(error)")
             }
         }
     }
     
     public func sendTo(_ peerID: String, _ data: Data, _ mode: MCSessionSendDataMode) {
+        print("send \(String(data: data, encoding: .utf8)!)")
         if(peerID == self.peerID.displayName) {
             self.commandDelegate?.interpret(data, peerID)
         } else {
-            //NSLog("%@", "send \(String(data: data, encoding: .utf8)!) to \(session.connectedPeers.count) peers")
-            
             for peer in session.connectedPeers {
                 if(peer.displayName == peerID) {
                     do {
