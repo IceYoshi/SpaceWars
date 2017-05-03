@@ -56,9 +56,12 @@
 		27D913071E6D98CC0030EFAC /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913061E6D98CC0030EFAC /* Background.swift */; };
 		27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913081E6D98FB0030EFAC /* Overlay.swift */; };
 		27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130A1E6DBBE70030EFAC /* Global.swift */; };
-		27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */; };
+		27D9130D1E6DC07D0030EFAC /* ShipSelectionScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */; };
 		27E589141EAB4C120096247F /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E589131EAB4C120096247F /* Textures.swift */; };
 		27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9C1C91EAC904F00B39165 /* CPUController.swift */; };
+		27FDE9D81EB9F1C600631788 /* StartShipSelectionClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */; };
+		27FDE9DA1EBA06A400631788 /* ShipSelectedClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */; };
+		27FDE9DC1EBA06BB00631788 /* ShipSelectedServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDE9DB1EBA06BB00631788 /* ShipSelectedServerCommand.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,9 +116,12 @@
 		27D913061E6D98CC0030EFAC /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		27D913081E6D98FB0030EFAC /* Overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
 		27D9130A1E6DBBE70030EFAC /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
-		27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
+		27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelectionScene.swift; sourceTree = "<group>"; };
 		27E589131EAB4C120096247F /* Textures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
 		27F9C1C91EAC904F00B39165 /* CPUController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUController.swift; sourceTree = "<group>"; };
+		27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartShipSelectionClientCommand.swift; sourceTree = "<group>"; };
+		27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelectedClientCommand.swift; sourceTree = "<group>"; };
+		27FDE9DB1EBA06BB00631788 /* ShipSelectedServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelectedServerCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +262,9 @@
 				27C3A20A1EB72F8200337027 /* MoveClientCommand.swift */,
 				27C3A20C1EB73B4B00337027 /* NameServerCommand.swift */,
 				27C3A20E1EB73B5900337027 /* NameClientCommand.swift */,
+				27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */,
+				27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */,
+				27FDE9DB1EBA06BB00631788 /* ShipSelectedServerCommand.swift */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -284,7 +293,7 @@
 		27D913041E6D98400030EFAC /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				27D9130C1E6DC07D0030EFAC /* LobbyScene.swift */,
+				27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */,
 				271980DE1E73230F006A058A /* GameScene.swift */,
 			);
 			name = scene;
@@ -379,7 +388,7 @@
 				27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */,
 				2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */,
 				27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */,
-				27D9130D1E6DC07D0030EFAC /* LobbyScene.swift in Sources */,
+				27D9130D1E6DC07D0030EFAC /* ShipSelectionScene.swift in Sources */,
 				270D97181E9A385600FFA117 /* GameEnvironment.swift in Sources */,
 				27C3A20B1EB72F8200337027 /* MoveClientCommand.swift in Sources */,
 				271F699A1EB62E0200AAC43B /* Countdown.swift in Sources */,
@@ -387,7 +396,10 @@
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
 				270251F81EA8F41A00C5605A /* LifeOrb.swift in Sources */,
 				277D47311E74B2B800901D8F /* StarField.swift in Sources */,
+				27FDE9DC1EBA06BB00631788 /* ShipSelectedServerCommand.swift in Sources */,
+				27FDE9DA1EBA06A400631788 /* ShipSelectedClientCommand.swift in Sources */,
 				27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */,
+				27FDE9D81EB9F1C600631788 /* StartShipSelectionClientCommand.swift in Sources */,
 				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
 				27C2E6501E884AB2001A52D5 /* Command.swift in Sources */,

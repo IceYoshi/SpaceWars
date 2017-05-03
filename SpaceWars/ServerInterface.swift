@@ -19,20 +19,23 @@ enum GameState: String {
 class ServerInterface: PeerChangeDelegate {
     
     private var state: GameState = .join
-    private var connections = [String: Player]()
+    private var players = [Player]()
     
     private var commandProcessor = CommandProcessor()
     private var idCounter = IDCounter()
-    private var client: ClientInterface
+    private var client: ClientInterface!
+    
+    private var setup: JSON?
     
     init(_ view: LobbyViewController, _ name: String) {
-        client = ClientInterface(view, name, .server)
+        client = ClientInterface(view, name, self)
         
         // Override delegates to the connectionManager
         client.connectionManager.commandDelegate = commandProcessor
         client.connectionManager.peerChangeDelegate = self
         
         commandProcessor.register(command: NameServerCommand(self))
+        commandProcessor.register(command: ShipSelectedServerCommand(self))
         
         client.sendName()
     }
@@ -45,11 +48,35 @@ class ServerInterface: PeerChangeDelegate {
         client.disconnect()
     }
     
+    public func clearNonConnectedClients() {
+        players = players.filter( { $0.isConnected } )
+    }
+    
+    public func getPlayerByPeerID(_ peerID: String) -> Player? {
+        for player in players {
+            if(player.peerID == peerID) {
+                return player
+            }
+        }
+        return nil
+    }
+    
+    public func getPlayerByID(_ id: Int) -> Player? {
+        for player in players {
+            if(player.id == id) {
+                return player
+            }
+        }
+        return nil
+    }
+    
     public func peerDidChange(_ peers: [MCPeerID]) {
         let peerIDs = peers.map( { $0.displayName } )
         
-        for (peerID, player) in connections {
-            if(!peerIDs.contains(peerID) && peerID != UIDevice.current.identifierForVendor!.uuidString) {
+        for player in players {
+            if(peerIDs.contains(player.peerID) || player.peerID == UIDevice.current.identifierForVendor!.uuidString) {
+                player.isConnected = true
+            } else {
                 player.isConnected = false
             }
         }
@@ -59,7 +86,11 @@ class ServerInterface: PeerChangeDelegate {
     
     public func didSendName(name: String, peerID: String) {
         if(state == .join) {
-            connections[peerID] = Player(id: idCounter.nextID(), name: name)
+            if let player = getPlayerByPeerID(peerID) {
+                player.name = name
+            } else {
+                players.append(Player(id: idCounter.nextID(), name: name, peerID: peerID))
+            }
             sendNames()
         } else {
             sendSync(peerID)
@@ -71,7 +102,7 @@ class ServerInterface: PeerChangeDelegate {
             "type":"name",
             "val":[]
         ]
-        for (_, player) in connections {
+        for player in players {
             if(player.isConnected) {
                 let val: JSON = [
                     "pid":player.id,
@@ -105,18 +136,35 @@ class ServerInterface: PeerChangeDelegate {
         sendTo(peerID, response, .reliable)
     }
     
-    public func sendToClients(_ response: JSON, _ mode: MCSessionSendDataMode) {
-        if let data = try? response.rawData() {
+    public func startShipSelection(setup: JSON) {
+        client.connectionManager.stopPairingService()
+        sendToClients(["type":"start_ship_selection"], .reliable)
+        state = .ship_selection
+        self.setup = setup
+    }
+    
+    public func sendToClients(_ message: JSON, _ mode: MCSessionSendDataMode) {
+        if let data = try? message.rawData() {
             client.connectionManager.sendToPeers(data, .reliable)
             client.commandProcessor.interpret(data, UIDevice.current.identifierForVendor!.uuidString)
         }
     }
     
-    public func sendTo(_ peerID: String, _ response: JSON, _ mode: MCSessionSendDataMode) {
-        if let data = try? response.rawData() {
+    public func sendTo(_ peerID: String, _ message: JSON, _ mode: MCSessionSendDataMode) {
+        if let data = try? message.rawData() {
             client.connectionManager.sendTo(peerID, data, .reliable)
         }
     }
     
+    public func didReceiveShipSelection(peerID: String, type: String) {
+        if let player = getPlayerByPeerID(peerID) {
+            let response: JSON = [
+                "type":"ship_selected",
+                "pid":player.id,
+                "ship_type":type
+            ]
+            sendToClients(response, .reliable)
+        }
+    }
     
 }

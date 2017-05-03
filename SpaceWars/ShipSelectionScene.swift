@@ -1,5 +1,5 @@
 //
-//  LobbyScene.swift
+//  ShipSelectionScene.swift
 //  SpaceWars
 //
 //  Created by Mike Pereira on 06/03/2017.
@@ -8,16 +8,15 @@
 
 import SpriteKit
 
-class LobbyScene: SKScene {
+class ShipSelectionScene: SKScene {
     
-    init(_ screenSize: CGSize) {
+    init(_ screenSize: CGSize, _ client: ClientInterface) {
         super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
-        self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
-        self.name = "LobbyScene"
+        self.name = "ShipSelectionScene"
         
         let label = SKLabelNode(text: "Click when ready!")
         label.fontSize = 70

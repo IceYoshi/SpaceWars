@@ -46,6 +46,15 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
         return false
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentCharacterCount = textField.text?.characters.count ?? 0
+        if(range.length + range.location > currentCharacterCount) {
+            return false
+        }
+        let newLength = currentCharacterCount + string.characters.count - range.length
+        return newLength <= 15
+    }
+    
     func onKeyboardEnter(notification: NSNotification) {
         if(nameLabel.isEditing) {
             var info = notification.userInfo!
@@ -95,7 +104,7 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
                 self.showToast(message: "Server started")
             }))
             dialog.addAction(UIAlertAction(title: "Join", style: .default, handler: { (action: UIAlertAction!) in
-                self.client = ClientInterface(self, self.name!, .client)
+                self.client = ClientInterface(self, self.name!, nil)
                 self.connectButton.setTitle("Reconnect", for: .normal)
                 self.showToast(message: "Client started")
             }))
@@ -186,12 +195,67 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
         if(self.server == nil) {
             self.showToast(message: "Only the host can start the game")
         } else {
-            self.server?.disconnect()
-            self.server = nil
-            self.present(GameViewController(), animated: true, completion: nil)
+            self.server?.startShipSelection(setup: createSetup())
         }
     }
     
+    private func createSetup() -> JSON {
+        let countdown = Int(self.settingsCountdownLabel.text!)!
+        let shape = settingsSpacefieldShape.titleForSegment(at: settingsSpacefieldShape.selectedSegmentIndex)!
+        let width = Int(settingsSpacefieldWidthLabel.text!)!
+        let height = Int(settingsSpacefieldHeightLabel.text!)!
+        
+        let meteoroidCount = Int(settingsMeteoroidsLabel.text!)!
+        let lifeOrbCount = Int(settingsLifeOrbsLabel.text!)!
+        let dilithiumCount = Int(settingsDilithiumLabel.text!)!
+        let blackholeCount = Int(settingsBlackholesLabel.text!)!
+        let cpuCount = Int(settingsCPUEnemiesLabel.text!)!
+        
+        var setup: JSON = [
+            "type":"setup",
+            "countdown":countdown,
+            "objects":[]
+        ]
+        
+        if(shape == "Rectangle") {
+            setup["space_field"] = [
+                "shape":shape,
+                "w":width,
+                "h":height
+            ]
+        } else {
+            setup["space_field"] = [
+                "shape":shape,
+                "r":width
+            ]
+        }
+        
+        for _ in stride(from: 1, through: meteoroidCount, by: 1) {
+            try? setup["objects"].merge(with: [ ["type":"meteoroid\(Int.rand(1, 2))"] ])
+        }
+        
+        for _ in stride(from: 1, through: lifeOrbCount, by: 1) {
+            try? setup["objects"].merge(with: [ ["type":"life_orb"] ])
+        }
+        
+        for _ in stride(from: 1, through: dilithiumCount, by: 1) {
+            try? setup["objects"].merge(with: [ ["type":"dilithium"] ])
+        }
+        
+        for _ in stride(from: 1, through: blackholeCount, by: 1) {
+            try? setup["objects"].merge(with: [ ["type":"blackhole"] ])
+        }
+        
+        for _ in stride(from: 1, through: cpuCount, by: 1) {
+            if(Int.rand(1, 6) == 1) {
+                try? setup["objects"].merge(with: [ ["type":"cpu_master"] ])
+            } else {
+                try? setup["objects"].merge(with: [ ["type":"cpu_slave"] ])
+            }
+        }
+        
+        return setup
+    }
     
 }
 

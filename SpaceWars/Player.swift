@@ -11,6 +11,7 @@ import Foundation
 class Player: CustomStringConvertible {
     public var id: Int
     public var name: String
+    public var peerID: String
     public var isConnected: Bool = true
     
     public var description: String {
@@ -19,8 +20,13 @@ class Player: CustomStringConvertible {
         }
     }
     
-    init(id: Int, name: String) {
+    convenience init(id: Int, name: String) {
+        self.init(id: id, name: name, peerID: "")
+    }
+    
+    required init(id: Int, name: String, peerID: String) {
         self.id = id
         self.name = name
+        self.peerID = peerID
     }
 }

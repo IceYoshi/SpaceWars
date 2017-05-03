@@ -16,21 +16,31 @@ class ClientInterface: PeerChangeDelegate {
     
     private var name: String
     private var rank: LocalRank
-    private var view: LobbyViewController
+    private var view: UIViewController
+    private(set) var server: ServerInterface?
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
     
+    private(set) var players = [Player]()
     
-    init(_ view: LobbyViewController, _ name: String, _ rank: LocalRank) {
+    init(_ view: LobbyViewController, _ name: String, _ server: ServerInterface?) {
         self.name = name
-        self.rank = rank
         self.view = view
+        self.server = server
+        
+        if(server == nil) {
+            self.rank = .client
+        } else {
+            self.rank = .server
+        }
         
         connectionManager = ConnectionManager(rank)
         connectionManager.commandDelegate = commandProcessor
         connectionManager.peerChangeDelegate = self
         
         commandProcessor.register(command: NameClientCommand(self))
+        commandProcessor.register(command: StartShipSelectionClientCommand(self))
+        commandProcessor.register(command: ShipSelectedClientCommand(self))
     }
     
     deinit {
@@ -40,6 +50,24 @@ class ClientInterface: PeerChangeDelegate {
     public func disconnect() {
         connectionManager.disconnect()
         didReceivePlayerList([])
+    }
+    
+    public func getPlayerByPeerID(_ peerID: String) -> Player? {
+        for player in players {
+            if(player.peerID == peerID) {
+                return player
+            }
+        }
+        return nil
+    }
+    
+    public func getPlayerByID(_ id: Int) -> Player? {
+        for player in players {
+            if(player.id == id) {
+                return player
+            }
+        }
+        return nil
     }
     
     public func peerDidChange(_ peers: [MCPeerID]) {
@@ -60,7 +88,29 @@ class ClientInterface: PeerChangeDelegate {
     }
     
     public func didReceivePlayerList(_ players: [Player]) {
-        view.updateConnectionList(players)
+        self.players = players
+        (view as? LobbyViewController)?.updateConnectionList(players)
+    }
+    
+    public func didReceiveStartShipSelection() {
+        let gameVC = GameViewController(self)
+        view.present(gameVC, animated: true, completion: {
+            self.view = gameVC
+        })
+    }
+    
+    public func didSelectSpaceship(type: String) {
+        let message: JSON = [
+            "type":"ship_selected",
+            "ship_type":type
+        ]
+        try? connectionManager.sendToServer(message.rawData(), .reliable)
+    }
+    
+    public func didReceiveSpaceshipSelection(id: Int, type: String) {
+        if let player = getPlayerByID(id) {
+            print("Player \(player.name) chose spaceship '\(type)'")
+        }
     }
 }
 

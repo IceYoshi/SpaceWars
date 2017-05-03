@@ -11,20 +11,33 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    private var client: ClientInterface
+    
+    public var skView: SKView {
+        return self.view as! SKView
+    }
+    
+    required init(_ client: ClientInterface) {
+        self.client = client
+        super.init(nibName: nil, bundle: nil)
+        
+        client.didSelectSpaceship(type: "human")
+        
+        print(client.players.minimalDescription)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view = SKView()
     }
     
-    var skView: SKView {
-        return self.view as! SKView
-    }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        skView.isExclusiveTouch = false
         skView.isMultipleTouchEnabled = true
         
         skView.showsFPS = Global.Constants.debugShowFPS
@@ -32,9 +45,7 @@ class GameViewController: UIViewController {
         skView.showsPhysics = Global.Constants.debugShowPhysics
         skView.showsFields = Global.Constants.debugShowFields
         
-        //let scene = LobbyScene(self.view.bounds.size)
-        let scene = GameScene(self.view.bounds.size)
-        
+        let scene = ShipSelectionScene(self.view.bounds.size, client)
         skView.presentScene(scene)
     }
 

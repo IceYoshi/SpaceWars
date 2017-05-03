@@ -84,7 +84,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             
             objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
             
-            //objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
+            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
             
             for _ in 1...5 {
                 let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
