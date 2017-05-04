@@ -25,7 +25,9 @@ enum TextureType: String {
     skeleton = "spaceship_skeleton.png",
     master = "spaceship_cpu_master.png",
     slave = "spaceship_cpu_slave.png",
-    space_station = "spacestation.png"
+    space_station = "spacestation.png",
+    arrow_left = "arrow_left.png",
+    arrow_right = "arrow_right.png"
 }
 
 class GameTexture {
@@ -46,7 +48,9 @@ class GameTexture {
         TextureType.skeleton: SKTexture(imageNamed: TextureType.skeleton.rawValue),
         TextureType.master: SKTexture(imageNamed: TextureType.master.rawValue),
         TextureType.slave: SKTexture(imageNamed: TextureType.slave.rawValue),
-        TextureType.space_station: SKTexture(imageNamed: TextureType.space_station.rawValue)
+        TextureType.space_station: SKTexture(imageNamed: TextureType.space_station.rawValue),
+        TextureType.arrow_left: SKTexture(imageNamed: TextureType.arrow_left.rawValue),
+        TextureType.arrow_right: SKTexture(imageNamed: TextureType.arrow_right.rawValue)
     ]
     
     static func getExplosionFrames() -> [SKTexture] {

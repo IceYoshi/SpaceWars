@@ -35,9 +35,7 @@ class FireButton: SKNode {
     }
     
     private func createButton() -> SKSpriteNode {
-        let sButton = SKSpriteNode(imageNamed: "button_fire.png")
-        sButton.size = CGSize(width: 128, height: 128)
-        sButton.name = "FireButton"
+        let sButton = SKSpriteNode(texture: GameTexture.textureDictionary[.button_fire], size: CGSize(width: 128, height: 128))
         sButton.color = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
         sButton.colorBlendFactor = 0
         return sButton

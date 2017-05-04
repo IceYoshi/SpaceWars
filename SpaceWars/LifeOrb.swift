@@ -11,13 +11,14 @@ import SpriteKit
 class LifeOrb: GameObject {
     
     public let hp_gain: Int
+    private var size: CGSize
     
     required init(_ config: JSON) {
         self.hp_gain = config["hp_gain"].intValue
+        self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
         super.init(config["id"].intValue, "life_orb", .life_orb)
         
-        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
@@ -75,6 +76,23 @@ class LifeOrb: GameObject {
                     delegate?.didRemove(obj: self)
                 }
         }
+    }
+    
+    override func getConfig() -> JSON {
+        return [
+            "type":"life_orb",
+            "id":self.id,
+            "hp_gain":self.hp_gain,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "w":self.size.width,
+                "h":self.size.height
+            ],
+            "rot":self.zRotation
+        ]
     }
     
 }

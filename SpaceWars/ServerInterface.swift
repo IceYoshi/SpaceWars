@@ -16,7 +16,7 @@ enum GameState: String {
     playing = "playing"
 }
 
-class ServerInterface: PeerChangeDelegate {
+class ServerInterface: PeerChangeDelegate, ShipSelectionDelegate {
     
     private var state: GameState = .join
     private var players = [Player]()
@@ -167,4 +167,7 @@ class ServerInterface: PeerChangeDelegate {
         }
     }
     
+    public func didEndShipSelection() {
+        client.loadGame()
+    }
 }

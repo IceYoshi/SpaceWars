@@ -14,6 +14,9 @@ class Blackhole: GameObject {
     private var delay: Int
     private var spawnPoint: CGPoint
     private var strength: Float
+    private var minRange: Float
+    private var maxRange: Float
+    private var radius: Int
     fileprivate var animationDuration: Double
     
     fileprivate var fieldnode: SKFieldNode?
@@ -24,13 +27,13 @@ class Blackhole: GameObject {
         self.spawnPoint = CGPoint(x: config["spawn_pos"]["x"].intValue, y: config["spawn_pos"]["y"].intValue)
         self.strength = config["strength"].floatValue
         self.animationDuration = config["delay"].doubleValue
+        self.minRange = Float(config["min_range"].intValue)
+        self.maxRange = Float(config["max_range"].intValue)
+        self.radius = config["size"]["r"].intValue
         
         super.init(config["id"].intValue, "blackhole", .blackhole)
         
-        let radius = config["size"]["r"].intValue
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
-        let minRange = Float(config["min_range"].intValue)
-        let maxRange = Float(config["max_range"].intValue)
         
         let sBlackhole = createBlackhole(radius)
         self.position = pos
@@ -39,16 +42,16 @@ class Blackhole: GameObject {
         self.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(radius)*2/3)
         self.physicsBody!.affectedByGravity = false
         self.physicsBody!.angularDamping = 0
-        self.physicsBody!.angularVelocity = 1
+        self.physicsBody!.angularVelocity = -1
         self.physicsBody!.categoryBitMask = Global.Constants.blackholeCategory
         self.physicsBody!.contactTestBitMask = 0
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.fieldBitMask = 0
         
         let gravityNode = SKFieldNode.radialGravityField()
-        gravityNode.minimumRadius = minRange
-        gravityNode.region = SKRegion(radius: maxRange)
-        gravityNode.strength = strength
+        gravityNode.minimumRadius = self.minRange
+        gravityNode.region = SKRegion(radius: self.maxRange)
+        gravityNode.strength = self.strength
         gravityNode.falloff = 0.7
         sBlackhole.addChild(gravityNode)
         self.fieldnode = gravityNode
@@ -83,7 +86,7 @@ class Blackhole: GameObject {
     }
     
     private func createBlackhole(_ radius: Int) -> SKSpriteNode {
-        return SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2))
+        return SKSpriteNode(texture: GameTexture.textureDictionary[.blackhole]!, size: CGSize(width: radius*2, height: radius*2.3))
     }
     
     public func animateWith(_ spaceship: Spaceship) {
@@ -145,6 +148,25 @@ class Blackhole: GameObject {
             spaceshipMoveAction
         ]))
         
+    }
+    
+    override func getConfig() -> JSON {
+        return [
+            "type":"blackhole",
+            "id":self.id,
+            "strength":self.strength,
+            "min_range":self.minRange,
+            "max_range":self.maxRange,
+            "dmg":self.dmg,
+            "delay":self.delay,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "r":self.radius
+            ]
+        ]
     }
     
 }

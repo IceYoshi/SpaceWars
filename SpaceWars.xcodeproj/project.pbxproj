@@ -43,6 +43,9 @@
 		27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */; };
 		27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */; };
 		27B8E02B1E740397003A12DE /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B8E02A1E740397003A12DE /* Joystick.swift */; };
+		27BF00891EBBA00C00EBA1C8 /* ShipSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */; };
+		27BF008B1EBBA25B00EBA1C8 /* NavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */; };
+		27BF008D1EBBD8F500EBA1C8 /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */; };
 		27C2E6501E884AB2001A52D5 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E64F1E884AB2001A52D5 /* Command.swift */; };
 		27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */; };
 		27C2E6551E884AE8001A52D5 /* MoveServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C2E6541E884AE8001A52D5 /* MoveServerCommand.swift */; };
@@ -103,6 +106,9 @@
 		27B8BDD71E8931E4007D8EF7 /* ConnectionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		27B8BDD91E8944A8007D8EF7 /* LobbyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyViewController.swift; sourceTree = "<group>"; };
 		27B8E02A1E740397003A12DE /* Joystick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
+		27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelection.swift; sourceTree = "<group>"; };
+		27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationButtons.swift; sourceTree = "<group>"; };
+		27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
 		27C2E64F1E884AB2001A52D5 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		27C2E6511E884ACC001A52D5 /* CommandProcessor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandProcessor.swift; sourceTree = "<group>"; };
 		27C2E6541E884AE8001A52D5 /* MoveServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoveServerCommand.swift; sourceTree = "<group>"; };
@@ -192,6 +198,9 @@
 				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
 				27992DB51EAA363F00DF24A7 /* MiniMap.swift */,
 				271F69991EB62E0200AAC43B /* Countdown.swift */,
+				27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */,
+				27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */,
+				27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */,
 			);
 			name = hud;
 			sourceTree = "<group>";
@@ -384,6 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2719C9DD1E99153D009D57B3 /* GameObject.swift in Sources */,
+				27BF008B1EBBA25B00EBA1C8 /* NavigationButtons.swift in Sources */,
 				273CAE8F1EAB997B00E9213C /* Spacestation.swift in Sources */,
 				27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */,
 				2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */,
@@ -411,6 +421,7 @@
 				2719C9E11E99171A009D57B3 /* RobotShip.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */,
+				27BF00891EBBA00C00EBA1C8 /* ShipSelection.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,
 				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
@@ -428,6 +439,7 @@
 				2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */,
 				27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */,
 				27B752DE1EA960E2001CFD51 /* BigMeteoroid.swift in Sources */,
+				27BF008D1EBBD8F500EBA1C8 /* StartButton.swift in Sources */,
 				27E589141EAB4C120096247F /* Textures.swift in Sources */,
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,

@@ -134,5 +134,23 @@ class Spacestation: GameObject {
         sStation?.colorBlendFactor = 1
     }
     
+    override func getConfig() -> JSON {
+        return [
+            "type":"spacestation",
+            "id":self.id,
+            "owner":self.ownerID,
+            "rate":self.regenerationRate,
+            "active":self.activeTime,
+            "inactive":self.inactiveTime,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "r":self.radius
+            ],
+            "rot":self.zRotation
+        ]
+    }
     
 }

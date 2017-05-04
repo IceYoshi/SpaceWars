@@ -11,13 +11,14 @@ import SpriteKit
 class Dilithium: GameObject {
     
     public let ammo_gain: Int
+    private var size: CGSize
     
     required init(_ config: JSON) {
         self.ammo_gain = config["ammo_gain"].intValue
+        self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
         super.init(config["id"].intValue, "dilithium", .dilithium)
         
-        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
@@ -75,6 +76,23 @@ class Dilithium: GameObject {
                     delegate?.didRemove(obj: self)
                 }
         }
+    }
+    
+    override func getConfig() -> JSON {
+        return [
+            "type":"dilithium",
+            "id":self.id,
+            "ammo_gain":self.ammo_gain,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "w":self.size.width,
+                "h":self.size.height
+            ],
+            "rot":self.zRotation
+        ]
     }
     
 }

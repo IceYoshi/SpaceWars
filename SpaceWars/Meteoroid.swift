@@ -24,6 +24,7 @@ class Meteoroid: GameObject {
     }
     private(set) var hp_max: Int
     private(set) var spwawnRate: CGFloat
+    private var size: CGSize
     
     private var hpIndicator: BarIndicator?
     
@@ -43,10 +44,10 @@ class Meteoroid: GameObject {
         self.hp = config["hp"].intValue
         self.hp_max = config["hp_max"].intValue
         self.spwawnRate = CGFloat(config["spawn_rate"].floatValue)
+        self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
         super.init(config["id"].intValue, "meteoroid", type)
         
-        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue
         
@@ -124,6 +125,25 @@ class Meteoroid: GameObject {
             }
         }
         
+    }
+    
+    override func getConfig() -> JSON {
+        return [
+            "type":self.type == .meteoroid_small ? "meteoroid1" : "meteoroid2",
+            "id":self.id,
+            "dmg":self.dmg,
+            "hp":self.hp,
+            "hp_max":self.hp_max,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "w":self.size.width,
+                "h":self.size.height
+            ],
+            "rot":self.zRotation
+        ]
     }
     
 }

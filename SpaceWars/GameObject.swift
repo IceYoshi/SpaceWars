@@ -59,4 +59,9 @@ class GameObject: SKNode {
         }
     }
     
+    public func getConfig() -> JSON {
+        print("Warning: GameObject superclass implementation of getConfig() should not have been called.")
+        return []
+    }
+    
 }

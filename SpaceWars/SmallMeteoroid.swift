@@ -25,11 +25,11 @@ class SmallMeteoroid: Meteoroid {
         self.init([
             "id":idCounter.nextID(),
             "dmg":140 * Global.mean(size: CGSize(width: w, height: h),
-                                   sizeMax: CGSize(width: maxWidth, height: maxHeight)),
+                                    sizeMax: CGSize(width: maxWidth, height: maxHeight)),
             "hp":hp,
             "hp_max":hp,
             "spawn_rate":0.75 * Global.mean(size: CGSize(width: w, height: h),
-                                           sizeMax: CGSize(width: maxWidth, height: maxHeight)),
+                                            sizeMax: CGSize(width: maxWidth, height: maxHeight)),
             "pos":[
                 "x":pos.x,
                 "y":pos.y
@@ -39,8 +39,15 @@ class SmallMeteoroid: Meteoroid {
                 "h":h
             ],
             "rot":rot
-            ])
-        
+        ])
+    }
+    
+    convenience init(idCounter: IDCounter, pos: CGPoint) {
+        self.init(idCounter: idCounter,
+                  pos: pos,
+                  width: Int.rand(64, 128),
+                  rot: CGFloat.rand(0, 2*CGFloat.pi)
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

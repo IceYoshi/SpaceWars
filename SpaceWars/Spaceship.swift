@@ -25,6 +25,8 @@ class Spaceship: GameObject {
     fileprivate var dmg: Int
     fileprivate var speed_max: Int
     fileprivate var acc: Int
+    private var damping: CGFloat
+    private var size: CGSize
     private(set) var hp_max: Int
     private(set) var hp: Int {
         didSet {
@@ -79,8 +81,10 @@ class Spaceship: GameObject {
         self.dmg = config["dmg"].intValue
         self.speed_max = config["speed"].intValue
         self.acc = config["acc"].intValue
+        self.damping = CGFloat(config["damping"].floatValue)
         self.hp_max = config["hp_max"].intValue
         self.hp = config["hp"].intValue
+        self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
         if let ammo_available = config["ammo"]["available"].arrayObject as? [Int] {
             self.ammo.formUnion(ammo_available)
@@ -91,20 +95,18 @@ class Spaceship: GameObject {
         
         super.init(config["id"].intValue, config["name"].stringValue, type)
         
-        let size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let vel = CGVector(dx: config["vel"]["dx"].intValue, dy: config["vel"]["dy"].intValue)
         let rot = config["rot"].floatValue
-        let damping = config["damping"].floatValue
         let fieldShape = config["space_field"]["shape"].stringValue
         
         self.position = pos
         self.zRotation = CGFloat(rot)
         self.zPosition = 1
         
-        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[type]!, size: size)
+        self.physicsBody = SKPhysicsBody(texture: GameTexture.textureDictionary[type]!, size: self.size)
         self.physicsBody!.affectedByGravity = false
-        self.physicsBody!.linearDamping = CGFloat(damping)
+        self.physicsBody!.linearDamping = self.damping
         self.physicsBody!.angularDamping = 0
         self.physicsBody!.categoryBitMask = Global.Constants.spaceshipCategory
         self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.blackholeCategory | Global.Constants.dilithiumCategory | Global.Constants.lifeorbCategory | Global.Constants.meteoroidCategory | Global.Constants.stationCategory
@@ -128,7 +130,7 @@ class Spaceship: GameObject {
             print("Received unexpected spacefield shape: \(fieldShape)")
         }
         
-        self.sShip = createShip(GameTexture.textureDictionary[type]!, size)
+        self.sShip = createShip(GameTexture.textureDictionary[type]!, self.size)
         self.addChild(sShip!)
         self.sShield = createShield()
         if(sShield != nil) {
@@ -137,7 +139,7 @@ class Spaceship: GameObject {
         
         self.isUserInteractionEnabled = true
         
-        self.addIndicators(size * 1.3)
+        self.addIndicators(self.size * 1.3)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -247,6 +249,41 @@ class Spaceship: GameObject {
                 delegate?.didRemove(obj: self)
             }
         }
+    }
+    
+    override func getConfig() -> JSON {
+        let type: String
+        if(self.type == .human) {
+            type = "human"
+        } else if(self.type == .robot) {
+            type = "robot"
+        } else if(self.type == .skeleton) {
+            type = "skeleton"
+        } else if(self.type == .slave) {
+            type = "cpu_slave"
+        } else {
+            type = "cpu_master"
+        }
+        return [
+            "type":type,
+            "name":self.name ?? "",
+            "id":self.id,
+            "dmg":self.dmg,
+            "hp":self.hp,
+            "speed":self.speed_max,
+            "acc":self.acc,
+            "damping":self.damping,
+            "hp_max":self.hp_max,
+            "pos":[
+                "x":self.position.x,
+                "y":self.position.y
+            ],
+            "size":[
+                "w":self.size.width,
+                "h":self.size.height
+            ],
+            "rot":self.zRotation
+        ]
     }
     
     func shoot() {

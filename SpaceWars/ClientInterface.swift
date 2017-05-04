@@ -7,6 +7,7 @@
 //
 
 import MultipeerConnectivity
+import SpriteKit
 
 protocol PeerChangeDelegate {
     func peerDidChange(_ peers: [MCPeerID])
@@ -16,16 +17,16 @@ class ClientInterface: PeerChangeDelegate {
     
     private var name: String
     private var rank: LocalRank
-    private var view: UIViewController
+    private var viewController: UIViewController
     private(set) var server: ServerInterface?
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
     
     private(set) var players = [Player]()
     
-    init(_ view: LobbyViewController, _ name: String, _ server: ServerInterface?) {
+    init(_ viewController: LobbyViewController, _ name: String, _ server: ServerInterface?) {
         self.name = name
-        self.view = view
+        self.viewController = viewController
         self.server = server
         
         if(server == nil) {
@@ -89,13 +90,13 @@ class ClientInterface: PeerChangeDelegate {
     
     public func didReceivePlayerList(_ players: [Player]) {
         self.players = players
-        (view as? LobbyViewController)?.updateConnectionList(players)
+        (viewController as? LobbyViewController)?.updateConnectionList(players)
     }
     
     public func didReceiveStartShipSelection() {
         let gameVC = GameViewController(self)
-        view.present(gameVC, animated: true, completion: {
-            self.view = gameVC
+        viewController.present(gameVC, animated: false, completion: {
+            self.viewController = gameVC
         })
     }
     
@@ -111,6 +112,11 @@ class ClientInterface: PeerChangeDelegate {
         if let player = getPlayerByID(id) {
             print("Player \(player.name) chose spaceship '\(type)'")
         }
+    }
+    
+    public func loadGame() {
+        let skView = self.viewController.view as? SKView
+        skView?.presentScene(GameScene(skView!.bounds.size))
     }
 }
 

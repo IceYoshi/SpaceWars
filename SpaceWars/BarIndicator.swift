@@ -10,7 +10,7 @@ import SpriteKit
 
 class BarIndicator: SKNode {
     
-    private var displayName: String?
+    fileprivate var displayName: String?
     fileprivate var currentValue: Int?
     fileprivate var maxValue: Int?
     private var size: CGSize
@@ -138,6 +138,7 @@ class BarIndicator: SKNode {
 
 protocol BarIndicatorProtocol {
     var value: Int {get set}
+    var displayedName: String? {get set}
 }
 
 extension BarIndicator: BarIndicatorProtocol {
@@ -151,6 +152,16 @@ extension BarIndicator: BarIndicatorProtocol {
                 self.currentValue = max(0, min(value, self.maxValue!))
                 self.updateBar()
             }
+        }
+    }
+    
+    var displayedName: String? {
+        get {
+            return self.displayName
+        }
+        set(value) {
+            self.displayName = value
+            self.updateBar()
         }
     }
     
