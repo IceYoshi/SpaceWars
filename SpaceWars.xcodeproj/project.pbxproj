@@ -34,6 +34,7 @@
 		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
 		2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2796F3781E9BFA7F006411AC /* Torpedo.swift */; };
 		27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27992DB51EAA363F00DF24A7 /* MiniMap.swift */; };
+		279F414D1EBCA3EB006AF5A8 /* SelectionDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279F414C1EBCA3EB006AF5A8 /* SelectionDisplay.swift */; };
 		27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */; };
 		27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B5F30A1E6C335A00F05F72 /* Extensions.swift */; };
 		27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B752D91EA960BD001CFD51 /* Meteoroid.swift */; };
@@ -97,6 +98,7 @@
 		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
 		2796F3781E9BFA7F006411AC /* Torpedo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torpedo.swift; sourceTree = "<group>"; };
 		27992DB51EAA363F00DF24A7 /* MiniMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniMap.swift; sourceTree = "<group>"; };
+		279F414C1EBCA3EB006AF5A8 /* SelectionDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionDisplay.swift; sourceTree = "<group>"; };
 		27A6DCCF1E74772D00D66C7D /* PlayerCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerCamera.swift; sourceTree = "<group>"; };
 		27B5F30A1E6C335A00F05F72 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27B752D91EA960BD001CFD51 /* Meteoroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Meteoroid.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */,
 				27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */,
 				27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */,
+				279F414C1EBCA3EB006AF5A8 /* SelectionDisplay.swift */,
 			);
 			name = hud;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				2719C9E11E99171A009D57B3 /* RobotShip.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
 				2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */,
+				279F414D1EBCA3EB006AF5A8 /* SelectionDisplay.swift in Sources */,
 				27BF00891EBBA00C00EBA1C8 /* ShipSelection.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,

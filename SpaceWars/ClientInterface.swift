@@ -13,7 +13,7 @@ protocol PeerChangeDelegate {
     func peerDidChange(_ peers: [MCPeerID])
 }
 
-class ClientInterface: PeerChangeDelegate {
+class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     
     private var name: String
     private var rank: LocalRank
@@ -21,6 +21,7 @@ class ClientInterface: PeerChangeDelegate {
     private(set) var server: ServerInterface?
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
+    public var scene: SKScene?
     
     private(set) var players = [Player]()
     
@@ -108,9 +109,13 @@ class ClientInterface: PeerChangeDelegate {
         try? connectionManager.sendToServer(message.rawData(), .reliable)
     }
     
+    func didEndShipSelection() {
+        self.server?.didEndShipSelection()
+    }
+    
     public func didReceiveSpaceshipSelection(id: Int, type: String) {
-        if let player = getPlayerByID(id) {
-            print("Player \(player.name) chose spaceship '\(type)'")
+        if(getPlayerByID(id) != nil) {
+            (self.scene as? ShipSelectionScene)?.didReceiveSpaceshipSelection(id, type)
         }
     }
     

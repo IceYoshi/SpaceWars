@@ -16,7 +16,7 @@ enum GameState: String {
     playing = "playing"
 }
 
-class ServerInterface: PeerChangeDelegate, ShipSelectionDelegate {
+class ServerInterface: PeerChangeDelegate {
     
     private var state: GameState = .join
     private var players = [Player]()

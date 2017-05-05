@@ -9,6 +9,7 @@
 import SpriteKit
 
 protocol ShipSelectionDelegate {
+    func didSelectSpaceship(type: String)
     func didEndShipSelection()
 }
 
@@ -30,28 +31,30 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
     private var speedIndicator: BarIndicator?
     private var accIndicator: BarIndicator?
     
+    private var selectionDisplay: SelectionDisplay
     private var delegate: ShipSelectionDelegate?
     
-    init(_ screenSize: CGSize, _ delegate: ShipSelectionDelegate?) {
+    init(screenSize: CGSize, players: [Player], delegate: ShipSelectionDelegate?, canStartGame: Bool) {
         self.shipSize = CGSize(width: screenSize.width*0.1, height: screenSize.width*0.12)
         self.screenSize = screenSize
+        
+        self.selectionDisplay = SelectionDisplay(screenSize, players)
         super.init()
         
         let shipLayer = SKNode()
         
+        addShipSprites(to: shipLayer)
+        animateToSelection(shouldAnimate: false)
         
         let navigationButtons = NavigationButtons(screenSize, self)
         navigationButtons.position = CGPoint(x: screenSize.width*0.25, y: screenSize.height*0.8)
         shipLayer.addChild(navigationButtons)
         
-        addShipSprites(to: shipLayer)
-        animateToSelection(shouldAnimate: false)
-        
         addBarIndicators(to: shipLayer)
         
-        if(delegate != nil) {
-            self.delegate = delegate
-            
+        self.delegate = delegate
+        
+        if(canStartGame) {
             let startButton = StartButton(screenSize, self)
             startButton.position = CGPoint(x: screenSize.width*0.25, y: screenSize.height*0.13)
             shipLayer.addChild(startButton)
@@ -60,6 +63,11 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
         }
         
         self.addChild(shipLayer)
+        self.addChild(self.selectionDisplay)
+        
+        self.run(SKAction.wait(forDuration: 0.5)) {
+            self.delegate?.didSelectSpaceship(type: self.getSelectedShipType())
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -89,6 +97,8 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
         self.selectedIndex = r >= 0 ? r : r + shipSprites.count
         animateToSelection(shouldAnimate: true)
         updateBarIndicators()
+        
+        delegate?.didSelectSpaceship(type: getSelectedShipType())
     }
     
     private func addShipSprites(to: SKNode) {
@@ -222,4 +232,7 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
         delegate?.didEndShipSelection()
     }
     
+    public func onShipSelected(id: Int, type: String) {
+        self.selectionDisplay.onShipSelected(id: id, type: type)
+    }
 }

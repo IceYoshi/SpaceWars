@@ -290,7 +290,8 @@ class Spaceship: GameObject {
         if(torpedoContainer != nil && canShoot) {
             self.canShoot = false
             let waitAction = SKAction.wait(forDuration: Global.Constants.shootDelay)
-            if let id = self.ammo.first {
+            if(self.physicsBody != nil && self.physicsBody?.categoryBitMask != 0 && self.ammo.first != nil) {
+                let id = self.ammo.first!
                 let shootAction = SKAction.run {
                     if(!self.infiniteShoot) {
                         self.ammo.remove(id)

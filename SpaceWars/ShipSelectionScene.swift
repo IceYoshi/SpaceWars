@@ -10,7 +10,13 @@ import SpriteKit
 
 class ShipSelectionScene: SKScene {
     
+    private var shipSelection: ShipSelection
+    private var client: ClientInterface
+    
     init(_ screenSize: CGSize, _ client: ClientInterface) {
+        self.shipSelection = ShipSelection(screenSize: screenSize, players: client.players, delegate: client, canStartGame: client.server != nil)
+        self.client = client
+        
         super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
@@ -18,11 +24,17 @@ class ShipSelectionScene: SKScene {
         
         self.name = "ShipSelectionScene"
         
-        self.addChild(ShipSelection(screenSize, client.server))
+        self.addChild(self.shipSelection)
+        
+        client.scene = self
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func didReceiveSpaceshipSelection(_ id: Int, _ type: String) {
+        shipSelection.onShipSelected(id: id, type: type)
     }
     
 }
