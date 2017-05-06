@@ -22,7 +22,7 @@ class ServerInterface: PeerChangeDelegate {
     private var players = [Player]()
     
     private var commandProcessor = CommandProcessor()
-    private var idCounter = IDCounter()
+    private(set) var idCounter = IDCounter()
     private var client: ClientInterface!
     
     private var setup: JSON?
@@ -168,6 +168,11 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didEndShipSelection() {
-        client.loadGame()
+        if(setup != nil) {
+            // TODO: Players get ships, pid
+            
+            
+            client.loadGame(setup!)
+        }
     }
 }

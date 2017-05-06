@@ -26,7 +26,7 @@ class ShipSelectionScene: SKScene {
         
         self.addChild(self.shipSelection)
         
-        client.scene = self
+        //client.scene = self
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -21,7 +21,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     private(set) var server: ServerInterface?
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
-    public var scene: SKScene?
+    private var scene: SKScene?
     
     private(set) var players = [Player]()
     
@@ -98,6 +98,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         let gameVC = GameViewController(self)
         viewController.present(gameVC, animated: false, completion: {
             self.viewController = gameVC
+            self.scene = gameVC.skView.scene
         })
     }
     
@@ -119,9 +120,9 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         }
     }
     
-    public func loadGame() {
+    public func loadGame(_ setup: JSON) {
         let skView = self.viewController.view as? SKView
-        skView?.presentScene(GameScene(skView!.bounds.size))
+        skView?.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, idCounter: server?.idCounter))
     }
 }
 

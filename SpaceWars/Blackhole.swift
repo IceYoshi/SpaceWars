@@ -11,7 +11,6 @@ import SpriteKit
 class Blackhole: GameObject {
     
     public let dmg: Int
-    private var delay: Int
     private var spawnPoint: CGPoint
     private var strength: Float
     private var minRange: Float
@@ -23,7 +22,6 @@ class Blackhole: GameObject {
     
     required init(_ config: JSON) {
         self.dmg = config["dmg"].intValue
-        self.delay = config["delay"].intValue
         self.spawnPoint = CGPoint(x: config["spawn_pos"]["x"].intValue, y: config["spawn_pos"]["y"].intValue)
         self.strength = config["strength"].floatValue
         self.animationDuration = config["delay"].doubleValue
@@ -59,9 +57,9 @@ class Blackhole: GameObject {
         self.addChild(sBlackhole)
     }
     
-    convenience init(idCounter: IDCounter, radius: CGFloat, pos: CGPoint, spawn_pos: CGPoint) {
+    convenience init(id: Int, radius: Int, pos: CGPoint, spawn_pos: CGPoint) {
         self.init([
-            "id":idCounter.nextID(),
+            "id":id,
             "strength":8 * Global.mean(r: radius, rMax: 300),
             "min_range":radius / 3,
             "max_range":radius * 3,
@@ -80,6 +78,11 @@ class Blackhole: GameObject {
             ]
         ])
     }
+    
+    convenience init(idCounter: IDCounter, radius: Int, pos: CGPoint, spawn_pos: CGPoint) {
+        self.init(id: idCounter.nextID(), radius: radius, pos: pos, spawn_pos: spawn_pos)
+    }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -158,7 +161,7 @@ class Blackhole: GameObject {
             "min_range":self.minRange,
             "max_range":self.maxRange,
             "dmg":self.dmg,
-            "delay":self.delay,
+            "delay":self.animationDuration,
             "pos":[
                 "x":self.position.x,
                 "y":self.position.y

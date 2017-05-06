@@ -59,9 +59,9 @@ class Spacestation: GameObject {
         self.physicsBody!.fieldBitMask = 0
     }
     
-    convenience init(idCounter: IDCounter, ownerID: Int, regenerationRate: Int, activeTime: Double, inactiveTime: Double, pos: CGPoint, radius: CGFloat, rot: CGFloat) {
+    convenience init(id: Int, ownerID: Int, regenerationRate: Int, activeTime: Double, inactiveTime: Double, pos: CGPoint, radius: CGFloat, rot: CGFloat) {
         self.init([
-            "id":idCounter.nextID(),
+            "id":id,
             "owner":ownerID,
             "rate":regenerationRate,
             "active":activeTime,
@@ -74,7 +74,19 @@ class Spacestation: GameObject {
                 "r":radius
             ],
             "rot":rot
-            ])
+        ])
+    }
+    
+    convenience init(idCounter: IDCounter, ownerID: Int, pos: CGPoint) {
+        self.init(id: idCounter.nextID(),
+                  ownerID: ownerID,
+                  regenerationRate: 15,
+                  activeTime: 10,
+                  inactiveTime: 60,
+                  pos: pos,
+                  radius: 300,
+                  rot: CGFloat.rand(0, 2*CGFloat.pi)
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

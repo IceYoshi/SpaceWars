@@ -34,14 +34,14 @@ class LifeOrb: GameObject {
         self.physicsBody!.fieldBitMask = 0
     }
     
-    convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {
+    convenience init(id: Int, pos: CGPoint, width: Int, rot: CGFloat) {
         let maxWidth = CGFloat(72)
         let maxHeight = CGFloat(maxWidth)/CGFloat(0.72)
         let w = max(min(CGFloat(width), maxWidth), 36)
         let h = CGFloat(w)/CGFloat(0.72)
         
         self.init([
-            "id":idCounter.nextID(),
+            "id":id,
             "hp_gain":30 * Global.mean(size: CGSize(width: w, height: h),
                                          sizeMax: CGSize(width: maxWidth, height: maxHeight)),
             "pos":[
@@ -54,6 +54,14 @@ class LifeOrb: GameObject {
             ],
             "rot":rot
             ])
+    }
+    
+    convenience init(idCounter: IDCounter, pos: CGPoint) {
+        self.init(id: idCounter.nextID(),
+                  pos: pos,
+                  width: Int.rand(36, 72),
+                  rot: CGFloat.rand(0, 2*CGFloat.pi)
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

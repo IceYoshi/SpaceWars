@@ -10,15 +10,12 @@ import SpriteKit
 
 class HumanShip: Spaceship {
     
-    required init(_ config: JSON) {
-        super.init(config: config, type: .human)
+    required init(_ config: JSON, _ fieldSize: CGSize, _ fieldShape: SpacefieldShape) {
+        super.init(config: config, type: .human, fieldSize: fieldSize, fieldShape: fieldShape)
     }
     
-    convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldShape: SpacefieldShape, fieldSize: CGSize) {
-        let id = idCounter.nextID()
-        let idRange = idCounter.nextIDRange(25)
-        
-        var config: JSON = [
+    convenience init(id: Int, idRange: [Int], playerName: String, pos: CGPoint, fieldSize: CGSize, fieldShape: SpacefieldShape) {
+        let config: JSON = [
             "id":id,
             "type":"human",
             "name":playerName,
@@ -45,25 +42,14 @@ class HumanShip: Spaceship {
                 "min":idRange.min() ?? 0,
                 "max":idRange.max() ?? 0,
                 "available":idRange
-            ],
-            "space_field":[]
+            ]
         ]
         
-        switch fieldShape {
-        case .rect:
-            config["space_field"] = JSON([
-                "shape": fieldShape.rawValue,
-                "w":fieldSize.width,
-                "h":fieldSize.height
-                ])
-        case .circle:
-            config["space_field"] = JSON([
-                "shape": fieldShape.rawValue,
-                "r":fieldSize.width
-                ])
-        }
-        
-        self.init(config)
+        self.init(config, fieldSize, fieldShape)
+    }
+    
+    convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldSize: CGSize, fieldShape: SpacefieldShape) {
+        self.init(id: idCounter.nextID(), idRange: idCounter.nextIDRange(25), playerName: playerName, pos: pos, fieldSize: fieldSize, fieldShape: fieldShape)
     }
     
     required init?(coder aDecoder: NSCoder) {

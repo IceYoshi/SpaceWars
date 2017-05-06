@@ -20,11 +20,6 @@ class Global {
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
-        // If the field shape is a circle, the width value will be used as
-        // the radius of the circle. The height value is simply ignored.
-        static let spacefieldSize: CGSize = CGSize(width: 2000, height: 4000)
-        static let spacefieldShape: SpacefieldShape = .circle
-        
         static let torpedoSize: CGSize = CGSize(width: 30, height: 90)
         static let torpedoVelocity: CGFloat = 3000
         static let torpedoAlphaDecay: CGFloat = 0.03
@@ -47,16 +42,16 @@ class Global {
         static let stationCategory: UInt32 = 0x1 << 6
     }
     
-    static func mean(w: CGFloat, h: CGFloat, wMax: CGFloat, hMax: CGFloat) -> CGFloat {
+    static func mean(w: Int, h: Int, wMax: Int, hMax: Int) -> CGFloat {
         return sqrt(CGFloat(w*h)/CGFloat(wMax*hMax))
     }
     
-    static func mean(r: CGFloat, rMax: CGFloat) -> CGFloat {
+    static func mean(r: Int, rMax: Int) -> CGFloat {
         return mean(w: r, h: r, wMax: rMax, hMax: rMax)
     }
     
     static func mean(size: CGSize, sizeMax: CGSize) -> CGFloat {
-        return mean(w: size.width, h: size.height, wMax: sizeMax.width, hMax: sizeMax.height)
+        return mean(w: Int(size.width), h: Int(size.height), wMax: Int(sizeMax.width), hMax: Int(sizeMax.height))
     }
     
     static func cache(shape: SKNode) -> SKEffectNode {

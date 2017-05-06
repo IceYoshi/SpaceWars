@@ -15,13 +15,13 @@ class BigMeteoroid: Meteoroid {
         super.init(config: config, type: .meteoroid_big)
     }
     
-    convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {
-        let maxWidth = CGFloat(256)
-        let w = max(min(CGFloat(width), maxWidth), 64)
+    convenience init(id: Int, pos: CGPoint, width: Int, rot: CGFloat) {
+        let maxWidth = 256
+        let w = max(min(width, maxWidth), 64)
         let hp = 240 * Global.mean(r: w, rMax: maxWidth)
         
         self.init([
-            "id":idCounter.nextID(),
+            "id":id,
             "dmg":140 * Global.mean(r: w, rMax: maxWidth),
             "hp":hp,
             "hp_max":hp,
@@ -37,6 +37,14 @@ class BigMeteoroid: Meteoroid {
             "rot":rot
             ])
 
+    }
+    
+    convenience init(idCounter: IDCounter, pos: CGPoint) {
+        self.init(id: idCounter.nextID(),
+                  pos: pos,
+                  width: Int.rand(64, 128),
+                  rot: CGFloat.rand(0, 2*CGFloat.pi)
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {

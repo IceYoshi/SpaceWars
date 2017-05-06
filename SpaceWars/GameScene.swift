@@ -16,132 +16,105 @@ protocol NeedsPhysicsUpdateProtocol {
 }
 
 class GameScene: SKScene, UIGestureRecognizerDelegate {
-    
-    private var viewSize: CGSize
-    
-    fileprivate var objectManager: ObjectManager?
+    fileprivate var objectManager: ObjectManager
     private var playerCamera: PlayerCamera?
     
     private var updateDelegates = [NeedsUpdateProtocol?]()
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
-    init(_ viewSize: CGSize) {
-        self.viewSize = viewSize
-        super.init(size: viewSize)
+    init(screenSize: CGSize, setup: JSON, idCounter: IDCounter?) {
+        let pid = setup["pid"].intValue
+        let fieldShape = SpacefieldShape(rawValue: setup["space_field"]["shape"].stringValue) ?? .rect
+        let fieldSize: CGSize
+        if(fieldShape == .rect) {
+            let w = setup["space_field"]["w"].intValue
+            let h = setup["space_field"]["h"].intValue
+            fieldSize = CGSize(width: w, height: h)
+        } else {
+            let r = setup["space_field"]["r"].intValue
+            fieldSize = CGSize(width: r, height: r)
+        }
+        
+        objectManager = ObjectManager(screenSize: screenSize, ownID: pid, fieldSize: fieldSize, fieldShape: fieldShape, idCounter: idCounter)
+        super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
         self.backgroundColor = .black
         self.physicsWorld.contactDelegate = self
         self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        self.physicsWorld.speed = 0
         
         self.name = "GameScene"
         
-        objectManager = ObjectManager(fieldSize: Global.Constants.spacefieldSize, fieldShape: Global.Constants.spacefieldShape, world: World(), background: Background(), overlay: Overlay(screenSize: viewSize), camera: PlayerCamera())
-        objectManager?.attachTo(scene: self)
-        objectManager?.paused = true
+        pauseGame()
+        objectManager.attachTo(scene: self)
         
-        createObjects(viewSize)
+        objectManager.generateWorld(setup["objects"].arrayValue)
+        
+        objectManager.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize:fieldSize))
+        objectManager.assignToBackground(obj: StarField(fieldSize: fieldSize))
+        
+        
+        let joystick = Joystick(deadZone: 0.1)
+        let padding = joystick.calculateAccumulatedFrame()
+        joystick.position = CGPoint(x: padding.width, y: padding.height)
+        objectManager.assignToOverlay(obj: joystick)
+        
+        let fireButton = FireButton()
+        fireButton.position = CGPoint(x: objectManager.screenSize.width - padding.width, y: padding.height)
+        objectManager.assignToOverlay(obj: fireButton)
+        
+        
+        let countdown = Countdown(startTime: setup["countdown"].intValue)
+        countdown.position = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
+        objectManager.assignToOverlay(obj: countdown)
+        countdown.register(delegate: self)
+        countdown.start()
+        
+        self.addNeedsUpdateDelegate(delegate: objectManager)
+        self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createObjects(_ screenSize: CGSize) {
-        if(objectManager != nil) {
-            // Overlay
-            let joystick = Joystick(deadZone: 0.1)
-            let padding = joystick.calculateAccumulatedFrame()
-            joystick.position = CGPoint(x: padding.width, y: padding.height)
-            objectManager!.assignToOverlay(obj: joystick)
-            
-            let fireButton = FireButton()
-            fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
-            objectManager!.assignToOverlay(obj: fireButton)
-            
-            let minimap = MiniMap(size: screenSize/3, fieldSize: objectManager!.fieldSize, fieldShape: objectManager!.fieldShape)
-            let offset = minimap.calculateAccumulatedFrame()/2
-            minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
-            objectManager!.assignMinimap(map: minimap)
-            
-            // World
-            objectManager!.assignPlayer(player: HumanShip(idCounter: objectManager!.idCounter, playerName: "Mike", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
-            
-            let spacestation = Spacestation(idCounter: objectManager!.idCounter, ownerID: objectManager!.player!.id, regenerationRate: 15, activeTime: 10, inactiveTime: 60, pos: objectManager!.getFreeRandomPosition(), radius: 100, rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-            //spacestation.changeColor(.red)
-            objectManager!.assignToWorld(obj: spacestation)
-            
-            /*
-            let cpuEnemy = CPUSlaveShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            cpuEnemy.controller = CPUController(ref: cpuEnemy, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
-            objectManager!.assignShip(ship: cpuEnemy)
-            
-            let cpuEnemy2 = CPUMasterShip(idCounter: objectManager!.idCounter, playerName: "COM", pos: objectManager!.getFreeRandomPosition(), fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize)
-            cpuEnemy2.controller = CPUController(ref: cpuEnemy2, targets: [objectManager!.player!], speedThrottle: 0.1, shootDelay: 3)
-            objectManager!.assignShip(ship: cpuEnemy2)
-             */
-            
-            objectManager!.assignToWorld(obj: SpacefieldBorder(fieldShape: objectManager!.fieldShape, fieldSize: objectManager!.fieldSize))
-            
-            objectManager!.assignToWorld(obj: Blackhole(idCounter: objectManager!.idCounter, radius: 150, pos: objectManager!.getFreeRandomPosition(), spawn_pos: objectManager!.centerPoint))
-            
-            for _ in 1...5 {
-                let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: dilithium)
-                dilithium.addItemRemoveDelegate(self)
-            }
-            
-            for _ in 1...5 {
-                let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: lifeOrb)
-                lifeOrb.addItemRemoveDelegate(self)
-            }
-            
-            for _ in 1...5 {
-                let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addItemRemoveDelegate(self)
-            }
-            
-            for _ in 1...5 {
-                let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: meteoroid)
-                meteoroid.addItemRemoveDelegate(self)
-            }
-            
-            // Background
-            objectManager!.assignToBackground(obj: StarField(fieldSize: objectManager!.fieldSize))
-            
-            
-            // Setup delegates
-            if let player = objectManager!.player {
-                objectManager!.background?.setParallaxReference(ref: player)
-                player.controller = joystick
-                fireButton.register(delegate: player)
-                
-                let healthBar = BarIndicator(displayName: "Shield", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
-                healthBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2)
-                objectManager!.assignToOverlay(obj: healthBar)
-                player.hpIndicator = healthBar
-                
-                let energyBar = BarIndicator(displayName: "Ammo", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
-                energyBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2 - 20)
-                objectManager!.assignToOverlay(obj: energyBar)
-                player.ammoIndicator = energyBar
-            }
-            
-            self.addNeedsUpdateDelegate(delegate: objectManager)
-            self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
-            
-            let countdown = Countdown(startTime: 5)
-            countdown.position = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
-            objectManager!.assignToOverlay(obj: countdown)
-            countdown.register(delegate: self)
-            countdown.start()
-        }
+    public func pauseGame() {
+        self.physicsWorld.speed = 0
+        objectManager.paused = true
     }
     
+    public func resumeGame() {
+        self.physicsWorld.speed = 1
+        objectManager.paused = false
+    }
+    /*
+    private func createObjects() {
+        // Overlay
+        
+        
+        // World
+        objectManager.assignPlayer(player: HumanShip(idCounter: objectManager.idCounter, playerName: "Mike", pos: objectManager.getFreeRandomPosition(), fieldShape: objectManager.fieldShape, fieldSize: objectManager.fieldSize))
+        
+        
+        // Setup delegates
+        if let player = objectManager.player {
+            objectManager.background.setParallaxReference(ref: player)
+            player.controller = joystick
+            fireButton.register(delegate: player)
+            
+            let healthBar = BarIndicator(displayName: "Shield", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
+            healthBar.position = CGPoint(x: objectManager.screenSize.width/2, y: padding.height/2)
+            objectManager.assignToOverlay(obj: healthBar)
+            player.hpIndicator = healthBar
+            
+            let energyBar = BarIndicator(displayName: "Ammo", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
+            energyBar.position = CGPoint(x: objectManager.screenSize.width/2, y: padding.height/2 - 20)
+            objectManager.assignToOverlay(obj: energyBar)
+            player.ammoIndicator = energyBar
+        }
+     
+    }
+*/
     override func didMove(to view: SKView) {
         let gestureRecognizer = UIPinchGestureRecognizer(
             target: self,
@@ -186,9 +159,9 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         var touchLocation = touch.location(in: self.view)
-        touchLocation.y = viewSize.height - touchLocation.y
+        touchLocation.y = objectManager.screenSize.height - touchLocation.y
         
-        if(objectManager!.touchesOverlay(touchLocation)) {
+        if(objectManager.touchesOverlay(touchLocation)) {
             return false
         }
         return true
@@ -206,9 +179,9 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     func didPerformPanGesture(recognizer: UIPanGestureRecognizer) {
-        if (camera != nil && objectManager?.player == nil) {
+        if (camera != nil && objectManager.player == nil) {
             if(recognizer.state == .changed || recognizer.state == .began) {
-                objectManager?.camera?.targetObject = nil
+                objectManager.camera.targetObject = nil
                 let t = recognizer.translation(in: self.view) * Double(camera!.xScale)
                 camera!.position += CGPoint(x: -t.x, y: t.y)
                 recognizer.setTranslation(CGPoint.zero, in: self.view)
@@ -251,9 +224,7 @@ extension GameScene: SKPhysicsContactDelegate {
         }
     }
     
-    func didEnd(_ contact: SKPhysicsContact) {
-        //self.didBegin(contact)
-    }
+    func didEnd(_ contact: SKPhysicsContact) {}
     
 }
 
@@ -266,27 +237,7 @@ protocol ItemRemovedDelegate: class {
 extension GameScene: ItemRemovedDelegate {
     
     func didRemove(obj: GameObject) {
-        if let _ = obj as? Dilithium {
-            let dilithium = Dilithium(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-            objectManager?.assignToWorld(obj: dilithium)
-            dilithium.addItemRemoveDelegate(self)
-        } else if let _ = obj as? LifeOrb {
-            let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-            objectManager?.assignToWorld(obj: lifeOrb)
-            lifeOrb.addItemRemoveDelegate(self)
-        } else if let _ = obj as? SmallMeteoroid {
-            let meteoroid = SmallMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(48, 128), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-            objectManager?.assignToWorld(obj: meteoroid)
-            meteoroid.addItemRemoveDelegate(self)
-        } else if let obj = obj as? BigMeteoroid {
-            if(CGFloat.rand(0, 1) <= obj.spwawnRate) {
-                let lifeOrb = LifeOrb(idCounter: objectManager!.idCounter, pos: obj.position, width: Int.rand(36, 72), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-                objectManager?.assignToWorld(obj: lifeOrb)
-            }
-            let meteoroid = BigMeteoroid(idCounter: objectManager!.idCounter, pos: objectManager!.getFreeRandomPosition(), width: Int.rand(64, 256), rot: CGFloat.rand(CGFloat(0), 2*CGFloat.pi))
-            objectManager?.assignToWorld(obj: meteoroid)
-            meteoroid.addItemRemoveDelegate(self)
-        }
+        
     }
     
 }
@@ -294,8 +245,7 @@ extension GameScene: ItemRemovedDelegate {
 extension GameScene: CountdownProtocol {
     
     func countdownEnded() {
-        objectManager?.paused = false
-        self.physicsWorld.speed = 1
+        resumeGame()
     }
     
 }

@@ -10,6 +10,8 @@ import SpriteKit
 
 enum SpacefieldShape: String {
     case rect = "rect", circle = "circle"
+    
+    
 }
 
 class SpacefieldBorder: GameEnvironment {

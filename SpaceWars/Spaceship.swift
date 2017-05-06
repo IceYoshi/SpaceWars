@@ -77,7 +77,7 @@ class Spaceship: GameObject {
         }
     }
     
-    init(config: JSON, type: TextureType) {
+    init(config: JSON, type: TextureType, fieldSize: CGSize, fieldShape: SpacefieldShape) {
         self.dmg = config["dmg"].intValue
         self.speed_max = config["speed"].intValue
         self.acc = config["acc"].intValue
@@ -98,7 +98,6 @@ class Spaceship: GameObject {
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let vel = CGVector(dx: config["vel"]["dx"].intValue, dy: config["vel"]["dy"].intValue)
         let rot = config["rot"].floatValue
-        let fieldShape = config["space_field"]["shape"].stringValue
         
         self.position = pos
         self.zRotation = CGFloat(rot)
@@ -114,20 +113,18 @@ class Spaceship: GameObject {
         self.physicsBody!.velocity = vel
         
         switch fieldShape {
-        case SpacefieldShape.rect.rawValue:
-            let fieldWidth = config["space_field"]["w"].intValue
-            let fieldHeight = config["space_field"]["h"].intValue
+        case .rect:
+            let fieldWidth = fieldSize.width
+            let fieldHeight = fieldSize.height
             self.constraints = [
                 SKConstraint.positionX(SKRange(lowerLimit: 0, upperLimit: CGFloat(fieldWidth))),
                 SKConstraint.positionY(SKRange(lowerLimit: 0, upperLimit: CGFloat(fieldHeight)))
             ]
-        case SpacefieldShape.circle.rawValue:
-            let fieldRadius = config["space_field"]["r"].intValue
+        case .circle:
+            let fieldRadius = fieldSize.width
             self.constraints = [
                 SKConstraint.distance(SKRange(upperLimit: CGFloat(fieldRadius)), to: CGPoint(x: fieldRadius, y: fieldRadius))
             ]
-        default:
-            print("Received unexpected spacefield shape: \(fieldShape)")
         }
         
         self.sShip = createShip(GameTexture.textureDictionary[type]!, self.size)

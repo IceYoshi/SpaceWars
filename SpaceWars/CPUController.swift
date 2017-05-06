@@ -20,11 +20,10 @@ class CPUController {
     private var shootDelay: Double
     
     
-    init(ref: Spaceship, targets: [Spaceship], speedThrottle: CGFloat, shootDelay: Double) {
+    init(ref: Spaceship, speedThrottle: CGFloat, shootDelay: Double) {
         self.speedThrottle = speedThrottle
         self.shootDelay = shootDelay
         self.reference = ref
-        self.setTargets(targets)
         
         ref.infiniteShoot = true
         self.enableAutoFire()

@@ -12,7 +12,7 @@ class Overlay: SKNode {
     
     var joystick: Joystick?
     
-    init(screenSize: CGSize) {
+    init(_ screenSize: CGSize) {
         super.init()
         
         self.name = "Overlay"

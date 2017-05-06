@@ -20,9 +20,6 @@ class GameViewController: UIViewController {
     required init(_ client: ClientInterface) {
         self.client = client
         super.init(nibName: nil, bundle: nil)
-        
-        //client.didSelectSpaceship(type: "human")
-        //let players = client.players
     }
     
     required init?(coder aDecoder: NSCoder) {

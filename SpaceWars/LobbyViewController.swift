@@ -201,7 +201,14 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
     
     private func createSetup() -> JSON {
         let countdown = Int(self.settingsCountdownLabel.text!)!
-        let shape = settingsSpacefieldShape.titleForSegment(at: settingsSpacefieldShape.selectedSegmentIndex)!
+        
+        let shape: SpacefieldShape
+        if(settingsSpacefieldShape.titleForSegment(at: settingsSpacefieldShape.selectedSegmentIndex)! == "Rectangle") {
+            shape = .rect
+        } else {
+            shape = .circle
+        }
+        
         let width = Int(settingsSpacefieldWidthLabel.text!)!
         let height = Int(settingsSpacefieldHeightLabel.text!)!
         
@@ -217,15 +224,16 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
             "objects":[]
         ]
         
-        if(shape == "Rectangle") {
+        switch shape {
+        case .rect:
             setup["space_field"] = [
-                "shape":shape,
+                "shape":shape.rawValue,
                 "w":width,
                 "h":height
             ]
-        } else {
+        case .circle:
             setup["space_field"] = [
-                "shape":shape,
+                "shape":shape.rawValue,
                 "r":width
             ]
         }

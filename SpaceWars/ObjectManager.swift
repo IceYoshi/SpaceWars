@@ -10,24 +10,28 @@ import SpriteKit
 
 class ObjectManager {
     
+    private(set) var screenSize: CGSize
+    
+    private(set) var ownID: Int
+    
     private(set) var fieldSize: CGSize
     private(set) var fieldShape: SpacefieldShape
     
-    public var idCounter: IDCounter
+    private(set) var idCounter: IDCounter?
     
-    public var world: World?
-    public var background: Background?
-    public var overlay: Overlay?
+    private(set) var world: World
+    private(set) var background: Background
+    private(set) var overlay: Overlay
+    private(set) var camera: PlayerCamera
+    private(set) var minimap: MiniMap
     
     fileprivate(set) var player: Spaceship?
-    private(set) var camera: PlayerCamera?
-    private(set) var minimap: MiniMap?
-    
     fileprivate var spaceships = [Spaceship]()
+    fileprivate var enemies = [Spaceship]()
     
     public var paused: Bool = false {
         didSet {
-            world?.isPaused = paused
+            world.isPaused = paused
         }
     }
     
@@ -43,62 +47,50 @@ class ObjectManager {
 
     private var objectDictionary = [Int: GameObject]()
     
-    init(fieldSize: CGSize, fieldShape: SpacefieldShape, world: World?, background: Background?, overlay: Overlay?, camera: PlayerCamera?) {
-        
-        self.idCounter = IDCounter()
-        
+    init(screenSize: CGSize, ownID: Int, fieldSize: CGSize, fieldShape: SpacefieldShape, idCounter: IDCounter?) {
+        self.screenSize = screenSize
+        self.ownID = ownID
         self.fieldSize = fieldSize
         self.fieldShape = fieldShape
-        self.world = world
-        self.background = background
-        self.overlay = overlay
-        self.camera = camera
+        self.idCounter = idCounter
+        self.world = World()
+        self.background = Background()
+        self.overlay = Overlay(screenSize)
+        self.camera = PlayerCamera()
+        self.camera.addChild(overlay)
         
-        if(overlay != nil) {
-            self.camera?.addChild(overlay!)
-        }
+        minimap = MiniMap(size: screenSize/3, fieldSize: fieldSize, fieldShape: fieldShape)
+        let offset = minimap.calculateAccumulatedFrame()/2
+        minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
+        assignToOverlay(obj: minimap)
     }
     
     public func attachTo(scene: SKScene) {
-        if(self.world != nil) {
-            self.world!.removeFromParent()
-            scene.addChild(self.world!)
-        }
-        if(self.background != nil) {
-            self.background!.removeFromParent()
-            scene.addChild(self.background!)
-        }
-        if(self.camera != nil) {
-            self.camera!.removeFromParent()
-            scene.camera = self.camera
-            scene.addChild(self.camera!)
-            constrainCamera()
-        }
+        world.removeFromParent()
+        scene.addChild(world)
+    
+        background.removeFromParent()
+        scene.addChild(background)
+        camera.removeFromParent()
+    
+        scene.camera = self.camera
+        scene.addChild(self.camera)
+        constrainCamera()
     }
     
     public func constrainCamera() {
         let offset = CGFloat(700)
-        switch self.fieldShape {
+        switch fieldShape {
         case .rect:
-            camera?.constraints = [
+            camera.constraints = [
                 SKConstraint.positionX(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.width + offset))),
                 SKConstraint.positionY(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.height + offset)))
             ]
         case .circle:
-            camera?.constraints = [
+            camera.constraints = [
                 SKConstraint.distance(SKRange(upperLimit: fieldSize.width * 2 - offset), to: self.centerPoint)
             ]
         }
-    }
-    
-    public func assignMinimap(map: MiniMap) {
-        self.minimap = map
-        
-        for (_, obj) in objectDictionary {
-            self.assignToMinimap(obj: obj)
-        }
-        
-        self.assignToOverlay(obj: map)
     }
     
     public func assignToMinimap(obj: GameObject) {
@@ -114,40 +106,67 @@ class ObjectManager {
             case .meteoroid_big: w = 2
             default: break
         }
-        self.minimap?.addItem(ref: obj, needsUpdate: u, weight: w)
+        self.minimap.addItem(ref: obj, needsUpdate: u, weight: w)
     }
     
-    public func assignPlayer(player: Spaceship) {
-        self.player = player
-        player.showIndicators = false
-        self.camera?.targetObject = player
-        self.assignShip(ship: player)
-        player.addItemRemoveDelegate(self)
-    }
-    
-    public func assignShip(ship: Spaceship) {
+    public func assignSpaceship(_ ship: Spaceship) {
         ship.torpedoContainer = world
-        self.spaceships.append(ship)
+        spaceships.append(ship)
+        
+        if(ship.id == ownID) {
+            player = ship
+            ship.showIndicators = false
+            camera.targetObject = ship
+            
+            let padding: CGFloat = 30
+            let healthBar = BarIndicator(displayName: "Shield", currentValue: player!.hp, maxValue: player!.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
+            healthBar.position = CGPoint(x: screenSize.width/2, y: padding)
+            assignToOverlay(obj: healthBar)
+            player!.hpIndicator = healthBar
+            
+            let energyBar = BarIndicator(displayName: "Ammo", currentValue: player!.ammoCount, maxValue: player!.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
+            energyBar.position = CGPoint(x: screenSize.width/2, y: padding - 20)
+            assignToOverlay(obj: energyBar)
+            player!.ammoIndicator = energyBar
+            
+        } else if(idCounter != nil) {
+            let spacestation = Spacestation(idCounter: idCounter!, ownerID: ship.id, pos: getFreeRandomPosition())
+            spacestation.changeColor(.red)
+            assignToWorld(obj: spacestation)
+        }
+        
+        ship.addClickDelegate(self)
         assignToWorld(obj: ship)
+        
+    }
+    
+    public func assignCPUSpaceship(_ enemy: Spaceship) {
+        enemy.torpedoContainer = world
+        enemies.append(enemy)
+        
+        enemy.controller = CPUController(ref: enemy, speedThrottle: 0.1, shootDelay: 3)
+        
+        enemy.addClickDelegate(self)
+        assignToWorld(obj: enemy)
     }
     
     public func assignToWorld(obj: GameObject) {
         objectDictionary[obj.id] = obj
         assignToMinimap(obj: obj)
-        world?.addChild(obj)
-        obj.addClickDelegate(self)
+        world.addChild(obj)
+        obj.addItemRemoveDelegate(self)
     }
     
     public func assignToWorld(obj: GameEnvironment) {
-        world?.addChild(obj)
+        world.addChild(obj)
     }
     
     public func assignToBackground(obj: GameEnvironment) {
-        background?.addChild(obj)
+        background.addChild(obj)
     }
     
     public func assignToOverlay(obj: SKNode) {
-        overlay?.addChild(obj)
+        overlay.addChild(obj)
     }
     
     public func getObjectById(id: Int) -> GameObject? {
@@ -155,10 +174,8 @@ class ObjectManager {
     }
     
     public func touchesOverlay(_ touchLocation: CGPoint) -> Bool {
-        if(overlay != nil) {
-            if(overlay!.nodes(at: touchLocation).count > 0) {
-                return true
-            }
+        if(overlay.nodes(at: touchLocation).count > 0) {
+            return true
         }
         return false
     }
@@ -180,35 +197,128 @@ class ObjectManager {
     
     public func getFreeRandomPosition() -> CGPoint {
         var pos = getRandomPosition()
-        if(world != nil) {
-            // With every failed positioning try, lower the minimal distance threshold
-            // in order to decrease execution time on an overfilled space field
-            var offset: Int = 0
-            while(isCloseToGameObject(pos, Global.Constants.spawnDistanceThreshold - offset)) {
-                pos = getRandomPosition()
-                offset += 5
-            }
+        
+        // With every failed positioning try, lower the minimal distance threshold
+        // in order to decrease execution time on an overfilled space field
+        var offset: Int = 0
+        while(isCloseToGameObject(pos, Global.Constants.spawnDistanceThreshold - offset)) {
+            pos = getRandomPosition()
+            offset += 5
         }
+        
         return pos
     }
     
     public func isCloseToGameObject(_ p: CGPoint, _ threshold: Int) -> Bool {
-        if(world != nil) {
-            for node in world!.children {
-                if(node as? GameObject != nil &&
-                    node.position.distanceTo(p) < threshold) {
-                    return true
-                }
+        for node in world.children {
+            if(node as? GameObject != nil &&
+                node.position.distanceTo(p) < threshold) {
+                return true
             }
         }
         return false
     }
+    
+    public func generateWorld(_ objects: [JSON]) {
+        let _ = getFreeRandomPosition()
+        for obj in objects {
+            switch obj["type"].stringValue {
+            case "meteoroid1":
+                if(idCounter != nil) {
+                    assignToWorld(obj: SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                } else {
+                    assignToWorld(obj: SmallMeteoroid(obj))
+                }
+            case "meteoroid2":
+                if(idCounter != nil) {
+                    assignToWorld(obj: BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                } else {
+                    assignToWorld(obj: BigMeteoroid(obj))
+                }
+            case "dilithium":
+                if(idCounter != nil) {
+                    assignToWorld(obj: Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                } else {
+                    assignToWorld(obj: Dilithium(obj))
+                }
+            case "life_orb":
+                if(idCounter != nil) {
+                    assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                } else {
+                    assignToWorld(obj: LifeOrb(obj))
+                }
+            case "blackhole":
+                if(idCounter != nil) {
+                    assignToWorld(obj: Blackhole(idCounter: idCounter!, radius: Int.rand(100, 300), pos: getFreeRandomPosition(), spawn_pos: centerPoint))
+                } else {
+                    assignToWorld(obj: Blackhole(obj))
+                }
+            case "spacestation":
+                assignToWorld(obj: Spacestation(obj))
+            case "human":
+                if(idCounter != nil) {
+                    assignSpaceship(HumanShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                } else {
+                    assignSpaceship(HumanShip(obj, fieldSize, fieldShape))
+                }
+            case "robot":
+                if(idCounter != nil) {
+                    assignSpaceship(RobotShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                } else {
+                    assignSpaceship(RobotShip(obj, fieldSize, fieldShape))
+                }
+            case "skeleton":
+                if(idCounter != nil) {
+                    assignSpaceship(SkeletonShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                } else {
+                    assignSpaceship(SkeletonShip(obj, fieldSize, fieldShape))
+                }
+            case "cpu_master":
+                if(idCounter != nil) {
+                    assignCPUSpaceship(CPUMasterShip(idCounter: idCounter!, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                } else {
+                    assignCPUSpaceship(CPUMasterShip(obj, fieldSize, fieldShape))
+                }
+            case "cpu_slave":
+                if(idCounter != nil) {
+                    assignCPUSpaceship(CPUSlaveShip(idCounter: idCounter!, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                } else {
+                    assignCPUSpaceship(CPUSlaveShip(obj, fieldSize, fieldShape))
+                }
+            case let type:
+                print("Unknown object type: \(type)")
+            }
+        }
+        
+        for enemy in enemies {
+            (enemy.controller as? CPUController)?.setTargets(spaceships)
+        }
+    }
+    
 }
 
 extension ObjectManager: ItemRemovedDelegate {
     
     func didRemove(obj: GameObject) {
-        self.player = nil
+        if(obj == player) {
+            player = nil
+        }
+        
+        if let _ = obj as? Dilithium {
+            assignToWorld(obj: Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition()))
+        } else if let _ = obj as? LifeOrb {
+            assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition()))
+        } else if let _ = obj as? SmallMeteoroid {
+            assignToWorld(obj: SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+        } else if let obj = obj as? BigMeteoroid {
+            if(CGFloat.rand(0, 1) < obj.spwawnRate) {
+                assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: obj.position))
+            }
+            assignToWorld(obj: BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+        } else if let ship = obj as? Spaceship {
+            spaceships = spaceships.filter({ $0 !== ship })
+            enemies = enemies.filter({ $0 !== ship })
+        }
     }
     
 }
@@ -217,7 +327,7 @@ extension ObjectManager: GameObjectClickDelegate {
     
     func didClick(obj: GameObject) {
         if(self.player == nil) {
-            self.camera?.targetObject = obj
+            camera.targetObject = obj
         }
     }
     
@@ -238,9 +348,9 @@ extension ObjectManager: NeedsUpdateProtocol {
 extension ObjectManager: NeedsPhysicsUpdateProtocol {
     
     func didSimulatePhysics() {
-        self.camera?.didSimulatePhysics()
-        self.background?.didSimulatePhysics()
-        self.minimap?.didSimulatePhysics()
+        camera.didSimulatePhysics()
+        background.didSimulatePhysics()
+        minimap.didSimulatePhysics()
     }
     
 }

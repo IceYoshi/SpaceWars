@@ -14,7 +14,7 @@ class SmallMeteoroid: Meteoroid {
         super.init(config: config, type: .meteoroid_small)
     }
     
-    convenience init(idCounter: IDCounter, pos: CGPoint, width: Int, rot: CGFloat) {
+    convenience init(id: Int, pos: CGPoint, width: Int, rot: CGFloat) {
         let maxWidth = CGFloat(128)
         let maxHeight = CGFloat(maxWidth)/CGFloat(2)
         let w = max(min(CGFloat(width), maxWidth), 48)
@@ -23,7 +23,7 @@ class SmallMeteoroid: Meteoroid {
                                    sizeMax: CGSize(width: maxWidth, height: maxHeight))
         
         self.init([
-            "id":idCounter.nextID(),
+            "id":id,
             "dmg":140 * Global.mean(size: CGSize(width: w, height: h),
                                     sizeMax: CGSize(width: maxWidth, height: maxHeight)),
             "hp":hp,
@@ -43,7 +43,7 @@ class SmallMeteoroid: Meteoroid {
     }
     
     convenience init(idCounter: IDCounter, pos: CGPoint) {
-        self.init(idCounter: idCounter,
+        self.init(id: idCounter.nextID(),
                   pos: pos,
                   width: Int.rand(64, 128),
                   rot: CGFloat.rand(0, 2*CGFloat.pi)
