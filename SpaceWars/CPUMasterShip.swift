@@ -48,8 +48,8 @@ class CPUMasterShip: Spaceship {
         self.init(config, fieldSize, fieldShape)
     }
     
-    convenience init(idCounter: IDCounter, playerName: String, pos: CGPoint, fieldSize: CGSize, fieldShape: SpacefieldShape) {
-        self.init(id: idCounter.nextID(), idRange: idCounter.nextIDRange(1), playerName: playerName, pos: pos, fieldSize: fieldSize, fieldShape: fieldShape)
+    convenience init(idCounter: IDCounter, id: Int, playerName: String, pos: CGPoint, fieldSize: CGSize, fieldShape: SpacefieldShape) {
+        self.init(id: id, idRange: idCounter.nextIDRange(1), playerName: playerName, pos: pos, fieldSize: fieldSize, fieldShape: fieldShape)
     }
     
     required init?(coder aDecoder: NSCoder) {

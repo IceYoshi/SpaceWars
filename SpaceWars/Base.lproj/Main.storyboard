@@ -203,13 +203,13 @@
                                                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="JSO-kV-4ZJ">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="200" height="29"/>
                                                                                 <subviews>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hHR-hi-40P">
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hHR-hi-40P">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="96" height="29"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
-                                                                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2000" minimumValue="1500" maximumValue="10000" stepValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="ifO-Oq-tKJ">
+                                                                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="3000" minimumValue="2000" maximumValue="10000" stepValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="ifO-Oq-tKJ">
                                                                                         <rect key="frame" x="106" y="0.0" width="94" height="29"/>
                                                                                         <connections>
                                                                                             <action selector="onSpacefieldWidthChanged:" destination="sfb-FC-IrQ" eventType="valueChanged" id="6sC-gj-m5a"/>
@@ -226,7 +226,7 @@
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
-                                                                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2000" minimumValue="1500" maximumValue="10000" stepValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="a8u-wq-A6m">
+                                                                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="2000" minimumValue="2000" maximumValue="10000" stepValue="500" translatesAutoresizingMaskIntoConstraints="NO" id="a8u-wq-A6m">
                                                                                         <rect key="frame" x="106" y="0.0" width="94" height="29"/>
                                                                                         <connections>
                                                                                             <action selector="onSpacefieldHeightChanged:" destination="sfb-FC-IrQ" eventType="valueChanged" id="KQd-rT-8Zq"/>

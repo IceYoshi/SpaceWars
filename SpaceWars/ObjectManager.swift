@@ -17,6 +17,7 @@ class ObjectManager {
     private(set) var fieldSize: CGSize
     private(set) var fieldShape: SpacefieldShape
     
+    private(set) var client: ClientInterface
     private(set) var idCounter: IDCounter?
     
     private(set) var world: World
@@ -28,6 +29,8 @@ class ObjectManager {
     fileprivate(set) var player: Spaceship?
     fileprivate var spaceships = [Spaceship]()
     fileprivate var enemies = [Spaceship]()
+    
+    private var objectDictionary = [Int: GameObject]()
     
     public var paused: Bool = false {
         didSet {
@@ -45,14 +48,13 @@ class ObjectManager {
         }
     }
 
-    private var objectDictionary = [Int: GameObject]()
-    
-    init(screenSize: CGSize, ownID: Int, fieldSize: CGSize, fieldShape: SpacefieldShape, idCounter: IDCounter?) {
+    init(screenSize: CGSize, ownID: Int, fieldSize: CGSize, fieldShape: SpacefieldShape, client: ClientInterface) {
         self.screenSize = screenSize
         self.ownID = ownID
         self.fieldSize = fieldSize
         self.fieldShape = fieldShape
-        self.idCounter = idCounter
+        self.client = client
+        self.idCounter = client.server?.idCounter
         self.world = World()
         self.background = Background()
         self.overlay = Overlay(screenSize)
@@ -63,6 +65,8 @@ class ObjectManager {
         let offset = minimap.calculateAccumulatedFrame()/2
         minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
         assignToOverlay(obj: minimap)
+        
+        background.setParallaxReference(ref: camera)
     }
     
     public func attachTo(scene: SKScene) {
@@ -79,16 +83,15 @@ class ObjectManager {
     }
     
     public func constrainCamera() {
-        let offset = CGFloat(700)
         switch fieldShape {
         case .rect:
             camera.constraints = [
-                SKConstraint.positionX(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.width + offset))),
-                SKConstraint.positionY(SKRange(lowerLimit: -offset, upperLimit: CGFloat(fieldSize.height + offset)))
+                SKConstraint.positionX(SKRange(lowerLimit: 0, upperLimit: fieldSize.width)),
+                SKConstraint.positionY(SKRange(lowerLimit: 0, upperLimit: fieldSize.height))
             ]
         case .circle:
             camera.constraints = [
-                SKConstraint.distance(SKRange(upperLimit: fieldSize.width * 2 - offset), to: self.centerPoint)
+                SKConstraint.distance(SKRange(upperLimit: fieldSize.width * 2), to: self.centerPoint)
             ]
         }
     }
@@ -118,26 +121,38 @@ class ObjectManager {
             ship.showIndicators = false
             camera.targetObject = ship
             
-            let padding: CGFloat = 30
+            let joystick = Joystick()
+            let padding = joystick.calculateAccumulatedFrame()
+            joystick.position = CGPoint(x: padding.width, y: padding.height)
+            player!.controller = joystick
+            assignToOverlay(obj: joystick)
+            
+            let fireButton = FireButton()
+            fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
+            fireButton.register(delegate: player!)
+            assignToOverlay(obj: fireButton)
+            
             let healthBar = BarIndicator(displayName: "Shield", currentValue: player!.hp, maxValue: player!.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
-            healthBar.position = CGPoint(x: screenSize.width/2, y: padding)
+            healthBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2)
             assignToOverlay(obj: healthBar)
             player!.hpIndicator = healthBar
             
             let energyBar = BarIndicator(displayName: "Ammo", currentValue: player!.ammoCount, maxValue: player!.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
-            energyBar.position = CGPoint(x: screenSize.width/2, y: padding - 20)
+            energyBar.position = CGPoint(x: screenSize.width/2, y: padding.height/2 - 20)
             assignToOverlay(obj: energyBar)
             player!.ammoIndicator = energyBar
-            
-        } else if(idCounter != nil) {
+        }
+        
+        if(idCounter != nil) {
             let spacestation = Spacestation(idCounter: idCounter!, ownerID: ship.id, pos: getFreeRandomPosition())
-            spacestation.changeColor(.red)
+            if(ship.id != ownID) {
+                spacestation.changeColor(.red)
+            }
             assignToWorld(obj: spacestation)
         }
         
         ship.addClickDelegate(self)
         assignToWorld(obj: ship)
-        
     }
     
     public func assignCPUSpaceship(_ enemy: Spaceship) {
@@ -219,6 +234,16 @@ class ObjectManager {
         return false
     }
     
+    public func getConfig() -> JSON {
+        var config: JSON = []
+        
+        for (_, obj) in objectDictionary {
+            try? config.merge(with: [ obj.getConfig() ])
+        }
+        
+        return config
+    }
+    
     public func generateWorld(_ objects: [JSON]) {
         let _ = getFreeRandomPosition()
         for obj in objects {
@@ -254,34 +279,58 @@ class ObjectManager {
                     assignToWorld(obj: Blackhole(obj))
                 }
             case "spacestation":
-                assignToWorld(obj: Spacestation(obj))
+                let station = Spacestation(obj)
+                assignToWorld(obj: station)
+                if(station.ownerID != ownID) {
+                    station.changeColor(.red)
+                }
             case "human":
                 if(idCounter != nil) {
-                    assignSpaceship(HumanShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    var id = obj["id"].intValue
+                    if(id == 0) {
+                        id = idCounter!.nextID()
+                    }
+                    assignSpaceship(HumanShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignSpaceship(HumanShip(obj, fieldSize, fieldShape))
                 }
             case "robot":
                 if(idCounter != nil) {
-                    assignSpaceship(RobotShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    var id = obj["id"].intValue
+                    if(id == 0) {
+                        id = idCounter!.nextID()
+                    }
+                    assignSpaceship(RobotShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignSpaceship(RobotShip(obj, fieldSize, fieldShape))
                 }
             case "skeleton":
                 if(idCounter != nil) {
-                    assignSpaceship(SkeletonShip(idCounter: idCounter!, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    var id = obj["id"].intValue
+                    if(id == 0) {
+                        id = idCounter!.nextID()
+                    }
+                    assignSpaceship(SkeletonShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignSpaceship(SkeletonShip(obj, fieldSize, fieldShape))
                 }
             case "cpu_master":
                 if(idCounter != nil) {
-                    assignCPUSpaceship(CPUMasterShip(idCounter: idCounter!, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    var id = obj["id"].intValue
+                    if(id == 0) {
+                        id = idCounter!.nextID()
+                    }
+                    assignCPUSpaceship(CPUMasterShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignCPUSpaceship(CPUMasterShip(obj, fieldSize, fieldShape))
                 }
             case "cpu_slave":
                 if(idCounter != nil) {
-                    assignCPUSpaceship(CPUSlaveShip(idCounter: idCounter!, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    var id = obj["id"].intValue
+                    if(id == 0) {
+                        id = idCounter!.nextID()
+                    }
+                    assignCPUSpaceship(CPUSlaveShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignCPUSpaceship(CPUSlaveShip(obj, fieldSize, fieldShape))
                 }
@@ -293,6 +342,8 @@ class ObjectManager {
         for enemy in enemies {
             (enemy.controller as? CPUController)?.setTargets(spaceships)
         }
+        
+        client.server?.didLoadGame(config: getConfig())
     }
     
 }
@@ -339,6 +390,9 @@ extension ObjectManager: NeedsUpdateProtocol {
         if(!paused) {
             for ship in self.spaceships {
                 ship.update()
+            }
+            for enemy in self.enemies {
+                enemy.update()
             }
         }
     }

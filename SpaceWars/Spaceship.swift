@@ -267,10 +267,15 @@ class Spaceship: GameObject {
             "id":self.id,
             "dmg":self.dmg,
             "hp":self.hp,
+            "hp_max":self.hp_max,
+            "ammo":[
+                "min":self.ammo_min,
+                "max":self.ammo_max,
+                "available":Array(self.ammo)
+            ],
             "speed":self.speed_max,
             "acc":self.acc,
             "damping":self.damping,
-            "hp_max":self.hp_max,
             "pos":[
                 "x":self.position.x,
                 "y":self.position.y
@@ -335,20 +340,18 @@ class Spaceship: GameObject {
 extension Spaceship: NeedsUpdateProtocol {
     
     public func update() {
-        if self.physicsBody != nil && (controller?.enabled) ?? false {
+        if(self.physicsBody != nil && (controller?.enabled) ?? false) {
             self.zRotation = controller!.angle - CGFloat.pi / 2
             
-            if(controller!.thrust > 0.3) {
-                let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
-                let multiplier = self.acc * controller!.thrust
-                var newVelocity = self.physicsBody!.velocity + accelerationVector * multiplier
-                
-                if newVelocity.length() > self.speed_max {
-                    newVelocity = newVelocity.normalized() * self.speed_max
-                }
-                
-                self.physicsBody!.velocity = newVelocity
+            let accelerationVector = CGVector(dx: cos(controller!.angle), dy: sin(controller!.angle))
+            let multiplier = self.acc * controller!.thrust
+            var newVelocity = self.physicsBody!.velocity + accelerationVector * multiplier
+            
+            if newVelocity.length() > self.speed_max {
+                newVelocity = newVelocity.normalized() * self.speed_max
             }
+            
+            self.physicsBody!.velocity = newVelocity
         }
         updateTorpedoes()
     }

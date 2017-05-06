@@ -22,7 +22,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     private var updateDelegates = [NeedsUpdateProtocol?]()
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
-    init(screenSize: CGSize, setup: JSON, idCounter: IDCounter?) {
+    init(screenSize: CGSize, setup: JSON, client: ClientInterface) {
         let pid = setup["pid"].intValue
         let fieldShape = SpacefieldShape(rawValue: setup["space_field"]["shape"].stringValue) ?? .rect
         let fieldSize: CGSize
@@ -35,7 +35,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             fieldSize = CGSize(width: r, height: r)
         }
         
-        objectManager = ObjectManager(screenSize: screenSize, ownID: pid, fieldSize: fieldSize, fieldShape: fieldShape, idCounter: idCounter)
+        objectManager = ObjectManager(screenSize: screenSize, ownID: pid, fieldSize: fieldSize, fieldShape: fieldShape, client: client)
         super.init(size: screenSize)
         
         self.scaleMode = .resizeFill
@@ -46,32 +46,25 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         self.name = "GameScene"
         
         pauseGame()
-        objectManager.attachTo(scene: self)
         
+        objectManager.attachTo(scene: self)
         objectManager.generateWorld(setup["objects"].arrayValue)
         
         objectManager.assignToWorld(obj: SpacefieldBorder(fieldShape: fieldShape, fieldSize:fieldSize))
         objectManager.assignToBackground(obj: StarField(fieldSize: fieldSize))
         
         
-        let joystick = Joystick(deadZone: 0.1)
-        let padding = joystick.calculateAccumulatedFrame()
-        joystick.position = CGPoint(x: padding.width, y: padding.height)
-        objectManager.assignToOverlay(obj: joystick)
-        
-        let fireButton = FireButton()
-        fireButton.position = CGPoint(x: objectManager.screenSize.width - padding.width, y: padding.height)
-        objectManager.assignToOverlay(obj: fireButton)
-        
-        
-        let countdown = Countdown(startTime: setup["countdown"].intValue)
-        countdown.position = CGPoint(x: screenSize.width/2, y: screenSize.height/2)
-        objectManager.assignToOverlay(obj: countdown)
-        countdown.register(delegate: self)
-        countdown.start()
-        
         self.addNeedsUpdateDelegate(delegate: objectManager)
         self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
+        
+        if(client.server != nil) {
+            self.run(SKAction.wait(forDuration: 0.5)){
+                self.startCountdown(setup["countdown"].intValue)
+            }
+        } else {
+            startCountdown(setup["countdown"].intValue)
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -83,38 +76,22 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.paused = true
     }
     
+    public func startCountdown(_ startTime: Int) {
+        pauseGame()
+        
+        let countdown = Countdown(startTime: startTime)
+        countdown.position = CGPoint(x: objectManager.screenSize.width/2,
+                                     y: objectManager.screenSize.height/2)
+        objectManager.assignToOverlay(obj: countdown)
+        countdown.register(delegate: self)
+        countdown.start()
+    }
+    
     public func resumeGame() {
         self.physicsWorld.speed = 1
         objectManager.paused = false
     }
-    /*
-    private func createObjects() {
-        // Overlay
-        
-        
-        // World
-        objectManager.assignPlayer(player: HumanShip(idCounter: objectManager.idCounter, playerName: "Mike", pos: objectManager.getFreeRandomPosition(), fieldShape: objectManager.fieldShape, fieldSize: objectManager.fieldSize))
-        
-        
-        // Setup delegates
-        if let player = objectManager.player {
-            objectManager.background.setParallaxReference(ref: player)
-            player.controller = joystick
-            fireButton.register(delegate: player)
-            
-            let healthBar = BarIndicator(displayName: "Shield", currentValue: player.hp, maxValue: player.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
-            healthBar.position = CGPoint(x: objectManager.screenSize.width/2, y: padding.height/2)
-            objectManager.assignToOverlay(obj: healthBar)
-            player.hpIndicator = healthBar
-            
-            let energyBar = BarIndicator(displayName: "Ammo", currentValue: player.ammoCount, maxValue: player.ammoCountMax, size: CGSize(width: 125, height: 15), highColor: .blue, lowColor: nil)
-            energyBar.position = CGPoint(x: objectManager.screenSize.width/2, y: padding.height/2 - 20)
-            objectManager.assignToOverlay(obj: energyBar)
-            player.ammoIndicator = energyBar
-        }
-     
-    }
-*/
+    
     override func didMove(to view: SKView) {
         let gestureRecognizer = UIPinchGestureRecognizer(
             target: self,
@@ -214,7 +191,7 @@ protocol ContactDelegate {
 extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if(contact.bodyA.categoryBitMask != 0 && contact.bodyB.categoryBitMask != 0) {
+        if(objectManager.client.server != nil  && contact.bodyA.categoryBitMask != 0 && contact.bodyB.categoryBitMask != 0) {
             if let obj = contact.bodyB.node as? GameObject {
                 (contact.bodyA.node as? ContactDelegate)?.contactWith(obj)
             }

@@ -13,6 +13,7 @@ class Player: CustomStringConvertible {
     public var name: String
     public var peerID: String
     public var isConnected: Bool = true
+    public var shipType: String = "human"
     
     public var description: String {
         get {

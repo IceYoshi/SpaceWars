@@ -13,7 +13,6 @@ class Joystick: SKNode {
     fileprivate var sDPad: SKSpriteNode?
     fileprivate var sJoystick: SKSpriteNode?
     fileprivate var blocked: Bool = false
-    fileprivate var deadZone: CGFloat
     
     fileprivate var joystickOffset: CGVector {
         get {
@@ -25,9 +24,7 @@ class Joystick: SKNode {
         }
     }
     
-    init(deadZone: CGFloat) {
-        self.deadZone = deadZone
-        
+    override init() {
         super.init()
         
         self.sDPad = self.createDPad()
@@ -99,7 +96,8 @@ extension Joystick: JoystickControllerProtocol {
     
     var enabled: Bool {
         get {
-            return !blocked && thrust > 0
+            let computedThrust = joystickOffset.length() / sJoystick!.size.width
+            return !blocked && computedThrust > 0
         }
         set(value) {
             self.blocked = !value
@@ -114,9 +112,9 @@ extension Joystick: JoystickControllerProtocol {
     
     var thrust: CGFloat {
         get {
-            if sJoystick != nil {
-                let calculatedThrust = joystickOffset.length() / sJoystick!.size.width
-                return calculatedThrust >= self.deadZone ? calculatedThrust : 0
+            let computedThrust = joystickOffset.length() / sJoystick!.size.width
+            if(computedThrust >= Global.Constants.joystickDeadZone) {
+                return computedThrust
             } else {
                 return 0
             }

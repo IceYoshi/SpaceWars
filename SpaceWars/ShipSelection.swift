@@ -10,7 +10,7 @@ import SpriteKit
 
 protocol ShipSelectionDelegate {
     func didSelectSpaceship(type: String)
-    func didEndShipSelection()
+    func didEndShipSelection(players: [Player])
 }
 
 class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
@@ -23,6 +23,7 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
     ]
     private var selectedIndex: Int = 0
     private var screenSize: CGSize
+    private var players: [Player]
     
     private var nameIndicator: BarIndicator?
     private var hpIndicator: BarIndicator?
@@ -34,9 +35,12 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
     private var selectionDisplay: SelectionDisplay
     private var delegate: ShipSelectionDelegate?
     
+    
+    
     init(screenSize: CGSize, players: [Player], delegate: ShipSelectionDelegate?, canStartGame: Bool) {
         self.shipSize = CGSize(width: screenSize.width*0.1, height: screenSize.width*0.12)
         self.screenSize = screenSize
+        self.players = players
         
         self.selectionDisplay = SelectionDisplay(screenSize, players)
         super.init()
@@ -229,10 +233,16 @@ class ShipSelection: SKNode, NavigationProtocol, StartButtonProtocol {
     }
     
     func didPressStart() {
-        delegate?.didEndShipSelection()
+        delegate?.didEndShipSelection(players: players)
     }
     
     public func onShipSelected(id: Int, type: String) {
-        self.selectionDisplay.onShipSelected(id: id, type: type)
+        for player in players {
+            if(player.id == id) {
+                player.shipType = type
+                self.selectionDisplay.onShipSelected(id: id, type: type)
+                break
+            }
+        }
     }
 }

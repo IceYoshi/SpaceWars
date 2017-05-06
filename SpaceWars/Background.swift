@@ -10,7 +10,7 @@ import SpriteKit
 
 class Background: SKNode {
     
-    var parallaxReference: SKNode?
+    fileprivate var parallaxReference: SKNode?
     
     override init() {
         super.init()

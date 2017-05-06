@@ -18,6 +18,13 @@ class PlayerCamera: SKCameraNode {
             target?.removeItemRemoveDelegate(self)
             value?.addItemRemoveDelegate(self)
             target = value
+            
+            if let constraints = self.constraints {
+                for constraint in constraints {
+                    constraint.enabled = value == nil
+                }
+            }
+            
         }
     }
     

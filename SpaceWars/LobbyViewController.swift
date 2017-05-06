@@ -234,7 +234,7 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
         case .circle:
             setup["space_field"] = [
                 "shape":shape.rawValue,
-                "r":width
+                "r":width/2
             ]
         }
         

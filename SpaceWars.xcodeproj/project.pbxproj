@@ -56,6 +56,7 @@
 		27C3A20F1EB73B5900337027 /* NameClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C3A20E1EB73B5900337027 /* NameClientCommand.swift */; };
 		27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CABFEA1E99235500CE0717 /* SwiftyJSON.swift */; };
 		27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CABFEC1E99418200CE0717 /* IDCounter.swift */; };
+		27CE1EEA1EBE316800BCB59E /* SetupClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CE1EE91EBE316800BCB59E /* SetupClientCommand.swift */; };
 		27D913021E6D98140030EFAC /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913011E6D98140030EFAC /* World.swift */; };
 		27D913071E6D98CC0030EFAC /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913061E6D98CC0030EFAC /* Background.swift */; };
 		27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D913081E6D98FB0030EFAC /* Overlay.swift */; };
@@ -120,6 +121,7 @@
 		27C3A20E1EB73B5900337027 /* NameClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameClientCommand.swift; sourceTree = "<group>"; };
 		27CABFEA1E99235500CE0717 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		27CABFEC1E99418200CE0717 /* IDCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDCounter.swift; sourceTree = "<group>"; };
+		27CE1EE91EBE316800BCB59E /* SetupClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupClientCommand.swift; sourceTree = "<group>"; };
 		27D913011E6D98140030EFAC /* World.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		27D913061E6D98CC0030EFAC /* Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		27D913081E6D98FB0030EFAC /* Overlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
+				27CE1EE81EBE180600BCB59E /* selection screen */,
 				270D971A1E9A437000FFA117 /* hud */,
 				270D97191E9A428500FFA117 /* environment */,
 				27CABFE91E99233300CE0717 /* lib */,
@@ -200,10 +203,6 @@
 				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
 				27992DB51EAA363F00DF24A7 /* MiniMap.swift */,
 				271F69991EB62E0200AAC43B /* Countdown.swift */,
-				27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */,
-				27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */,
-				27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */,
-				279F414C1EBCA3EB006AF5A8 /* SelectionDisplay.swift */,
 			);
 			name = hud;
 			sourceTree = "<group>";
@@ -277,6 +276,7 @@
 				27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */,
 				27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */,
 				27FDE9DB1EBA06BB00631788 /* ShipSelectedServerCommand.swift */,
+				27CE1EE91EBE316800BCB59E /* SetupClientCommand.swift */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -287,6 +287,17 @@
 				27CABFEA1E99235500CE0717 /* SwiftyJSON.swift */,
 			);
 			name = lib;
+			sourceTree = "<group>";
+		};
+		27CE1EE81EBE180600BCB59E /* selection screen */ = {
+			isa = PBXGroup;
+			children = (
+				27BF00881EBBA00C00EBA1C8 /* ShipSelection.swift */,
+				279F414C1EBCA3EB006AF5A8 /* SelectionDisplay.swift */,
+				27BF008C1EBBD8F500EBA1C8 /* StartButton.swift */,
+				27BF008A1EBBA25B00EBA1C8 /* NavigationButtons.swift */,
+			);
+			name = "selection screen";
 			sourceTree = "<group>";
 		};
 		27D913031E6D98230030EFAC /* extra */ = {
@@ -433,6 +444,7 @@
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
 				27B79C831E9D64A000DC4AD2 /* BarIndicator.swift in Sources */,
 				27B8E02B1E740397003A12DE /* Joystick.swift in Sources */,
+				27CE1EEA1EBE316800BCB59E /* SetupClientCommand.swift in Sources */,
 				271F699E1EB6876600AAC43B /* ServerInterface.swift in Sources */,
 				27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */,
 				27C3A20F1EB73B5900337027 /* NameClientCommand.swift in Sources */,

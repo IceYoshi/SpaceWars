@@ -29,7 +29,7 @@ class Global {
         static let minZoomLevel: CGFloat = 1.5
         static let defaultZoomLevel: CGFloat = 2.0
         
-        static let joystickDeadZone: CGFloat = 0.1
+        static let joystickDeadZone: CGFloat = 0.3
         
         static let spawnDistanceThreshold: Int = 200
         

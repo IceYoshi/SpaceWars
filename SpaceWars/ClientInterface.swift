@@ -43,6 +43,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         commandProcessor.register(command: NameClientCommand(self))
         commandProcessor.register(command: StartShipSelectionClientCommand(self))
         commandProcessor.register(command: ShipSelectedClientCommand(self))
+        commandProcessor.register(command: SetupClientCommand(self))
     }
     
     deinit {
@@ -110,8 +111,8 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         try? connectionManager.sendToServer(message.rawData(), .reliable)
     }
     
-    func didEndShipSelection() {
-        self.server?.didEndShipSelection()
+    func didEndShipSelection(players: [Player]) {
+        self.server?.didEndShipSelection(players: players)
     }
     
     public func didReceiveSpaceshipSelection(id: Int, type: String) {
@@ -122,7 +123,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     
     public func loadGame(_ setup: JSON) {
         let skView = self.viewController.view as? SKView
-        skView?.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, idCounter: server?.idCounter))
+        skView?.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, client: self))
     }
 }
 

@@ -167,12 +167,35 @@ class ServerInterface: PeerChangeDelegate {
         }
     }
     
-    public func didEndShipSelection() {
+    public func didEndShipSelection(players: [Player]) {
         if(setup != nil) {
-            // TODO: Players get ships, pid
+            try? setup!.merge(with: [
+                "pid":getPlayerByPeerID(UIDevice.current.identifierForVendor!.uuidString)!.id
+                ]
+            )
             
+            for player in players {
+                try? setup!["objects"].merge(with: [[
+                    "type":player.shipType,
+                    "name":player.name,
+                    "id":player.id
+                    ]])
+            }
             
             client.loadGame(setup!)
+        }
+    }
+    
+    public func didLoadGame(config: JSON) {
+        if(setup != nil) {
+            setup!["objects"] = config
+            var personalizedSetup = setup!
+            for player in players {
+                if(player.peerID != UIDevice.current.identifierForVendor!.uuidString) {
+                    personalizedSetup["pid"] = JSON(player.id)
+                    sendTo(player.peerID, personalizedSetup, .reliable)
+                }
+            }
         }
     }
 }
