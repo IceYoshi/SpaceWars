@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		270251F81EA8F41A00C5605A /* LifeOrb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270251F71EA8F41A00C5605A /* LifeOrb.swift */; };
+		270B62FF1EBF671F0080D05B /* PauseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270B62FE1EBF671F0080D05B /* PauseButton.swift */; };
 		270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C79141E6B54B70045C868 /* AppDelegate.swift */; };
 		270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C791C1E6B54B70045C868 /* GameViewController.swift */; };
 		270C79201E6B54B70045C868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 270C791E1E6B54B70045C868 /* Main.storyboard */; };
@@ -63,6 +64,18 @@
 		27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130A1E6DBBE70030EFAC /* Global.swift */; };
 		27D9130D1E6DC07D0030EFAC /* ShipSelectionScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */; };
 		27E589141EAB4C120096247F /* Textures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E589131EAB4C120096247F /* Textures.swift */; };
+		27E6BE281EBF19E1008FFC42 /* CollisionClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE271EBF19E1008FFC42 /* CollisionClientCommand.swift */; };
+		27E6BE2A1EBF241F008FFC42 /* FireServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE291EBF241F008FFC42 /* FireServerCommand.swift */; };
+		27E6BE2C1EBF2435008FFC42 /* FireClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE2B1EBF2435008FFC42 /* FireClientCommand.swift */; };
+		27E6BE2E1EBF25B0008FFC42 /* PauseServerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE2D1EBF25B0008FFC42 /* PauseServerCommand.swift */; };
+		27E6BE301EBF25BF008FFC42 /* PauseClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */; };
+		27E6BE321EBF260E008FFC42 /* StateSyncClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */; };
+		27E6BE341EBF26A0008FFC42 /* StationStatusClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */; };
+		27E6BE361EBF26F8008FFC42 /* ItemRespawnClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */; };
+		27E6BE381EBF2729008FFC42 /* KillClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */; };
+		27E6BE3A1EBF2748008FFC42 /* GameoverClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */; };
+		27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */; };
+		27E6BE3E1EBF3D82008FFC42 /* PausePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */; };
 		27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9C1C91EAC904F00B39165 /* CPUController.swift */; };
 		27FDE9D81EB9F1C600631788 /* StartShipSelectionClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */; };
 		27FDE9DA1EBA06A400631788 /* ShipSelectedClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */; };
@@ -71,6 +84,7 @@
 
 /* Begin PBXFileReference section */
 		270251F71EA8F41A00C5605A /* LifeOrb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LifeOrb.swift; sourceTree = "<group>"; };
+		270B62FE1EBF671F0080D05B /* PauseButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseButton.swift; sourceTree = "<group>"; };
 		270C79111E6B54B70045C868 /* SpaceWars.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpaceWars.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		270C79141E6B54B70045C868 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		270C791C1E6B54B70045C868 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -128,6 +142,18 @@
 		27D9130A1E6DBBE70030EFAC /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelectionScene.swift; sourceTree = "<group>"; };
 		27E589131EAB4C120096247F /* Textures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Textures.swift; sourceTree = "<group>"; };
+		27E6BE271EBF19E1008FFC42 /* CollisionClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollisionClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE291EBF241F008FFC42 /* FireServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireServerCommand.swift; sourceTree = "<group>"; };
+		27E6BE2B1EBF2435008FFC42 /* FireClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE2D1EBF25B0008FFC42 /* PauseServerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseServerCommand.swift; sourceTree = "<group>"; };
+		27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSyncClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationStatusClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemRespawnClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KillClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PausePanel.swift; sourceTree = "<group>"; };
 		27F9C1C91EAC904F00B39165 /* CPUController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPUController.swift; sourceTree = "<group>"; };
 		27FDE9D71EB9F1C600631788 /* StartShipSelectionClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartShipSelectionClientCommand.swift; sourceTree = "<group>"; };
 		27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShipSelectedClientCommand.swift; sourceTree = "<group>"; };
@@ -203,6 +229,8 @@
 				27B79C821E9D64A000DC4AD2 /* BarIndicator.swift */,
 				27992DB51EAA363F00DF24A7 /* MiniMap.swift */,
 				271F69991EB62E0200AAC43B /* Countdown.swift */,
+				27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */,
+				270B62FE1EBF671F0080D05B /* PauseButton.swift */,
 			);
 			name = hud;
 			sourceTree = "<group>";
@@ -277,6 +305,17 @@
 				27FDE9D91EBA06A400631788 /* ShipSelectedClientCommand.swift */,
 				27FDE9DB1EBA06BB00631788 /* ShipSelectedServerCommand.swift */,
 				27CE1EE91EBE316800BCB59E /* SetupClientCommand.swift */,
+				27E6BE271EBF19E1008FFC42 /* CollisionClientCommand.swift */,
+				27E6BE291EBF241F008FFC42 /* FireServerCommand.swift */,
+				27E6BE2B1EBF2435008FFC42 /* FireClientCommand.swift */,
+				27E6BE2D1EBF25B0008FFC42 /* PauseServerCommand.swift */,
+				27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */,
+				27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */,
+				27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */,
+				27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */,
+				27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */,
+				27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */,
+				27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */,
 			);
 			name = commands;
 			sourceTree = "<group>";
@@ -408,7 +447,10 @@
 			files = (
 				2719C9DD1E99153D009D57B3 /* GameObject.swift in Sources */,
 				27BF008B1EBBA25B00EBA1C8 /* NavigationButtons.swift in Sources */,
+				27E6BE2C1EBF2435008FFC42 /* FireClientCommand.swift in Sources */,
+				27E6BE3A1EBF2748008FFC42 /* GameoverClientCommand.swift in Sources */,
 				273CAE8F1EAB997B00E9213C /* Spacestation.swift in Sources */,
+				27E6BE2E1EBF25B0008FFC42 /* PauseServerCommand.swift in Sources */,
 				27CABFED1E99418200CE0717 /* IDCounter.swift in Sources */,
 				2719C9EC1E991801009D57B3 /* Spaceship.swift in Sources */,
 				27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */,
@@ -419,11 +461,13 @@
 				270C791D1E6B54B70045C868 /* GameViewController.swift in Sources */,
 				270C79151E6B54B70045C868 /* AppDelegate.swift in Sources */,
 				270251F81EA8F41A00C5605A /* LifeOrb.swift in Sources */,
+				27E6BE2A1EBF241F008FFC42 /* FireServerCommand.swift in Sources */,
 				277D47311E74B2B800901D8F /* StarField.swift in Sources */,
 				27FDE9DC1EBA06BB00631788 /* ShipSelectedServerCommand.swift in Sources */,
 				27FDE9DA1EBA06A400631788 /* ShipSelectedClientCommand.swift in Sources */,
 				27C2E6521E884ACC001A52D5 /* CommandProcessor.swift in Sources */,
 				27FDE9D81EB9F1C600631788 /* StartShipSelectionClientCommand.swift in Sources */,
+				27E6BE3E1EBF3D82008FFC42 /* PausePanel.swift in Sources */,
 				27D913091E6D98FB0030EFAC /* Overlay.swift in Sources */,
 				27B5F30B1E6C335A00F05F72 /* Extensions.swift in Sources */,
 				27C2E6501E884AB2001A52D5 /* Command.swift in Sources */,
@@ -434,11 +478,13 @@
 				270D971C1E9A4AB500FFA117 /* Blackhole.swift in Sources */,
 				2719C9E11E99171A009D57B3 /* RobotShip.swift in Sources */,
 				27D913021E6D98140030EFAC /* World.swift in Sources */,
+				27E6BE301EBF25BF008FFC42 /* PauseClientCommand.swift in Sources */,
 				2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */,
 				279F414D1EBCA3EB006AF5A8 /* SelectionDisplay.swift in Sources */,
 				27BF00891EBBA00C00EBA1C8 /* ShipSelection.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,
+				27E6BE361EBF26F8008FFC42 /* ItemRespawnClientCommand.swift in Sources */,
 				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
 				27B752DC1EA960D0001CFD51 /* SmallMeteoroid.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,
@@ -447,6 +493,7 @@
 				27CE1EEA1EBE316800BCB59E /* SetupClientCommand.swift in Sources */,
 				271F699E1EB6876600AAC43B /* ServerInterface.swift in Sources */,
 				27B8BDDA1E8944A8007D8EF7 /* LobbyViewController.swift in Sources */,
+				270B62FF1EBF671F0080D05B /* PauseButton.swift in Sources */,
 				27C3A20F1EB73B5900337027 /* NameClientCommand.swift in Sources */,
 				27C2E6551E884AE8001A52D5 /* MoveServerCommand.swift in Sources */,
 				270D97161E9A37CB00FFA117 /* SpacefieldBorder.swift in Sources */,
@@ -455,14 +502,19 @@
 				2719C9DF1E9916F8009D57B3 /* HumanShip.swift in Sources */,
 				27F9C1CA1EAC904F00B39165 /* CPUController.swift in Sources */,
 				27B752DE1EA960E2001CFD51 /* BigMeteoroid.swift in Sources */,
+				27E6BE341EBF26A0008FFC42 /* StationStatusClientCommand.swift in Sources */,
 				27BF008D1EBBD8F500EBA1C8 /* StartButton.swift in Sources */,
 				27E589141EAB4C120096247F /* Textures.swift in Sources */,
+				27E6BE281EBF19E1008FFC42 /* CollisionClientCommand.swift in Sources */,
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
+				27E6BE381EBF2729008FFC42 /* KillClientCommand.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
+				27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */,
 				27C3A2091EB72B0200337027 /* ClientInterface.swift in Sources */,
 				271F699C1EB686F100AAC43B /* Player.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,
+				27E6BE321EBF260E008FFC42 /* StateSyncClientCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

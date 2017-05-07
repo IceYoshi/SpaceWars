@@ -41,12 +41,13 @@ class FireButton: SKNode {
         return sButton
     }
     
-    public func register(delegate: FireButtonProtocol) {
+    public func addDelegate(_ delegate: FireButtonProtocol) {
         delegates.append(delegate)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0.3
+        self.sButton?.setScale(0.9)
         for delegate in delegates {
             delegate?.buttonClickBegan()
         }
@@ -54,6 +55,7 @@ class FireButton: SKNode {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0
+        self.sButton?.setScale(1)
         for delegate in delegates {
             delegate?.buttonClickEnded()
         }
@@ -61,6 +63,7 @@ class FireButton: SKNode {
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.sButton?.colorBlendFactor = 0
+        self.sButton?.setScale(1)
         for delegate in delegates {
             delegate?.buttonClickEnded()
         }

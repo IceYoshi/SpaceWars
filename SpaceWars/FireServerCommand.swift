@@ -1,20 +1,20 @@
 //
-//  MoveServerCommand.swift
+//  FireServerCommand.swift
 //  SpaceWars
 //
-//  Created by Mike Pereira on 26/03/2017.
+//  Created by Mike Pereira on 07/05/2017.
 //  Copyright © 2017 Mike Pereira. All rights reserved.
 //
 
 import SpriteKit
 
-class MoveServerCommand: Command {
+class FireServerCommand: Command {
     
     private var delegate: ServerInterface
     
     required init(_ delegate: ServerInterface) {
         self.delegate = delegate
-        super.init(commandName: "move")
+        super.init(commandName: "fire")
     }
     
     override func process(_ data: JSON, _ peerID: String) {

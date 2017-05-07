@@ -22,6 +22,12 @@ class GameViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return true
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

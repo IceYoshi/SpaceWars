@@ -44,6 +44,16 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         commandProcessor.register(command: StartShipSelectionClientCommand(self))
         commandProcessor.register(command: ShipSelectedClientCommand(self))
         commandProcessor.register(command: SetupClientCommand(self))
+        commandProcessor.register(command: StartClientCommand(self))
+        commandProcessor.register(command: CollisionClientCommand(self))
+        commandProcessor.register(command: FireClientCommand(self))
+        commandProcessor.register(command: MoveClientCommand(self))
+        commandProcessor.register(command: ItemRespawnClientCommand(self))
+        commandProcessor.register(command: PauseClientCommand(self))
+        commandProcessor.register(command: StationStatusClientCommand(self))
+        commandProcessor.register(command: KillClientCommand(self))
+        commandProcessor.register(command: GameoverClientCommand(self))
+        commandProcessor.register(command: StateSyncClientCommand(self))
     }
     
     deinit {
@@ -124,6 +134,24 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     public func loadGame(_ setup: JSON) {
         let skView = self.viewController.view as? SKView
         skView?.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, client: self))
+        self.scene = skView?.scene
+    }
+    
+    public func resumeGame() {
+        (self.scene as? GameScene)?.resumeGame()
+    }
+    
+    public func pauseGame(id: Int) {
+        (self.scene as? GameScene)?.pauseGame(caller: getPlayerByID(id)?.name)
+    }
+    
+    public func sendPause() {
+        let message: JSON = ["type":"pause"]
+        try? connectionManager.sendToServer(message.rawData(), .reliable)
+    }
+    
+    public func didCollide(_ id1: Int, _ id2: Int) {
+        (self.scene as? GameScene)?.didCollide(id1, id2)
     }
 }
 

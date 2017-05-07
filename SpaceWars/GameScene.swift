@@ -22,6 +22,8 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     private var updateDelegates = [NeedsUpdateProtocol?]()
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
+    private var countdown: Countdown?
+    
     init(screenSize: CGSize, setup: JSON, client: ClientInterface) {
         let pid = setup["pid"].intValue
         let fieldShape = SpacefieldShape(rawValue: setup["space_field"]["shape"].stringValue) ?? .rect
@@ -59,12 +61,11 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         
         if(client.server != nil) {
             self.run(SKAction.wait(forDuration: 0.5)){
-                self.startCountdown(setup["countdown"].intValue)
+                self.startCountdown(time: setup["countdown"].intValue)
             }
         } else {
-            startCountdown(setup["countdown"].intValue)
+            startCountdown(time: setup["countdown"].intValue)
         }
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,18 +77,30 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.paused = true
     }
     
-    public func startCountdown(_ startTime: Int) {
+    public func pauseGame(caller: String?) {
         pauseGame()
         
-        let countdown = Countdown(startTime: startTime)
-        countdown.position = CGPoint(x: objectManager.screenSize.width/2,
+        objectManager.pauseGame(name: caller)
+    }
+    
+    public func startCountdown(time: Int) {
+        pauseGame()
+        countdown = Countdown(startTime: time)
+        countdown!.position = CGPoint(x: objectManager.screenSize.width/2,
                                      y: objectManager.screenSize.height/2)
-        objectManager.assignToOverlay(obj: countdown)
-        countdown.register(delegate: self)
-        countdown.start()
+        objectManager.assignToOverlay(obj: countdown!)
+        countdown!.addDelegate(self)
+        countdown!.start()
     }
     
     public func resumeGame() {
+        if(countdown?.running ?? false) {
+            countdown?.removeDelegate(self)
+            countdown?.endTimer()
+        }
+        
+        objectManager.resumeGame()
+        
         self.physicsWorld.speed = 1
         objectManager.paused = false
     }
@@ -129,10 +142,6 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
             }
         }
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {}
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {}
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         var touchLocation = touch.location(in: self.view)
@@ -182,6 +191,15 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         }
     }
     
+    public func didCollide(_ id1: Int, _ id2: Int) {
+        if let objA = objectManager.getObjectById(id: id1),
+            let objB = objectManager.getObjectById(id: id2) {
+            
+            (objA as? ContactDelegate)?.contactWith(objB)
+            (objB as? ContactDelegate)?.contactWith(objA)
+        }
+    }
+    
 }
 
 protocol ContactDelegate {
@@ -192,11 +210,16 @@ extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         if(objectManager.client.server != nil  && contact.bodyA.categoryBitMask != 0 && contact.bodyB.categoryBitMask != 0) {
-            if let obj = contact.bodyB.node as? GameObject {
-                (contact.bodyA.node as? ContactDelegate)?.contactWith(obj)
-            }
-            if let obj = contact.bodyA.node as? GameObject {
-                (contact.bodyB.node as? ContactDelegate)?.contactWith(obj)
+            if let objA = contact.bodyA.node as? GameObject,
+                let objB = contact.bodyB.node as? GameObject {
+                
+                if((objA as? Spacestation) == nil && (objB as? Spacestation) == nil) {
+                    self.objectManager.client.server!.didCollide(objA.id, objB.id)
+                } else {
+                    (objA as? ContactDelegate)?.contactWith(objB)
+                    (objB as? ContactDelegate)?.contactWith(objA)
+                }
+                
             }
         }
     }
@@ -222,7 +245,8 @@ extension GameScene: ItemRemovedDelegate {
 extension GameScene: CountdownProtocol {
     
     func countdownEnded() {
-        resumeGame()
+        objectManager.client.server?.didStartGame()
+        objectManager.attachPauseButton()
     }
     
 }

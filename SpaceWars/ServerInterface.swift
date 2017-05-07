@@ -36,6 +36,9 @@ class ServerInterface: PeerChangeDelegate {
         
         commandProcessor.register(command: NameServerCommand(self))
         commandProcessor.register(command: ShipSelectedServerCommand(self))
+        commandProcessor.register(command: FireServerCommand(self))
+        commandProcessor.register(command: MoveServerCommand(self))
+        commandProcessor.register(command: PauseServerCommand(self))
         
         client.sendName()
     }
@@ -197,5 +200,28 @@ class ServerInterface: PeerChangeDelegate {
                 }
             }
         }
+    }
+    
+    public func didStartGame() {
+        sendToClients(["type":"start"], .reliable)
+    }
+    
+    public func didCollide(_ id1: Int, _ id2: Int) {
+        let message: JSON = [
+            "type":"collision",
+            "id1":id1,
+            "id2":id2
+        ]
+        
+        sendToClients(message, .reliable)
+    }
+    
+    public func didReceivePause(_ peerID: String) {
+        let message: JSON = [
+            "type":"pause",
+            "pid":getPlayerByPeerID(peerID)?.id ?? 0
+        ]
+        
+        sendToClients(message, .reliable)
     }
 }

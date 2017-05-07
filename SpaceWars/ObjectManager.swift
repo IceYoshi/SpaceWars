@@ -30,11 +30,20 @@ class ObjectManager {
     fileprivate var spaceships = [Spaceship]()
     fileprivate var enemies = [Spaceship]()
     
-    private var objectDictionary = [Int: GameObject]()
+    fileprivate var objectDictionary = [Int: GameObject]()
+    
+    private var pausePanel: SKNode?
+    private var pauseButton: PauseButton?
     
     public var paused: Bool = false {
         didSet {
             world.isPaused = paused
+            
+            if(paused) {
+                pauseButton?.setState(.paused)
+            } else {
+                pauseButton?.setState(.unpaused)
+            }
         }
     }
     
@@ -60,13 +69,23 @@ class ObjectManager {
         self.overlay = Overlay(screenSize)
         self.camera = PlayerCamera()
         self.camera.addChild(overlay)
+        self.minimap = MiniMap(size: screenSize/3, fieldSize: fieldSize, fieldShape: fieldShape)
         
-        minimap = MiniMap(size: screenSize/3, fieldSize: fieldSize, fieldShape: fieldShape)
         let offset = minimap.calculateAccumulatedFrame()/2
         minimap.position = CGPoint(x: offset.width, y: screenSize.height - offset.height)
         assignToOverlay(obj: minimap)
         
         background.setParallaxReference(ref: camera)
+    }
+    
+    public func attachPauseButton() {
+        self.pauseButton?.removeFromParent()
+        self.pauseButton?.removeDelegate(self)
+        self.pauseButton = PauseButton(shouldSwitch: client.server != nil)
+        let offset = pauseButton!.calculateAccumulatedFrame()/2
+        pauseButton!.position = CGPoint(x: screenSize.width - offset.width, y: screenSize.height - offset.height)
+        pauseButton!.addDelegate(self)
+        assignToOverlay(obj: pauseButton!)
     }
     
     public func attachTo(scene: SKScene) {
@@ -80,6 +99,20 @@ class ObjectManager {
         scene.camera = self.camera
         scene.addChild(self.camera)
         constrainCamera()
+    }
+    
+    public func pauseGame(name: String?) {
+        paused = true
+        
+        pausePanel?.removeFromParent()
+        pausePanel = PausePanel(screenSize: screenSize, name: name)
+        assignToOverlay(obj: pausePanel!)
+    }
+    
+    public func resumeGame() {
+        paused = false
+        pausePanel?.removeFromParent()
+        pausePanel = nil
     }
     
     public func constrainCamera() {
@@ -129,7 +162,7 @@ class ObjectManager {
             
             let fireButton = FireButton()
             fireButton.position = CGPoint(x: screenSize.width - padding.width, y: padding.height)
-            fireButton.register(delegate: player!)
+            fireButton.addDelegate(player!)
             assignToOverlay(obj: fireButton)
             
             let healthBar = BarIndicator(displayName: "Shield", currentValue: player!.hp, maxValue: player!.hp_max, size: CGSize(width: 125, height: 15), highColor: .green, lowColor: .red)
@@ -351,24 +384,28 @@ class ObjectManager {
 extension ObjectManager: ItemRemovedDelegate {
     
     func didRemove(obj: GameObject) {
-        if(obj == player) {
-            player = nil
-        }
+        objectDictionary[obj.id] = nil
         
-        if let _ = obj as? Dilithium {
-            assignToWorld(obj: Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition()))
-        } else if let _ = obj as? LifeOrb {
-            assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition()))
-        } else if let _ = obj as? SmallMeteoroid {
-            assignToWorld(obj: SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
-        } else if let obj = obj as? BigMeteoroid {
-            if(CGFloat.rand(0, 1) < obj.spwawnRate) {
-                assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: obj.position))
+        if(idCounter != nil) {
+            if(obj == player) {
+                player = nil
             }
-            assignToWorld(obj: BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
-        } else if let ship = obj as? Spaceship {
-            spaceships = spaceships.filter({ $0 !== ship })
-            enemies = enemies.filter({ $0 !== ship })
+            
+            if let _ = obj as? Dilithium {
+                assignToWorld(obj: Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition()))
+            } else if let _ = obj as? LifeOrb {
+                assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition()))
+            } else if let _ = obj as? SmallMeteoroid {
+                assignToWorld(obj: SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+            } else if let obj = obj as? BigMeteoroid {
+                if(CGFloat.rand(0, 1) < obj.spwawnRate) {
+                    assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: obj.position))
+                }
+                assignToWorld(obj: BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+            } else if let ship = obj as? Spaceship {
+                spaceships = spaceships.filter({ $0 !== ship })
+                enemies = enemies.filter({ $0 !== ship })
+            }
         }
     }
     
@@ -405,6 +442,22 @@ extension ObjectManager: NeedsPhysicsUpdateProtocol {
         camera.didSimulatePhysics()
         background.didSimulatePhysics()
         minimap.didSimulatePhysics()
+    }
+    
+}
+
+extension ObjectManager: PauseButtonProtocol {
+    
+    func didClickResume() {
+        if(paused) {
+            client.server?.didStartGame()
+        }
+    }
+    
+    func didClickPause() {
+        if(!paused) {
+            client.sendPause()
+        }
     }
     
 }

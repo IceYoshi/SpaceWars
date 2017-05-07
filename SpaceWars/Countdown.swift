@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-protocol CountdownProtocol {
+protocol CountdownProtocol: class {
     func countdownEnded()
 }
 
@@ -17,7 +17,7 @@ class Countdown: SKNode {
     private var startTime: Int
     
     private var delegates = [CountdownProtocol?]()
-    private var running: Bool = false
+    private(set) var running: Bool = false
     private var label: SKLabelNode?
     
     init(startTime: Int) {
@@ -33,12 +33,41 @@ class Countdown: SKNode {
     }
     
     
-    public func register(delegate: CountdownProtocol) {
+    public func addDelegate(_ delegate: CountdownProtocol) {
         delegates.append(delegate)
+    }
+    
+    public func removeDelegate(_ delegate: CountdownProtocol) {
+        delegates = delegates.filter({ $0 !== delegate })
     }
     
     public func start() {
         self.tick()
+    }
+    
+    public func setTime(val: Int) {
+        self.startTime = max(val, 0)
+        self.start()
+    }
+    
+    public func endTimer() {
+        self.removeAllActions()
+        self.running = false
+        
+        for delegate in self.delegates {
+            delegate?.countdownEnded()
+        }
+        
+        let fadeInOutAction = SKAction.sequence([
+            SKAction.fadeIn(withDuration: 0.5),
+            SKAction.fadeOut(withDuration: 0.5)
+        ])
+        let scaleAction = SKAction.scale(to: 4, duration: 1)
+
+        self.label?.text = "GO!"
+        self.label?.run(SKAction.group([fadeInOutAction, scaleAction])) {
+            self.removeFromParent()
+        }
     }
     
     private func tick() {
@@ -57,14 +86,7 @@ class Countdown: SKNode {
                     self.label?.text = String(self.startTime)
                     self.tick()
                 } else {
-                    for delegate in self.delegates {
-                        delegate?.countdownEnded()
-                    }
-                    
-                    self.label?.text = "GO!"
-                    self.label?.run(SKAction.group([fadeInOutAction, scaleAction])) {
-                        self.removeFromParent()
-                    }
+                    self.endTimer()
                 }
             }
         }

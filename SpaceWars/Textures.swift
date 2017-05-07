@@ -27,7 +27,9 @@ enum TextureType: String {
     slave = "spaceship_cpu_slave.png",
     space_station = "spacestation.png",
     arrow_left = "arrow_left.png",
-    arrow_right = "arrow_right.png"
+    arrow_right = "arrow_right.png",
+    button_pause = "button_pause.png",
+    button_play = "button_play.png"
 }
 
 class GameTexture {
@@ -50,7 +52,9 @@ class GameTexture {
         TextureType.slave: SKTexture(imageNamed: TextureType.slave.rawValue),
         TextureType.space_station: SKTexture(imageNamed: TextureType.space_station.rawValue),
         TextureType.arrow_left: SKTexture(imageNamed: TextureType.arrow_left.rawValue),
-        TextureType.arrow_right: SKTexture(imageNamed: TextureType.arrow_right.rawValue)
+        TextureType.arrow_right: SKTexture(imageNamed: TextureType.arrow_right.rawValue),
+        TextureType.button_pause: SKTexture(imageNamed: TextureType.button_pause.rawValue),
+        TextureType.button_play: SKTexture(imageNamed: TextureType.button_play.rawValue)
     ]
     
     static func getExplosionFrames() -> [SKTexture] {
