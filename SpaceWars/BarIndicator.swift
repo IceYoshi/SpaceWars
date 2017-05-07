@@ -78,8 +78,7 @@ class BarIndicator: SKNode {
     
     private func createShading() -> SKShapeNode {
         let h = size.height / 2
-        
-        let sShading = SKShapeNode(rectOf: CGSize(width: size.width, height: h), cornerRadius: 5)
+        let sShading = SKShapeNode(rectOf: CGSize(width: size.width, height: h), cornerRadius: 4)
         sShading.strokeColor = .black
         sShading.fillColor = .black
         sShading.alpha = 0.3
