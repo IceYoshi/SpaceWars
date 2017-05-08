@@ -33,6 +33,8 @@ class Global {
         
         static let spawnDistanceThreshold: Int = 200
         
+        static let delayBetweenMoveMessages: Int = 100 // in milliseconds
+        
         static let blackholeCategory: UInt32 = 0x1 << 0
         static let spaceshipCategory: UInt32 = 0x1 << 1
         static let torpedoCategory: UInt32 = 0x1 << 2

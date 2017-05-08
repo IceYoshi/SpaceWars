@@ -405,7 +405,19 @@ class ObjectManager {
         case "meteoroid2":
             assignToWorld(obj: BigMeteoroid(obj))
         case let unknownType:
-            print("Cannot respawn item of unknown type: \(unknownType)")
+            print("Cannot respawn object of unknown type: \(unknownType)")
+        }
+    }
+    
+    public func didReceiveMove(objects: [JSON]) {
+        for object in objects {
+            if let spaceship = getObjectById(id: object["pid"].intValue) {
+                if(spaceship.id != player?.id ?? 0) {
+                    spaceship.position = CGPoint(x: object["pos"]["x"].intValue, y: object["pos"]["y"].intValue)
+                    spaceship.zRotation = CGFloat(object["rot"].floatValue)
+                    spaceship.physicsBody?.velocity = CGVector(dx: object["vel"]["dx"].intValue, dy: object["vel"]["dy"].intValue)
+                }
+            }
         }
     }
     
@@ -422,26 +434,26 @@ extension ObjectManager: ObjectRemovedDelegate {
         
         if(idCounter != nil) {
             if let _ = obj as? Dilithium {
-                let item = Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendObjectRespawn(config: item.getConfig())
-                assignToWorld(obj: item)
+                let object = Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendObjectRespawn(config: object.getConfig())
+                assignToWorld(obj: object)
             } else if let _ = obj as? LifeOrb {
-                let item = LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendObjectRespawn(config: item.getConfig())
-                assignToWorld(obj: item)
+                let object = LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendObjectRespawn(config: object.getConfig())
+                assignToWorld(obj: object)
             } else if let _ = obj as? SmallMeteoroid {
-                let item = SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendObjectRespawn(config: item.getConfig())
-                assignToWorld(obj: item)
-            } else if let obj = obj as? BigMeteoroid {
-                if(CGFloat.rand(0, 1) < obj.spwawnRate) {
-                    let item = LifeOrb(idCounter: idCounter!, pos: obj.position)
-                    client.server?.sendObjectRespawn(config: item.getConfig())
-                    assignToWorld(obj: item)
+                let object = SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendObjectRespawn(config: object.getConfig())
+                assignToWorld(obj: object)
+            } else if let meteoroid = obj as? BigMeteoroid {
+                if(CGFloat.rand(0, 1) < meteoroid.spwawnRate) {
+                    let object = LifeOrb(idCounter: idCounter!, pos: meteoroid.position)
+                    client.server?.sendObjectRespawn(config: object.getConfig())
+                    assignToWorld(obj: object)
                 }
-                let item = BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendObjectRespawn(config: item.getConfig())
-                assignToWorld(obj: item)
+                let object = BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendObjectRespawn(config: object.getConfig())
+                assignToWorld(obj: object)
             } else if let ship = obj as? Spaceship {
                 spaceships = spaceships.filter({ $0 !== ship })
                 enemies = enemies.filter({ $0 !== ship })

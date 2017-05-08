@@ -18,7 +18,7 @@ class MoveClientCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        
+        delegate.didReceiveMove(objects: data["objects"].arrayValue)
     }
     
 }

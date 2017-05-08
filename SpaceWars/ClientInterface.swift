@@ -22,7 +22,13 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
     private var isSendingMoveMessages: Bool = false
-    private var shouldSendMoveMessages: Bool = false
+    private var shouldSendMoveMessages: Bool = false {
+        didSet {
+            if(shouldSendMoveMessages) {
+                self.sendPlayerData()
+            }
+        }
+    }
     
     // Current scene
     private var scene: SKScene?
@@ -146,7 +152,6 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     public func resumeGame() {
         (self.scene as? GameScene)?.resumeGame()
         shouldSendMoveMessages = true
-        sendPlayerData()
     }
     
     public func pauseGame(id: Int) {
@@ -201,6 +206,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
             if let player = (self.scene as? GameScene)?.getPlayer(), let playerVelocity = player.physicsBody?.velocity {
                 let message: JSON = [
                     "type":"move",
+                    "pid":player.id,
                     "sqn":self.moveSQN,
                     "pos":[
                         "x":player.position.x,
@@ -214,13 +220,18 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
                 ]
                 try? connectionManager.sendToServer(message.rawData(), .unreliable)
                 self.moveSQN += 1
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Global.Constants.delayBetweenMoveMessages), execute: {
                     self.isSendingMoveMessages = false
                     self.sendPlayerData()
                 })
             }
         }
     }
+    
+    public func didReceiveMove(objects: [JSON]) {
+        (self.scene as? GameScene)?.didReceiveMove(objects: objects)
+    }
+    
 }
 
 

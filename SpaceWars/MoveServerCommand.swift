@@ -18,7 +18,7 @@ class MoveServerCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        
+        delegate.didReceiveMove(obj: data, peerID: peerID)
     }
     
 }

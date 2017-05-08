@@ -14,6 +14,7 @@ class Player: CustomStringConvertible {
     public var peerID: String
     public var isConnected: Bool = true
     public var shipType: String = "human"
+    private var moveObject: JSON?
     
     public var description: String {
         get {
@@ -30,4 +31,30 @@ class Player: CustomStringConvertible {
         self.name = name
         self.peerID = peerID
     }
+    
+    public func setMoveObject(obj: JSON) {
+        if(moveObject == nil || moveObject!["sqn"].uInt64Value < obj["sqn"].uInt64Value) {
+            moveObject = obj
+        }
+    }
+    
+    public func getMoveObject() -> JSON? {
+        if(moveObject == nil) {
+            return nil
+        }
+        
+        return [
+            "pid":moveObject!["pid"],
+            "pos":[
+                "x":moveObject!["pos"]["x"].intValue,
+                "y":moveObject!["pos"]["y"].intValue
+            ],
+            "vel":[
+                "dx":moveObject!["vel"]["dx"].intValue,
+                "dy":moveObject!["vel"]["dx"].intValue
+            ],
+            "rot":moveObject!["rot"].floatValue
+        ]
+    }
+    
 }

@@ -120,6 +120,10 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.didReceiveObjectRespawn(obj: obj)
     }
     
+    public func didReceiveMove(objects: [JSON]) {
+        objectManager.didReceiveMove(objects: objects)
+    }
+    
     public func getConfig() -> JSON {
         return objectManager.getConfig()
     }

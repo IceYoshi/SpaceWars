@@ -27,6 +27,17 @@ class ServerInterface: PeerChangeDelegate {
     
     private var setup: JSON?
     
+    // SeQuence Number, needed for keeping track of move message ordering on a unreliable sending channel
+    private var moveSQN: UInt64 = 0
+    private var isSendingMoveMessages: Bool = false
+    private var shouldSendMoveMessages: Bool = false {
+        didSet {
+            if(shouldSendMoveMessages) {
+                self.sendMove()
+            }
+        }
+    }
+    
     init(_ view: LobbyViewController, _ name: String) {
         client = ClientInterface(view, name, self)
         
@@ -205,6 +216,7 @@ class ServerInterface: PeerChangeDelegate {
     
     public func didStartGame() {
         sendToClients(["type":"start"], .reliable)
+        shouldSendMoveMessages = true
     }
     
     public func didCollide(_ id1: Int, _ id2: Int) {
@@ -224,6 +236,7 @@ class ServerInterface: PeerChangeDelegate {
         ]
         
         sendToClients(message, .reliable)
+        shouldSendMoveMessages = false
     }
     
     public func didReceiveFire(_ config: JSON, _ peerID: String) {
@@ -262,6 +275,35 @@ class ServerInterface: PeerChangeDelegate {
         ]
         for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
             sendTo(player.peerID, message, .reliable)
+        }
+    }
+    
+    public func didReceiveMove(obj: JSON, peerID: String) {
+        getPlayerByPeerID(peerID)?.setMoveObject(obj: obj)
+    }
+    
+    // Sends move command to clients. Recursively calls itself after some delay.
+    public func sendMove() {
+        if(!isSendingMoveMessages && shouldSendMoveMessages) {
+            isSendingMoveMessages = true
+            var message: JSON = [
+                "type":"move",
+                "sqn":self.moveSQN,
+                "objects":[]
+            ]
+            
+            for player in players {
+                if let object = player.getMoveObject() {
+                    try? message["objects"].merge(with: [ object ])
+                }
+            }
+            
+            sendToClients(message, .unreliable)
+            self.moveSQN += 1
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(Global.Constants.delayBetweenMoveMessages), execute: {
+                self.isSendingMoveMessages = false
+                self.sendMove()
+            })
         }
     }
 }
