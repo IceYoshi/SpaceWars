@@ -18,7 +18,7 @@ class FireServerCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        
+        delegate.didReceiveFire(data, peerID)
     }
     
 }

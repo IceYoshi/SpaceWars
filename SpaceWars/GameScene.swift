@@ -105,6 +105,10 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.paused = false
     }
     
+    public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
+        objectManager.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
+    }
+    
     override func didMove(to view: SKView) {
         let gestureRecognizer = UIPinchGestureRecognizer(
             target: self,

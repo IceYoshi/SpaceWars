@@ -8,6 +8,10 @@
 
 import SpriteKit
 
+protocol TorpedoProtocol {
+    func shootTorpedo(ref: Torpedo, shouldSend: Bool)
+}
+
 class Spaceship: GameObject {
     
     public var controller: JoystickControllerProtocol?
@@ -18,7 +22,7 @@ class Spaceship: GameObject {
     
     public var infiniteShoot: Bool = false
     
-    public var torpedoContainer: SKNode?
+    public var torpedoDelegate: TorpedoProtocol?
     fileprivate var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
@@ -288,19 +292,25 @@ class Spaceship: GameObject {
         ]
     }
     
-    func shoot() {
-        if(torpedoContainer != nil && canShoot) {
+    public func shoot(fid: Int, pos: CGPoint, rot: CGFloat, shouldSend: Bool = false) {
+        if(!self.infiniteShoot) {
+            self.ammo.remove(fid)
+        }
+        
+        let torpedo = Torpedo(id: fid, dmg: self.dmg, pos: pos, rot: rot)
+        self.activeTorpedoes.append(torpedo)
+        torpedo.addItemRemoveDelegate(self)
+        self.torpedoDelegate?.shootTorpedo(ref: torpedo, shouldSend: shouldSend)
+    }
+    
+    private func shoot() {
+        if(torpedoDelegate != nil && canShoot) {
             self.canShoot = false
             let waitAction = SKAction.wait(forDuration: Global.Constants.shootDelay)
             if(self.physicsBody != nil && self.physicsBody?.categoryBitMask != 0 && self.ammo.first != nil) {
                 let id = self.ammo.first!
                 let shootAction = SKAction.run {
-                    if(!self.infiniteShoot) {
-                        self.ammo.remove(id)
-                    }
-                    let torpedo = Torpedo(id: id, dmg: self.dmg, pos: self.position, rot: self.zRotation)
-                    self.activeTorpedoes.append(torpedo)
-                    self.torpedoContainer!.addChild(torpedo)
+                    self.shoot(fid: id, pos: self.position, rot: self.zRotation, shouldSend: true)
                 }
                 
                 self.run(SKAction.sequence([shootAction, waitAction])) {
@@ -357,13 +367,8 @@ extension Spaceship: NeedsUpdateProtocol {
     }
     
     private func updateTorpedoes() {
-        let torpedoes = self.activeTorpedoes
-        for (i, torpedo) in torpedoes.enumerated() {
-            if(torpedo.alpha > 0) {
-                torpedo.update()
-            } else {
-                self.activeTorpedoes.remove(at: i)
-            }
+        for torpedo in self.activeTorpedoes {
+            torpedo.update()
         }
     }
     
@@ -415,6 +420,14 @@ extension Spaceship: ContactDelegate {
                 obj.stopHPTransfer()
             }
         }
+    }
+    
+}
+
+extension Spaceship: ItemRemovedDelegate {
+    
+    func didRemove(obj: GameObject) {
+        self.activeTorpedoes = self.activeTorpedoes.filter( { $0 != obj } )
     }
     
 }

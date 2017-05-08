@@ -88,19 +88,15 @@ class ConnectionManager: NSObject {
     
     public func sendTo(_ peerID: String, _ data: Data, _ mode: MCSessionSendDataMode) {
         print("send \(String(data: data, encoding: .utf8)!)")
-        if(peerID == self.peerID.displayName) {
-            self.commandDelegate?.interpret(data, peerID)
-        } else {
-            for peer in session.connectedPeers {
-                if(peer.displayName == peerID) {
-                    do {
-                        try self.session.send(data, toPeers: [peer], with: mode)
-                    }
-                    catch let error {
-                        print("Error while sending: \(error)")
-                    }
-                    break
+        for peer in session.connectedPeers {
+            if(peer.displayName == peerID) {
+                do {
+                    try self.session.send(data, toPeers: [peer], with: mode)
                 }
+                catch let error {
+                    print("Error while sending: \(error)")
+                }
+                break
             }
         }
     }

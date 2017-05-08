@@ -60,9 +60,8 @@ extension Torpedo: NeedsUpdateProtocol {
     
     func update() {
         self.alpha = max(0, self.alpha - Global.Constants.torpedoAlphaDecay)
-        if(self.alpha == 0) {
-            self.removeFromParent()
-            self.removeAllChildren()
+        if(self.alpha < 0.4) {
+            self.remove()
         }
     }
     

@@ -224,4 +224,15 @@ class ServerInterface: PeerChangeDelegate {
         
         sendToClients(message, .reliable)
     }
+    
+    public func didReceiveFire(_ config: JSON, _ peerID: String) {
+        if let sender = getPlayerByPeerID(peerID) {
+            var message = config
+            message["pid"] = JSON(sender.id)
+            
+            for player in players.filter( { $0 !== sender } ) {
+                sendTo(player.peerID, message, .reliable)
+            }
+        }
+    }
 }

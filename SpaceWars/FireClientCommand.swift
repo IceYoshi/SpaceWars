@@ -18,7 +18,14 @@ class FireClientCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
+        let pos = CGPoint(x: data["pos"]["x"].intValue, y: data["pos"]["y"].intValue)
         
+        
+        delegate.didReceiveFire(pid: data["pid"].intValue,
+                                fid: data["fid"].intValue,
+                                pos: pos,
+                                rot: CGFloat(data["rot"].floatValue)
+        )
     }
     
 }

@@ -139,6 +139,7 @@ class ObjectManager {
         switch obj.type {
             case .space_station: u = true; w = 2.4
             case .blackhole: u = true; w = 2.4
+        case .laserbeam: u = true; w = 0.8
             case .meteoroid_big: w = 2
             default: break
         }
@@ -146,7 +147,7 @@ class ObjectManager {
     }
     
     public func assignSpaceship(_ ship: Spaceship) {
-        ship.torpedoContainer = world
+        ship.torpedoDelegate = self
         spaceships.append(ship)
         
         if(ship.id == ownID) {
@@ -189,7 +190,7 @@ class ObjectManager {
     }
     
     public func assignCPUSpaceship(_ enemy: Spaceship) {
-        enemy.torpedoContainer = world
+        enemy.torpedoDelegate = self
         enemies.append(enemy)
         
         enemy.controller = CPUController(ref: enemy, speedThrottle: 0.1, shootDelay: 3)
@@ -379,6 +380,12 @@ class ObjectManager {
         client.server?.didLoadGame(config: getConfig())
     }
     
+    public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
+        if let ship = getObjectById(id: pid) as? Spaceship {
+            ship.shoot(fid: fid, pos: pos, rot: rot)
+        }
+    }
+    
 }
 
 extension ObjectManager: ItemRemovedDelegate {
@@ -457,6 +464,18 @@ extension ObjectManager: PauseButtonProtocol {
     func didClickPause() {
         if(!paused) {
             client.sendPause()
+        }
+    }
+    
+}
+
+extension ObjectManager: TorpedoProtocol {
+    
+    func shootTorpedo(ref: Torpedo, shouldSend: Bool) {
+        assignToWorld(obj: ref)
+        
+        if(shouldSend) {
+            client.sendTorpedo(torpedo: ref)
         }
     }
     

@@ -153,6 +153,25 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     public func didCollide(_ id1: Int, _ id2: Int) {
         (self.scene as? GameScene)?.didCollide(id1, id2)
     }
+    
+    public func sendTorpedo(torpedo: Torpedo) {
+        let message: JSON = [
+            "type":"fire",
+            "fid":torpedo.id,
+            "pos":[
+                "x":torpedo.position.x,
+                "y":torpedo.position.y
+            ],
+            "rot":torpedo.zRotation
+        ]
+        
+        try? connectionManager.sendToServer(message.rawData(), .reliable)
+    }
+    
+    public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
+        (self.scene as? GameScene)?.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
+    }
+    
 }
 
 
