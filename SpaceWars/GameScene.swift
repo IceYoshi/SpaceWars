@@ -22,7 +22,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     private var updateDelegates = [NeedsUpdateProtocol?]()
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
-    private var countdown: Countdown?
+    fileprivate var countdown: Countdown?
     
     init(screenSize: CGSize, setup: JSON, client: ClientInterface) {
         let pid = setup["pid"].intValue
@@ -85,7 +85,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     public func startCountdown(time: Int) {
         pauseGame()
-        countdown = Countdown(startTime: time)
+        countdown = Countdown(startTime: time, shouldFinish: objectManager.client.server != nil)
         countdown!.position = CGPoint(x: objectManager.screenSize.width/2,
                                      y: objectManager.screenSize.height/2)
         objectManager.assignToOverlay(obj: countdown!)
@@ -94,8 +94,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     public func resumeGame() {
-        if(countdown?.running ?? false) {
-            countdown?.removeDelegate(self)
+        if(countdown != nil) {
             countdown?.endTimer()
         }
         
@@ -107,6 +106,18 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
         objectManager.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
+    }
+    
+    public func didReceiveStationStatus(id: Int, status: Bool) {
+        objectManager.didReceiveStationStatus(id: id, status: status)
+    }
+    
+    public func didReceiveItemRespawn(obj: JSON) {
+        objectManager.didReceiveItemRespawn(obj: obj)
+    }
+    
+    public func getConfig() -> JSON {
+        return objectManager.getConfig()
     }
     
     override func didMove(to view: SKView) {
@@ -238,17 +249,11 @@ protocol ItemRemovedDelegate: class {
     
 }
 
-extension GameScene: ItemRemovedDelegate {
-    
-    func didRemove(obj: GameObject) {
-        
-    }
-    
-}
-
 extension GameScene: CountdownProtocol {
     
     func countdownEnded() {
+        self.countdown?.removeDelegate(self)
+        self.countdown = nil
         objectManager.client.server?.didStartGame()
         objectManager.attachPauseButton()
     }

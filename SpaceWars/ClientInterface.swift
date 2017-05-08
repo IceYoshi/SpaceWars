@@ -51,7 +51,6 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         commandProcessor.register(command: ItemRespawnClientCommand(self))
         commandProcessor.register(command: PauseClientCommand(self))
         commandProcessor.register(command: StationStatusClientCommand(self))
-        commandProcessor.register(command: KillClientCommand(self))
         commandProcessor.register(command: GameoverClientCommand(self))
         commandProcessor.register(command: StateSyncClientCommand(self))
     }
@@ -172,6 +171,17 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         (self.scene as? GameScene)?.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
     }
     
+    public func didReceiveStationStatus(id: Int, status: Bool) {
+        (self.scene as? GameScene)?.didReceiveStationStatus(id: id, status: status)
+    }
+    
+    public func didReceiveItemRespawn(obj: JSON) {
+        (self.scene as? GameScene)?.didReceiveItemRespawn(obj: obj)
+    }
+    
+    public func getConfig() -> JSON {
+        return (self.scene as? GameScene)?.getConfig() ?? []
+    }
 }
 
 

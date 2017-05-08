@@ -18,7 +18,7 @@ class ItemRespawnClientCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        
+        delegate.didReceiveItemRespawn(obj: data["object"])
     }
     
 }

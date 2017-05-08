@@ -72,7 +72,6 @@
 		27E6BE321EBF260E008FFC42 /* StateSyncClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */; };
 		27E6BE341EBF26A0008FFC42 /* StationStatusClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */; };
 		27E6BE361EBF26F8008FFC42 /* ItemRespawnClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */; };
-		27E6BE381EBF2729008FFC42 /* KillClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */; };
 		27E6BE3A1EBF2748008FFC42 /* GameoverClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */; };
 		27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */; };
 		27E6BE3E1EBF3D82008FFC42 /* PausePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */; };
@@ -150,7 +149,6 @@
 		27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSyncClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationStatusClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemRespawnClientCommand.swift; sourceTree = "<group>"; };
-		27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KillClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PausePanel.swift; sourceTree = "<group>"; };
@@ -313,7 +311,6 @@
 				27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */,
 				27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */,
 				27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */,
-				27E6BE371EBF2729008FFC42 /* KillClientCommand.swift */,
 				27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */,
 				27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */,
 			);
@@ -508,7 +505,6 @@
 				27E6BE281EBF19E1008FFC42 /* CollisionClientCommand.swift in Sources */,
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
-				27E6BE381EBF2729008FFC42 /* KillClientCommand.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
 				27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */,
 				27C3A2091EB72B0200337027 /* ClientInterface.swift in Sources */,

@@ -119,6 +119,7 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func sendSync(_ peerID: String) {
+        setup?["objects"] = client.getConfig()
         var response: JSON = [
             "type":"state_sync",
             "state":state.rawValue
@@ -130,10 +131,10 @@ class ServerInterface: PeerChangeDelegate {
             response["paused"] = false
         case .pre_game:
             response["paused"] = false
-            response["setup"] = JSON.null
+            response["setup"] = setup ?? []
         case .playing:
             response["paused"] = false
-            response["setup"] = JSON.null
+            response["setup"] = setup ?? []
         }
         
         sendTo(peerID, response, .reliable)
@@ -231,8 +232,36 @@ class ServerInterface: PeerChangeDelegate {
             message["pid"] = JSON(sender.id)
             
             for player in players.filter( { $0 !== sender } ) {
-                sendTo(player.peerID, message, .reliable)
+                if(player.peerID == UIDevice.current.identifierForVendor!.uuidString) {
+                    if let data = try? message.rawData() {
+                        client.commandProcessor.interpret(data, player.peerID)
+                    }
+                } else {
+                    sendTo(player.peerID, message, .reliable)
+                }
+                
             }
+        }
+    }
+    
+    public func sendStationStatus(id: Int, status: Bool) {
+        let message: JSON = [
+            "type":"station_status",
+            "station_id":id,
+            "enabled":status
+        ]
+        for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
+            sendTo(player.peerID, message, .reliable)
+        }
+    }
+    
+    public func sendItemRespawn(config: JSON) {
+        let message: JSON = [
+            "type":"item_respawn",
+            "object":config
+        ]
+        for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
+            sendTo(player.peerID, message, .reliable)
         }
     }
 }

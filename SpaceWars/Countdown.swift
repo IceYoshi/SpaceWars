@@ -15,13 +15,15 @@ protocol CountdownProtocol: class {
 class Countdown: SKNode {
     
     private var startTime: Int
+    private var shouldFinish: Bool
     
     private var delegates = [CountdownProtocol?]()
     private(set) var running: Bool = false
     private var label: SKLabelNode?
     
-    init(startTime: Int) {
+    init(startTime: Int, shouldFinish: Bool) {
         self.startTime = startTime
+        self.shouldFinish = shouldFinish
         super.init()
         
         self.label = createLabel(startTime)
@@ -51,7 +53,7 @@ class Countdown: SKNode {
     }
     
     public func endTimer() {
-        self.removeAllActions()
+        self.label?.removeAllActions()
         self.running = false
         
         for delegate in self.delegates {
@@ -63,7 +65,7 @@ class Countdown: SKNode {
             SKAction.fadeOut(withDuration: 0.5)
         ])
         let scaleAction = SKAction.scale(to: 4, duration: 1)
-
+        self.label?.setScale(1)
         self.label?.text = "GO!"
         self.label?.run(SKAction.group([fadeInOutAction, scaleAction])) {
             self.removeFromParent()
@@ -86,7 +88,9 @@ class Countdown: SKNode {
                     self.label?.text = String(self.startTime)
                     self.tick()
                 } else {
-                    self.endTimer()
+                    if(self.shouldFinish) {
+                        self.endTimer()
+                    }
                 }
             }
         }

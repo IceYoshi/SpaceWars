@@ -182,6 +182,7 @@ class ObjectManager {
             if(ship.id != ownID) {
                 spacestation.changeColor(.red)
             }
+            spacestation.delegate = self
             assignToWorld(obj: spacestation)
         }
         
@@ -314,6 +315,7 @@ class ObjectManager {
                 }
             case "spacestation":
                 let station = Spacestation(obj)
+                station.delegate = self
                 assignToWorld(obj: station)
                 if(station.ownerID != ownID) {
                     station.changeColor(.red)
@@ -386,6 +388,27 @@ class ObjectManager {
         }
     }
     
+    public func didReceiveStationStatus(id: Int, status: Bool) {
+        if let station = getObjectById(id: id) as? Spacestation {
+            station.enabled = status
+        }
+    }
+    
+    public func didReceiveItemRespawn(obj: JSON) {
+        switch obj["type"].stringValue {
+        case "dilithium":
+            assignToWorld(obj: Dilithium(obj))
+        case "life_orb":
+            assignToWorld(obj: LifeOrb(obj))
+        case "meteoroid1":
+            assignToWorld(obj: SmallMeteoroid(obj))
+        case "meteoroid2":
+            assignToWorld(obj: BigMeteoroid(obj))
+        case let unknownType:
+            print("Cannot respawn item of unknown type: \(unknownType)")
+        }
+    }
+    
 }
 
 extension ObjectManager: ItemRemovedDelegate {
@@ -393,22 +416,32 @@ extension ObjectManager: ItemRemovedDelegate {
     func didRemove(obj: GameObject) {
         objectDictionary[obj.id] = nil
         
+        if(obj == player) {
+            player = nil
+        }
+        
         if(idCounter != nil) {
-            if(obj == player) {
-                player = nil
-            }
-            
             if let _ = obj as? Dilithium {
-                assignToWorld(obj: Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                let item = Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendItemRespawn(config: item.getConfig())
+                assignToWorld(obj: item)
             } else if let _ = obj as? LifeOrb {
-                assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                let item = LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendItemRespawn(config: item.getConfig())
+                assignToWorld(obj: item)
             } else if let _ = obj as? SmallMeteoroid {
-                assignToWorld(obj: SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                let item = SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendItemRespawn(config: item.getConfig())
+                assignToWorld(obj: item)
             } else if let obj = obj as? BigMeteoroid {
                 if(CGFloat.rand(0, 1) < obj.spwawnRate) {
-                    assignToWorld(obj: LifeOrb(idCounter: idCounter!, pos: obj.position))
+                    let item = LifeOrb(idCounter: idCounter!, pos: obj.position)
+                    client.server?.sendItemRespawn(config: item.getConfig())
+                    assignToWorld(obj: item)
                 }
-                assignToWorld(obj: BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition()))
+                let item = BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
+                client.server?.sendItemRespawn(config: item.getConfig())
+                assignToWorld(obj: item)
             } else if let ship = obj as? Spaceship {
                 spaceships = spaceships.filter({ $0 !== ship })
                 enemies = enemies.filter({ $0 !== ship })
@@ -477,6 +510,14 @@ extension ObjectManager: TorpedoProtocol {
         if(shouldSend) {
             client.sendTorpedo(torpedo: ref)
         }
+    }
+    
+}
+
+extension ObjectManager: SpacestationDelegate {
+    
+    func stationStatusChanged(enabled: Bool, ref: Spacestation) {
+        client.server?.sendStationStatus(id: ref.id, status: enabled)
     }
     
 }

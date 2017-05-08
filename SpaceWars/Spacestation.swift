@@ -8,6 +8,12 @@
 
 import SpriteKit
 
+protocol SpacestationDelegate {
+    
+    func stationStatusChanged(enabled: Bool, ref: Spacestation)
+    
+}
+
 class Spacestation: GameObject {
     
     public let ownerID: Int
@@ -15,8 +21,9 @@ class Spacestation: GameObject {
     public let activeTime: Double
     public let inactiveTime: Double
     public let radius: Int
+    public var delegate: SpacestationDelegate?
     
-    private var enabled: Bool = true {
+    public var enabled: Bool = true {
         didSet {
             if(enabled) {
                 self.alpha = 1
@@ -26,6 +33,7 @@ class Spacestation: GameObject {
                     self.alpha = 0
                 }
             }
+            delegate?.stationStatusChanged(enabled: enabled, ref: self)
         }
     }
     private var isActive: Bool = false
