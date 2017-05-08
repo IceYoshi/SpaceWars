@@ -255,9 +255,9 @@ class ServerInterface: PeerChangeDelegate {
         }
     }
     
-    public func sendItemRespawn(config: JSON) {
+    public func sendObjectRespawn(config: JSON) {
         let message: JSON = [
-            "type":"item_respawn",
+            "type":"object_respawn",
             "object":config
         ]
         for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {

@@ -88,7 +88,7 @@ class MiniMap: SKNode {
         sprite.setScale(weight)
         self.objectDictionary[ref] = sprite
         self.addChild(sprite)
-        ref.addItemRemoveDelegate(self)
+        ref.addObjectRemoveDelegate(self)
     }
     
     public func convert(_ p: CGPoint) -> CGPoint {
@@ -114,7 +114,7 @@ extension MiniMap: NeedsPhysicsUpdateProtocol {
     
 }
 
-extension MiniMap: ItemRemovedDelegate {
+extension MiniMap: ObjectRemovedDelegate {
     
     func didRemove(obj: GameObject) {
         self.objectDictionary[obj]?.removeFromParent()

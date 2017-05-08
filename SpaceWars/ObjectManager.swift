@@ -204,7 +204,7 @@ class ObjectManager {
         objectDictionary[obj.id] = obj
         assignToMinimap(obj: obj)
         world.addChild(obj)
-        obj.addItemRemoveDelegate(self)
+        obj.addObjectRemoveDelegate(self)
     }
     
     public func assignToWorld(obj: GameEnvironment) {
@@ -394,7 +394,7 @@ class ObjectManager {
         }
     }
     
-    public func didReceiveItemRespawn(obj: JSON) {
+    public func didReceiveObjectRespawn(obj: JSON) {
         switch obj["type"].stringValue {
         case "dilithium":
             assignToWorld(obj: Dilithium(obj))
@@ -411,7 +411,7 @@ class ObjectManager {
     
 }
 
-extension ObjectManager: ItemRemovedDelegate {
+extension ObjectManager: ObjectRemovedDelegate {
     
     func didRemove(obj: GameObject) {
         objectDictionary[obj.id] = nil
@@ -423,24 +423,24 @@ extension ObjectManager: ItemRemovedDelegate {
         if(idCounter != nil) {
             if let _ = obj as? Dilithium {
                 let item = Dilithium(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendItemRespawn(config: item.getConfig())
+                client.server?.sendObjectRespawn(config: item.getConfig())
                 assignToWorld(obj: item)
             } else if let _ = obj as? LifeOrb {
                 let item = LifeOrb(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendItemRespawn(config: item.getConfig())
+                client.server?.sendObjectRespawn(config: item.getConfig())
                 assignToWorld(obj: item)
             } else if let _ = obj as? SmallMeteoroid {
                 let item = SmallMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendItemRespawn(config: item.getConfig())
+                client.server?.sendObjectRespawn(config: item.getConfig())
                 assignToWorld(obj: item)
             } else if let obj = obj as? BigMeteoroid {
                 if(CGFloat.rand(0, 1) < obj.spwawnRate) {
                     let item = LifeOrb(idCounter: idCounter!, pos: obj.position)
-                    client.server?.sendItemRespawn(config: item.getConfig())
+                    client.server?.sendObjectRespawn(config: item.getConfig())
                     assignToWorld(obj: item)
                 }
                 let item = BigMeteoroid(idCounter: idCounter!, pos: getFreeRandomPosition())
-                client.server?.sendItemRespawn(config: item.getConfig())
+                client.server?.sendObjectRespawn(config: item.getConfig())
                 assignToWorld(obj: item)
             } else if let ship = obj as? Spaceship {
                 spaceships = spaceships.filter({ $0 !== ship })

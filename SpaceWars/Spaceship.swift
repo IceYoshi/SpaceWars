@@ -299,7 +299,7 @@ class Spaceship: GameObject {
         
         let torpedo = Torpedo(id: fid, dmg: self.dmg, pos: pos, rot: rot)
         self.activeTorpedoes.append(torpedo)
-        torpedo.addItemRemoveDelegate(self)
+        torpedo.addObjectRemoveDelegate(self)
         self.torpedoDelegate?.shootTorpedo(ref: torpedo, shouldSend: shouldSend)
     }
     
@@ -424,7 +424,7 @@ extension Spaceship: ContactDelegate {
     
 }
 
-extension Spaceship: ItemRemovedDelegate {
+extension Spaceship: ObjectRemovedDelegate {
     
     func didRemove(obj: GameObject) {
         self.activeTorpedoes = self.activeTorpedoes.filter( { $0 != obj } )

@@ -15,8 +15,8 @@ class PlayerCamera: SKCameraNode {
             return target
         }
         set(value) {
-            target?.removeItemRemoveDelegate(self)
-            value?.addItemRemoveDelegate(self)
+            target?.removeObjectRemoveDelegate(self)
+            value?.addObjectRemoveDelegate(self)
             target = value
             
             if let constraints = self.constraints {
@@ -73,7 +73,7 @@ extension PlayerCamera: NeedsPhysicsUpdateProtocol {
     
 }
 
-extension PlayerCamera: ItemRemovedDelegate {
+extension PlayerCamera: ObjectRemovedDelegate {
     
     func didRemove(obj: GameObject) {
         self.targetObject = nil

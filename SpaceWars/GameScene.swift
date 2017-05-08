@@ -104,6 +104,10 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.paused = false
     }
     
+    public func getPlayer() -> Spaceship? {
+        return objectManager.player
+    }
+    
     public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
         objectManager.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
     }
@@ -112,8 +116,8 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.didReceiveStationStatus(id: id, status: status)
     }
     
-    public func didReceiveItemRespawn(obj: JSON) {
-        objectManager.didReceiveItemRespawn(obj: obj)
+    public func didReceiveObjectRespawn(obj: JSON) {
+        objectManager.didReceiveObjectRespawn(obj: obj)
     }
     
     public func getConfig() -> JSON {
@@ -243,7 +247,7 @@ extension GameScene: SKPhysicsContactDelegate {
     
 }
 
-protocol ItemRemovedDelegate: class {
+protocol ObjectRemovedDelegate: class {
     
     func didRemove(obj: GameObject)
     

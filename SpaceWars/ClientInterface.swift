@@ -21,7 +21,14 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     private(set) var server: ServerInterface?
     private(set) var commandProcessor = CommandProcessor()
     private(set) var connectionManager: ConnectionManager
+    private var isSendingMoveMessages: Bool = false
+    private var shouldSendMoveMessages: Bool = false
+    
+    // Current scene
     private var scene: SKScene?
+    
+    // SeQuence Number, needed for keeping track of move message ordering on a unreliable sending channel
+    private var moveSQN: UInt64 = 0
     
     private(set) var players = [Player]()
     
@@ -48,7 +55,7 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         commandProcessor.register(command: CollisionClientCommand(self))
         commandProcessor.register(command: FireClientCommand(self))
         commandProcessor.register(command: MoveClientCommand(self))
-        commandProcessor.register(command: ItemRespawnClientCommand(self))
+        commandProcessor.register(command: ObjectRespawnClientCommand(self))
         commandProcessor.register(command: PauseClientCommand(self))
         commandProcessor.register(command: StationStatusClientCommand(self))
         commandProcessor.register(command: GameoverClientCommand(self))
@@ -138,10 +145,13 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     
     public func resumeGame() {
         (self.scene as? GameScene)?.resumeGame()
+        shouldSendMoveMessages = true
+        sendPlayerData()
     }
     
     public func pauseGame(id: Int) {
         (self.scene as? GameScene)?.pauseGame(caller: getPlayerByID(id)?.name)
+        shouldSendMoveMessages = false
     }
     
     public func sendPause() {
@@ -175,12 +185,41 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         (self.scene as? GameScene)?.didReceiveStationStatus(id: id, status: status)
     }
     
-    public func didReceiveItemRespawn(obj: JSON) {
-        (self.scene as? GameScene)?.didReceiveItemRespawn(obj: obj)
+    public func didReceiveObjectRespawn(obj: JSON) {
+        (self.scene as? GameScene)?.didReceiveObjectRespawn(obj: obj)
     }
     
+    // Array of all currently active game objects, including their most up-to-date state
     public func getConfig() -> JSON {
         return (self.scene as? GameScene)?.getConfig() ?? []
+    }
+    
+    // Sends move command to server. Recursively calls itself after some delay.
+    public func sendPlayerData() {
+        if(!isSendingMoveMessages && shouldSendMoveMessages) {
+            isSendingMoveMessages = true
+            if let player = (self.scene as? GameScene)?.getPlayer(), let playerVelocity = player.physicsBody?.velocity {
+                let message: JSON = [
+                    "type":"move",
+                    "sqn":self.moveSQN,
+                    "pos":[
+                        "x":player.position.x,
+                        "y":player.position.y
+                    ],
+                    "vel":[
+                        "dx":playerVelocity.dx,
+                        "dy":playerVelocity.dy
+                    ],
+                    "rot":player.zRotation
+                ]
+                try? connectionManager.sendToServer(message.rawData(), .unreliable)
+                self.moveSQN += 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                    self.isSendingMoveMessages = false
+                    self.sendPlayerData()
+                })
+            }
+        }
     }
 }
 

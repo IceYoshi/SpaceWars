@@ -19,7 +19,7 @@ class GameObject: SKNode {
     private(set) var id: Int
     private(set) var type: TextureType
     
-    internal var removeDelegates = [ItemRemovedDelegate?]()
+    internal var removeDelegates = [ObjectRemovedDelegate?]()
     internal var clickDelegates = [GameObjectClickDelegate?]()
     
     init(_ id: Int, _ name: String, _ type: TextureType) {
@@ -34,11 +34,11 @@ class GameObject: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func addItemRemoveDelegate(_ delegate: ItemRemovedDelegate) {
+    public func addObjectRemoveDelegate(_ delegate: ObjectRemovedDelegate) {
         removeDelegates.append(delegate)
     }
     
-    public func removeItemRemoveDelegate(_ delegate: ItemRemovedDelegate) {
+    public func removeObjectRemoveDelegate(_ delegate: ObjectRemovedDelegate) {
         removeDelegates = removeDelegates.filter({ $0 !== delegate })
     }
     

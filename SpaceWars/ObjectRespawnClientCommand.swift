@@ -1,5 +1,5 @@
 //
-//  ItemRespawnClientCommand.swift
+//  ObjectRespawnClientCommand.swift
 //  SpaceWars
 //
 //  Created by Mike Pereira on 07/05/2017.
@@ -8,17 +8,17 @@
 
 import SpriteKit
 
-class ItemRespawnClientCommand: Command {
+class ObjectRespawnClientCommand: Command {
     
     private var delegate: ClientInterface
     
     required init(_ delegate: ClientInterface) {
         self.delegate = delegate
-        super.init(commandName: "item_respawn")
+        super.init(commandName: "object_respawn")
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        delegate.didReceiveItemRespawn(obj: data["object"])
+        delegate.didReceiveObjectRespawn(obj: data["object"])
     }
     
 }

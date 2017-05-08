@@ -71,7 +71,7 @@
 		27E6BE301EBF25BF008FFC42 /* PauseClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */; };
 		27E6BE321EBF260E008FFC42 /* StateSyncClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */; };
 		27E6BE341EBF26A0008FFC42 /* StationStatusClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */; };
-		27E6BE361EBF26F8008FFC42 /* ItemRespawnClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */; };
+		27E6BE361EBF26F8008FFC42 /* ObjectRespawnClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE351EBF26F8008FFC42 /* ObjectRespawnClientCommand.swift */; };
 		27E6BE3A1EBF2748008FFC42 /* GameoverClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */; };
 		27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */; };
 		27E6BE3E1EBF3D82008FFC42 /* PausePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */; };
@@ -148,7 +148,7 @@
 		27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PauseClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSyncClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StationStatusClientCommand.swift; sourceTree = "<group>"; };
-		27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemRespawnClientCommand.swift; sourceTree = "<group>"; };
+		27E6BE351EBF26F8008FFC42 /* ObjectRespawnClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectRespawnClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameoverClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartClientCommand.swift; sourceTree = "<group>"; };
 		27E6BE3D1EBF3D82008FFC42 /* PausePanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PausePanel.swift; sourceTree = "<group>"; };
@@ -310,7 +310,7 @@
 				27E6BE2F1EBF25BF008FFC42 /* PauseClientCommand.swift */,
 				27E6BE311EBF260E008FFC42 /* StateSyncClientCommand.swift */,
 				27E6BE331EBF26A0008FFC42 /* StationStatusClientCommand.swift */,
-				27E6BE351EBF26F8008FFC42 /* ItemRespawnClientCommand.swift */,
+				27E6BE351EBF26F8008FFC42 /* ObjectRespawnClientCommand.swift */,
 				27E6BE391EBF2748008FFC42 /* GameoverClientCommand.swift */,
 				27E6BE3B1EBF2EDC008FFC42 /* StartClientCommand.swift */,
 			);
@@ -481,7 +481,7 @@
 				27BF00891EBBA00C00EBA1C8 /* ShipSelection.swift in Sources */,
 				27D9130B1E6DBBE70030EFAC /* Global.swift in Sources */,
 				2719C9E91E99177E009D57B3 /* CPUMasterShip.swift in Sources */,
-				27E6BE361EBF26F8008FFC42 /* ItemRespawnClientCommand.swift in Sources */,
+				27E6BE361EBF26F8008FFC42 /* ObjectRespawnClientCommand.swift in Sources */,
 				27B8BDD81E8931E4007D8EF7 /* ConnectionManager.swift in Sources */,
 				27B752DC1EA960D0001CFD51 /* SmallMeteoroid.swift in Sources */,
 				27A6DCD01E74772D00D66C7D /* PlayerCamera.swift in Sources */,

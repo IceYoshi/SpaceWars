@@ -39,13 +39,13 @@ class CPUController {
     
     public func setTargets(_ targets: [Spaceship]) {
         for target in self.targets {
-            target.removeItemRemoveDelegate(self)
+            target.removeObjectRemoveDelegate(self)
         }
         
         self.targets = targets
         
         for target in self.targets {
-            target.addItemRemoveDelegate(self)
+            target.addObjectRemoveDelegate(self)
         }
     }
     
@@ -119,7 +119,7 @@ extension CPUController: JoystickControllerProtocol {
     
 }
 
-extension CPUController: ItemRemovedDelegate {
+extension CPUController: ObjectRemovedDelegate {
     
     func didRemove(obj: GameObject) {
         self.targets = self.targets.filter({ $0 !== obj })

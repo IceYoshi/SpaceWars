@@ -57,9 +57,11 @@ class NavigationButtons: SKNode {
             let node = self.atPoint(touch.location(in: self))
             if(node == self.previousButton) {
                 self.previousButton?.colorBlendFactor = 0.5
+                self.previousButton?.setScale(0.8)
                 self.delegate.selectPrevious()
             } else if(node == self.nextButton){
                 self.nextButton?.colorBlendFactor = 0.5
+                self.nextButton?.setScale(0.8)
                 self.delegate.selectNext()
             }
         }
@@ -67,7 +69,9 @@ class NavigationButtons: SKNode {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.previousButton?.colorBlendFactor = 0
+        self.previousButton?.setScale(1)
         self.nextButton?.colorBlendFactor = 0
+        self.nextButton?.setScale(1)
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
