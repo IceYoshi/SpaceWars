@@ -130,7 +130,6 @@ class Blackhole: GameObject {
         
         let spaceshipMoveAction = SKAction.sequence([
             SKAction.run {
-                self.run(blackholeFadeInOutAction)
                 spaceship.physicsBody?.categoryBitMask = 0;
                 spaceship.physicsBody?.velocity = CGVector.zero
             },
@@ -151,6 +150,11 @@ class Blackhole: GameObject {
             spaceshipMoveAction
         ]))
         
+        self.run(SKAction.sequence([
+            SKAction.wait(forDuration: self.animationDuration * 0.4),
+            blackholeFadeInOutAction
+            ]))
+        
     }
     
     override func getConfig() -> JSON {
@@ -165,6 +169,10 @@ class Blackhole: GameObject {
             "pos":[
                 "x":self.position.x,
                 "y":self.position.y
+            ],
+            "spawn_pos":[
+                "x":self.spawnPoint.x,
+                "y":self.spawnPoint.y
             ],
             "size":[
                 "r":self.radius
