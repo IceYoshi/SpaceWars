@@ -175,13 +175,21 @@ class Spaceship: GameObject {
         }
     }
     
-    public func rotateSprite(rotDuration: Double) {
-        sShip?.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat.pi, duration: rotDuration/2)))
+    public func rotateSpriteIndefinitely(revolutionDuration: Double) {
+        sShip?.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat.pi, duration: revolutionDuration/2)))
+    }
+    
+    public func rotateSprite(toAngle: CGFloat, duration: Double) {
+        sShip?.run(SKAction.rotate(toAngle: toAngle, duration: duration, shortestUnitArc: true))
     }
     
     public func resetSpriteRotation() {
         sShip?.removeAllActions()
         sShip?.zRotation = 0
+    }
+    
+    public func ownsTorpedo(_ torpedo: Torpedo) -> Bool {
+        return !(torpedo.id < self.ammo_min || torpedo.id > self.ammo_max)
     }
     
     private func addIndicators(_ size: CGSize) {

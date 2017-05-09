@@ -71,7 +71,7 @@ extension Torpedo: ContactDelegate {
     
     func contactWith(_ object: GameObject) {
         if let obj = object as? Spaceship {
-            if(self.id < obj.ammo_min || self.id > obj.ammo_max) {
+            if(!obj.ownsTorpedo(self)) {
                 obj.changeHP(value: -self.dmg)
                 self.remove()
             }

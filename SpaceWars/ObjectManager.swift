@@ -414,11 +414,21 @@ class ObjectManager {
     
     public func didReceiveMove(objects: [JSON]) {
         for object in objects {
-            if let spaceship = getObjectById(id: object["pid"].intValue) {
+            if let spaceship = getObjectById(id: object["pid"].intValue) as? Spaceship {
                 if(spaceship.id != player?.id ?? 0) {
-                    spaceship.position = CGPoint(x: object["pos"]["x"].intValue, y: object["pos"]["y"].intValue)
-                    spaceship.zRotation = CGFloat(object["rot"].floatValue)
-                    spaceship.physicsBody?.velocity = CGVector(dx: object["vel"]["dx"].intValue, dy: object["vel"]["dy"].intValue)
+                    let framesBetweenMoveMessage = CGFloat(Global.Constants.delayBetweenMoveMessages) * 0.06
+                    
+                    let receivedPosition = CGPoint(x: object["pos"]["x"].intValue, y: object["pos"]["y"].intValue)
+                    let receivedVelocity = CGVector(dx: object["vel"]["dx"].intValue, dy: object["vel"]["dy"].intValue)
+                    
+                    let predictedPosition = CGPoint(x: receivedPosition.x + receivedVelocity.dx * framesBetweenMoveMessage,
+                                                    y: receivedPosition.y + receivedVelocity.dy * framesBetweenMoveMessage)
+                    
+                    let newVelocity = CGVector(dx: (predictedPosition.x - spaceship.position.x) / framesBetweenMoveMessage,
+                                               dy: (predictedPosition.y - spaceship.position.y) / framesBetweenMoveMessage)
+                    
+                    spaceship.physicsBody?.velocity = newVelocity
+                    spaceship.rotateSprite(toAngle: CGFloat(object["rot"].floatValue), duration: Double(1/framesBetweenMoveMessage))
                 }
             }
         }

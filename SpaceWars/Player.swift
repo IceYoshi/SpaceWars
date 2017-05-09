@@ -51,7 +51,7 @@ class Player: CustomStringConvertible {
             ],
             "vel":[
                 "dx":moveObject!["vel"]["dx"].intValue,
-                "dy":moveObject!["vel"]["dx"].intValue
+                "dy":moveObject!["vel"]["dy"].intValue
             ],
             "rot":moveObject!["rot"].floatValue
         ]

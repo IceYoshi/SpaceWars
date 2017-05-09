@@ -141,7 +141,7 @@ class Blackhole: GameObject {
         ])
         
         let pullInAction = SKAction.sequence([
-                SKAction.run { spaceship.rotateSprite(rotDuration: 0.5) },
+                SKAction.run { spaceship.rotateSpriteIndefinitely(revolutionDuration: 0.5) },
                 fadeOutSpaceshipAction,
                 SKAction.run { spaceship.resetSpriteRotation() }
             ])

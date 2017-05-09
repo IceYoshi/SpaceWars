@@ -237,6 +237,15 @@ extension GameScene: SKPhysicsContactDelegate {
                 let objB = contact.bodyB.node as? GameObject {
                 
                 if((objA as? Spacestation) == nil && (objB as? Spacestation) == nil) {
+                    if let torpedo = objA as? Torpedo, let ship = objB as? Spaceship {
+                        if(ship.ownsTorpedo(torpedo)) {
+                            return
+                        }
+                    } else if let torpedo = objB as? Torpedo, let ship = objA as? Spaceship {
+                        if(ship.ownsTorpedo(torpedo)) {
+                            return
+                        }
+                    }
                     self.objectManager.client.server!.didCollide(objA.id, objB.id)
                 } else {
                     (objA as? ContactDelegate)?.contactWith(objB)
