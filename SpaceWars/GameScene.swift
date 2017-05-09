@@ -108,6 +108,10 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         return objectManager.player
     }
     
+    public func getEnemies() -> [Spaceship] {
+        return objectManager.enemies
+    }
+    
     public func didReceiveFire(pid: Int, fid: Int, pos: CGPoint, rot: CGFloat) {
         objectManager.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
     }

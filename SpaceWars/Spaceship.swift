@@ -304,7 +304,6 @@ class Spaceship: GameObject {
         if(!self.infiniteShoot) {
             self.ammo.remove(fid)
         }
-        
         let torpedo = Torpedo(id: fid, dmg: self.dmg, pos: pos, rot: rot)
         self.activeTorpedoes.append(torpedo)
         torpedo.addObjectRemoveDelegate(self)

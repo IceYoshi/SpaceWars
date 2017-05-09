@@ -27,8 +27,8 @@ class ObjectManager {
     private(set) var minimap: MiniMap
     
     fileprivate(set) var player: Spaceship?
-    fileprivate var spaceships = [Spaceship]()
-    fileprivate var enemies = [Spaceship]()
+    fileprivate(set) var spaceships = [Spaceship]()
+    fileprivate(set) var enemies = [Spaceship]()
     
     fileprivate var objectDictionary = [Int: GameObject]()
     
@@ -192,9 +192,12 @@ class ObjectManager {
     
     public func assignCPUSpaceship(_ enemy: Spaceship) {
         enemy.torpedoDelegate = self
+        enemy.infiniteShoot = true
         enemies.append(enemy)
         
-        enemy.controller = CPUController(ref: enemy, speedThrottle: 0.1, shootDelay: 3)
+        if(client.server != nil) {
+            enemy.controller = CPUController(ref: enemy, speedThrottle: 0.1, shootDelay: 3)
+        }
         
         enemy.addClickDelegate(self)
         assignToWorld(obj: enemy)
@@ -416,19 +419,21 @@ class ObjectManager {
         for object in objects {
             if let spaceship = getObjectById(id: object["pid"].intValue) as? Spaceship {
                 if(spaceship.id != player?.id ?? 0) {
-                    let framesBetweenMoveMessage = CGFloat(Global.Constants.delayBetweenMoveMessages) * 0.06
-                    
-                    let receivedPosition = CGPoint(x: object["pos"]["x"].intValue, y: object["pos"]["y"].intValue)
-                    let receivedVelocity = CGVector(dx: object["vel"]["dx"].intValue, dy: object["vel"]["dy"].intValue)
-                    
-                    let predictedPosition = CGPoint(x: receivedPosition.x + receivedVelocity.dx * framesBetweenMoveMessage,
-                                                    y: receivedPosition.y + receivedVelocity.dy * framesBetweenMoveMessage)
-                    
-                    let newVelocity = CGVector(dx: (predictedPosition.x - spaceship.position.x) / framesBetweenMoveMessage,
-                                               dy: (predictedPosition.y - spaceship.position.y) / framesBetweenMoveMessage)
-                    
-                    spaceship.physicsBody?.velocity = newVelocity
-                    spaceship.rotateSprite(toAngle: CGFloat(object["rot"].floatValue), duration: Double(1/framesBetweenMoveMessage))
+                    if(client.server == nil || !enemies.contains(spaceship)) {
+                        let framesBetweenMoveMessage = CGFloat(Global.Constants.delayBetweenMoveMessages) * 0.06
+                        
+                        let receivedPosition = CGPoint(x: object["pos"]["x"].intValue, y: object["pos"]["y"].intValue)
+                        let receivedVelocity = CGVector(dx: object["vel"]["dx"].intValue, dy: object["vel"]["dy"].intValue)
+                        
+                        let predictedPosition = CGPoint(x: receivedPosition.x + receivedVelocity.dx * framesBetweenMoveMessage,
+                                                        y: receivedPosition.y + receivedVelocity.dy * framesBetweenMoveMessage)
+                        
+                        let newVelocity = CGVector(dx: (predictedPosition.x - spaceship.position.x) / framesBetweenMoveMessage,
+                                                   dy: (predictedPosition.y - spaceship.position.y) / framesBetweenMoveMessage)
+                        
+                        spaceship.physicsBody?.velocity = newVelocity
+                        spaceship.rotateSprite(toAngle: CGFloat(object["rot"].floatValue), duration: Double(1/framesBetweenMoveMessage))
+                    }
                 }
             }
         }
@@ -533,7 +538,16 @@ extension ObjectManager: TorpedoProtocol {
         assignToWorld(obj: ref)
         
         if(shouldSend) {
-            client.sendTorpedo(torpedo: ref)
+            if(player?.ownsTorpedo(ref) ?? false) {
+                client.sendTorpedo(torpedo: ref)
+            } else {
+                for enemy in enemies {
+                    if(enemy.ownsTorpedo(ref)) {
+                        client.server?.sendFire(pid: enemy.id, ref: ref)
+                        break
+                    }
+                }
+            }
         }
     }
     

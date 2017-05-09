@@ -257,6 +257,23 @@ class ServerInterface: PeerChangeDelegate {
         }
     }
     
+    public func sendFire(pid: Int, ref: Torpedo) {
+        let message: JSON = [
+            "type":"fire",
+            "pid":pid,
+            "fid":ref.id,
+            "pos":[
+                "x":ref.position.x,
+                "y":ref.position.y
+            ],
+            "rot":ref.zRotation
+        ]
+        
+        for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
+            sendTo(player.peerID, message, .reliable)
+        }
+    }
+    
     public func sendStationStatus(id: Int, status: Bool, transfer: Bool) {
         let message: JSON = [
             "type":"station_status",
@@ -297,6 +314,10 @@ class ServerInterface: PeerChangeDelegate {
                 if let object = player.getMoveObject() {
                     try? message["objects"].merge(with: [ object ])
                 }
+            }
+            
+            if let enemyData = client.getEnemyData() {
+                try? message["objects"].merge(with: enemyData)
             }
             
             sendToClients(message, .unreliable)

@@ -232,6 +232,31 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         (self.scene as? GameScene)?.didReceiveMove(objects: objects)
     }
     
+    public func getEnemyData() -> JSON? {
+        if let enemies = (self.scene as? GameScene)?.getEnemies() {
+            if(enemies.count == 0) {
+                return nil
+            }
+            var objects: JSON = []
+            for enemy in enemies {
+                try? objects.merge(with: [[
+                    "pid":enemy.id,
+                    "pos":[
+                        "x":enemy.position.x,
+                        "y":enemy.position.y
+                    ],
+                    "vel":[
+                        "dx":enemy.physicsBody?.velocity.dx ?? 0,
+                        "dy":enemy.physicsBody?.velocity.dy ?? 0
+                    ],
+                    "rot":enemy.zRotation
+                ]])
+            }
+            return objects
+        }
+        return nil
+    }
+    
 }
 
 

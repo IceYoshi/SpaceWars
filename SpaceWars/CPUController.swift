@@ -25,7 +25,6 @@ class CPUController {
         self.shootDelay = shootDelay
         self.reference = ref
         
-        ref.infiniteShoot = true
         self.enableAutoFire()
     }
     
