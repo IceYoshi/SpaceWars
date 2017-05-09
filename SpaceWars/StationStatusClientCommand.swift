@@ -18,7 +18,7 @@ class StationStatusClientCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        delegate.didReceiveStationStatus(id: data["station_id"].intValue, status: data["enabled"].boolValue)
+        delegate.didReceiveStationStatus(id: data["station_id"].intValue, status: data["enabled"].boolValue, transfer: data["transfer"].boolValue)
     }
     
 }

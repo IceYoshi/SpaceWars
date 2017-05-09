@@ -186,8 +186,8 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         (self.scene as? GameScene)?.didReceiveFire(pid: pid, fid: fid, pos: pos, rot: rot)
     }
     
-    public func didReceiveStationStatus(id: Int, status: Bool) {
-        (self.scene as? GameScene)?.didReceiveStationStatus(id: id, status: status)
+    public func didReceiveStationStatus(id: Int, status: Bool, transfer: Bool) {
+        (self.scene as? GameScene)?.didReceiveStationStatus(id: id, status: status, transfer: transfer)
     }
     
     public func didReceiveObjectRespawn(obj: JSON) {

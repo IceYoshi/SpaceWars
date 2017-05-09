@@ -388,9 +388,12 @@ class ObjectManager {
         }
     }
     
-    public func didReceiveStationStatus(id: Int, status: Bool) {
+    public func didReceiveStationStatus(id: Int, status: Bool, transfer: Bool) {
         if let station = getObjectById(id: id) as? Spacestation {
             station.enabled = status
+            if(transfer) {
+                (getObjectById(id: station.ownerID) as? Spaceship)?.changeHP(value: station.regenerationRate)
+            }
         }
     }
     
@@ -528,8 +531,8 @@ extension ObjectManager: TorpedoProtocol {
 
 extension ObjectManager: SpacestationDelegate {
     
-    func stationStatusChanged(enabled: Bool, ref: Spacestation) {
-        client.server?.sendStationStatus(id: ref.id, status: enabled)
+    func stationTrigger(enabled: Bool, transfer: Bool, ref: Spacestation) {
+        client.server?.sendStationStatus(id: ref.id, status: enabled, transfer: transfer)
     }
     
 }

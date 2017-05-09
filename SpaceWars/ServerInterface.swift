@@ -257,11 +257,12 @@ class ServerInterface: PeerChangeDelegate {
         }
     }
     
-    public func sendStationStatus(id: Int, status: Bool) {
+    public func sendStationStatus(id: Int, status: Bool, transfer: Bool) {
         let message: JSON = [
             "type":"station_status",
             "station_id":id,
-            "enabled":status
+            "enabled":status,
+            "transfer":transfer
         ]
         for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
             sendTo(player.peerID, message, .reliable)

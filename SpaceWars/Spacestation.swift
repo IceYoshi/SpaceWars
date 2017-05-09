@@ -10,7 +10,7 @@ import SpriteKit
 
 protocol SpacestationDelegate {
     
-    func stationStatusChanged(enabled: Bool, ref: Spacestation)
+    func stationTrigger(enabled: Bool, transfer: Bool, ref: Spacestation)
     
 }
 
@@ -33,7 +33,6 @@ class Spacestation: GameObject {
                     self.alpha = 0
                 }
             }
-            delegate?.stationStatusChanged(enabled: enabled, ref: self)
         }
     }
     private var isActive: Bool = false
@@ -112,12 +111,16 @@ class Spacestation: GameObject {
                 self.isActive = true
                 let waitAction = SKAction.wait(forDuration: 1)
                 let transferAction = SKAction.run {
-                    self.ownerRef?.changeHP(value: self.regenerationRate)
+                    if(self.ownerRef != nil) {
+                        self.delegate?.stationTrigger(enabled: true, transfer: true, ref: self)
+                        self.ownerRef?.changeHP(value: self.regenerationRate)
+                    }
                 }
                 self.run(SKAction.sequence([waitAction, transferAction])) {
                     self.isActive = false
                     self.transfer()
                 }
+                
             } else {
                 self.disableTemporarely()
             }
@@ -127,9 +130,11 @@ class Spacestation: GameObject {
     public func disableTemporarely() {
         if(enabled) {
             self.removeAllActions()
+            self.delegate?.stationTrigger(enabled: false, transfer: false, ref: self)
             self.enabled = false
             self.activeTimeCounter = 0
             self.run(SKAction.wait(forDuration: self.inactiveTime)) {
+                self.delegate?.stationTrigger(enabled: true, transfer: false, ref: self)
                 self.enabled = true
                 self.transfer()
             }
