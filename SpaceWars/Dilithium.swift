@@ -17,7 +17,7 @@ class Dilithium: GameObject {
         self.ammo_gain = config["ammo_gain"].intValue
         self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
-        super.init(config["id"].intValue, "dilithium", .dilithium)
+        super.init(config["id"].intValue, "Dilithium", .dilithium)
         
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue

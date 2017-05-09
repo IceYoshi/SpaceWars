@@ -29,7 +29,7 @@ class Blackhole: GameObject {
         self.maxRange = Float(config["max_range"].intValue)
         self.radius = config["size"]["r"].intValue
         
-        super.init(config["id"].intValue, "blackhole", .blackhole)
+        super.init(config["id"].intValue, "Blackhole", .blackhole)
         
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         
@@ -151,7 +151,7 @@ class Blackhole: GameObject {
         ]))
         
         self.run(SKAction.sequence([
-            SKAction.wait(forDuration: self.animationDuration * 0.4),
+            SKAction.wait(forDuration: self.animationDuration * 0.3),
             blackholeFadeInOutAction
             ]))
         

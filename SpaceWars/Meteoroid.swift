@@ -46,7 +46,7 @@ class Meteoroid: GameObject {
         self.spwawnRate = CGFloat(config["spawn_rate"].floatValue)
         self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
-        super.init(config["id"].intValue, "meteoroid", type)
+        super.init(config["id"].intValue, "Meteoroid", type)
         
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue

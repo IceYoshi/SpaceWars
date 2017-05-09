@@ -148,6 +148,7 @@ class ObjectManager {
     
     public func assignSpaceship(_ ship: Spaceship) {
         ship.torpedoDelegate = self
+        ship.spaceshipDelegate = self
         spaceships.append(ship)
         
         if(ship.id == ownID) {
@@ -359,7 +360,7 @@ class ObjectManager {
                     if(id == 0) {
                         id = idCounter!.nextID()
                     }
-                    assignCPUSpaceship(CPUMasterShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    assignCPUSpaceship(CPUMasterShip(idCounter: idCounter!, id: id, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignCPUSpaceship(CPUMasterShip(obj, fieldSize, fieldShape))
                 }
@@ -369,7 +370,7 @@ class ObjectManager {
                     if(id == 0) {
                         id = idCounter!.nextID()
                     }
-                    assignCPUSpaceship(CPUSlaveShip(idCounter: idCounter!, id: id, playerName: obj["name"].stringValue, pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
+                    assignCPUSpaceship(CPUSlaveShip(idCounter: idCounter!, id: id, playerName: "COM", pos: getFreeRandomPosition(), fieldSize: fieldSize, fieldShape: fieldShape))
                 } else {
                     assignCPUSpaceship(CPUSlaveShip(obj, fieldSize, fieldShape))
                 }
@@ -439,6 +440,19 @@ class ObjectManager {
         }
     }
     
+    public func getOwnerIDOfTorpedo(fid: Int) -> Int {
+        for ship in spaceships {
+            if(ship.ownsTorpedo(fid)) {
+                return ship.id
+            }
+        }
+        for ship in enemies {
+            if(ship.ownsTorpedo(fid)) {
+                return ship.id
+            }
+        }
+        return 0
+    }
 }
 
 extension ObjectManager: ObjectRemovedDelegate {
@@ -538,11 +552,11 @@ extension ObjectManager: TorpedoProtocol {
         assignToWorld(obj: ref)
         
         if(shouldSend) {
-            if(player?.ownsTorpedo(ref) ?? false) {
+            if(player?.ownsTorpedo(ref.id) ?? false) {
                 client.sendTorpedo(torpedo: ref)
             } else {
                 for enemy in enemies {
-                    if(enemy.ownsTorpedo(ref)) {
+                    if(enemy.ownsTorpedo(ref.id)) {
                         client.server?.sendFire(pid: enemy.id, ref: ref)
                         break
                     }
@@ -557,6 +571,25 @@ extension ObjectManager: SpacestationDelegate {
     
     func stationTrigger(enabled: Bool, transfer: Bool, ref: Spacestation) {
         client.server?.sendStationStatus(id: ref.id, status: enabled, transfer: transfer)
+    }
+    
+}
+
+extension ObjectManager: SpaceshipRemoveProtocol {
+    
+    func didRemoveSpaceship(ref: Spaceship) {
+        if(client.server != nil) {
+            var collisionBy: String = "Unknown"
+            
+            
+            if let player = getObjectById(id: getOwnerIDOfTorpedo(fid: ref.lastCollisionBy)) {
+                collisionBy = player.name!
+            } else if let obj = getObjectById(id: ref.lastCollisionBy) {
+                collisionBy = obj.name!
+            }
+            
+            client.server!.didRemoveSpaceship(ref: ref, killedBy: collisionBy)
+        }
     }
     
 }

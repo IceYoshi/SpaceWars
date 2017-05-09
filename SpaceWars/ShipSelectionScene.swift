@@ -11,11 +11,9 @@ import SpriteKit
 class ShipSelectionScene: SKScene {
     
     private var shipSelection: ShipSelection
-    private var client: ClientInterface
     
     init(_ screenSize: CGSize, _ client: ClientInterface) {
         self.shipSelection = ShipSelection(screenSize: screenSize, players: client.players, delegate: client, canStartGame: client.server != nil)
-        self.client = client
         
         super.init(size: screenSize)
         
@@ -25,8 +23,6 @@ class ShipSelectionScene: SKScene {
         self.name = "ShipSelectionScene"
         
         self.addChild(self.shipSelection)
-        
-        //client.scene = self
     }
     
     required init?(coder aDecoder: NSCoder) {

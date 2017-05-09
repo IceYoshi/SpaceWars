@@ -12,6 +12,10 @@ protocol TorpedoProtocol {
     func shootTorpedo(ref: Torpedo, shouldSend: Bool)
 }
 
+protocol SpaceshipRemoveProtocol {
+    func didRemoveSpaceship(ref: Spaceship)
+}
+
 class Spaceship: GameObject {
     
     public var controller: JoystickControllerProtocol?
@@ -23,6 +27,7 @@ class Spaceship: GameObject {
     public var infiniteShoot: Bool = false
     
     public var torpedoDelegate: TorpedoProtocol?
+    public var spaceshipDelegate: SpaceshipRemoveProtocol?
     fileprivate var sShip: SKSpriteNode?
     private var sShield: SKSpriteNode?
     
@@ -44,6 +49,7 @@ class Spaceship: GameObject {
     }
     private(set) var ammo_min: Int
     private(set) var ammo_max: Int
+    public var lastCollisionBy: Int = 0
     
     public var ammoCount: Int {
         return ammo.count
@@ -188,8 +194,8 @@ class Spaceship: GameObject {
         sShip?.zRotation = 0
     }
     
-    public func ownsTorpedo(_ torpedo: Torpedo) -> Bool {
-        return !(torpedo.id < self.ammo_min || torpedo.id > self.ammo_max)
+    public func ownsTorpedo(_ fid: Int) -> Bool {
+        return !(fid < self.ammo_min || fid > self.ammo_max)
     }
     
     private func addIndicators(_ size: CGSize) {
@@ -238,7 +244,7 @@ class Spaceship: GameObject {
         self.ammo.removeAll()
         self.sShield?.removeFromParent()
         self.sShield = nil
-        
+        self.spaceshipDelegate?.didRemoveSpaceship(ref: self)
         if let sprite = self.sShip {
             self.children.filter({ $0 != sprite }).forEach({ $0.removeFromParent() })
             sprite.run(SKAction.group([
@@ -247,6 +253,7 @@ class Spaceship: GameObject {
                 ])) {
                 self.removeAllChildren()
                 self.removeFromParent()
+                    
                 for delegate in self.removeDelegates {
                     delegate?.didRemove(obj: self)
                 }
@@ -409,14 +416,17 @@ extension Spaceship: ContactDelegate {
             obj.remove()
             
         } else if let obj = object as? Blackhole {
+            self.lastCollisionBy = obj.id
             self.changeHP(value: -obj.dmg)
             obj.animateWith(self)
             
         } else if let obj = object as? Meteoroid {
+            self.lastCollisionBy = obj.id
             self.changeHP(value: -obj.dmg)
             obj.remove()
             
         } else if let obj = object as? Spaceship {
+            self.lastCollisionBy = obj.id
             self.remove()
             obj.remove()
             

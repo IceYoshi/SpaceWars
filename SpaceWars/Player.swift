@@ -16,6 +16,12 @@ class Player: CustomStringConvertible {
     public var shipType: String = "human"
     private var moveObject: JSON?
     
+    // Stats
+    public var fireCount: Int = 0
+    public var hitCount: Int = 0
+    public var killedBy: String?
+    
+    
     public var description: String {
         get {
             return name
@@ -55,6 +61,14 @@ class Player: CustomStringConvertible {
             ],
             "rot":moveObject!["rot"].floatValue
         ]
+    }
+    
+    public func incrementFireCount() {
+        fireCount += 1
+    }
+    
+    public func incrementHitCount() {
+        hitCount += 1
     }
     
 }

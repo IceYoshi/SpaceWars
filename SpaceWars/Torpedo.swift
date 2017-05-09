@@ -71,7 +71,8 @@ extension Torpedo: ContactDelegate {
     
     func contactWith(_ object: GameObject) {
         if let obj = object as? Spaceship {
-            if(!obj.ownsTorpedo(self)) {
+            if(!obj.ownsTorpedo(self.id)) {
+                obj.lastCollisionBy = self.id
                 obj.changeHP(value: -self.dmg)
                 self.remove()
             }

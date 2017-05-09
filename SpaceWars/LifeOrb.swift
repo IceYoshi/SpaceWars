@@ -17,7 +17,7 @@ class LifeOrb: GameObject {
         self.hp_gain = config["hp_gain"].intValue
         self.size = CGSize(width: config["size"]["w"].intValue, height: config["size"]["h"].intValue)
         
-        super.init(config["id"].intValue, "life_orb", .life_orb)
+        super.init(config["id"].intValue, "Life orb", .life_orb)
         
         let pos = CGPoint(x: config["pos"]["x"].intValue, y: config["pos"]["y"].intValue)
         let rot = config["rot"].floatValue

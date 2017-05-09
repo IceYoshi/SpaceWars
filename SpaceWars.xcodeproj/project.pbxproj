@@ -32,6 +32,9 @@
 		2734B1C51E9AE39700EB71C2 /* FireButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2734B1C41E9AE39700EB71C2 /* FireButton.swift */; };
 		273678BA1E9FEE4D0055A643 /* Dilithium.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273678B91E9FEE4C0055A643 /* Dilithium.swift */; };
 		273CAE8F1EAB997B00E9213C /* Spacestation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 273CAE8E1EAB997B00E9213C /* Spacestation.swift */; };
+		2778CD461EC22664003BE7AA /* StatScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2778CD451EC22664003BE7AA /* StatScene.swift */; };
+		2778CD481EC2274B003BE7AA /* StatScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2778CD471EC2274B003BE7AA /* StatScreen.swift */; };
+		2778CD4B1EC228D4003BE7AA /* LobbyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2778CD4A1EC228D4003BE7AA /* LobbyButton.swift */; };
 		277D47311E74B2B800901D8F /* StarField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D47301E74B2B800901D8F /* StarField.swift */; };
 		2796F3791E9BFA7F006411AC /* Torpedo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2796F3781E9BFA7F006411AC /* Torpedo.swift */; };
 		27992DB61EAA363F00DF24A7 /* MiniMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27992DB51EAA363F00DF24A7 /* MiniMap.swift */; };
@@ -109,6 +112,9 @@
 		2734B1C41E9AE39700EB71C2 /* FireButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FireButton.swift; sourceTree = "<group>"; };
 		273678B91E9FEE4C0055A643 /* Dilithium.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dilithium.swift; sourceTree = "<group>"; };
 		273CAE8E1EAB997B00E9213C /* Spacestation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spacestation.swift; sourceTree = "<group>"; };
+		2778CD451EC22664003BE7AA /* StatScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatScene.swift; sourceTree = "<group>"; };
+		2778CD471EC2274B003BE7AA /* StatScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatScreen.swift; sourceTree = "<group>"; };
+		2778CD4A1EC228D4003BE7AA /* LobbyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyButton.swift; sourceTree = "<group>"; };
 		277D47301E74B2B800901D8F /* StarField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarField.swift; sourceTree = "<group>"; };
 		2796F3781E9BFA7F006411AC /* Torpedo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torpedo.swift; sourceTree = "<group>"; };
 		27992DB51EAA363F00DF24A7 /* MiniMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniMap.swift; sourceTree = "<group>"; };
@@ -188,6 +194,7 @@
 		270C79131E6B54B70045C868 /* SpaceWars */ = {
 			isa = PBXGroup;
 			children = (
+				2778CD491EC22751003BE7AA /* stat screen */,
 				27CE1EE81EBE180600BCB59E /* selection screen */,
 				270D971A1E9A437000FFA117 /* hud */,
 				270D97191E9A428500FFA117 /* environment */,
@@ -254,6 +261,15 @@
 				273678B91E9FEE4C0055A643 /* Dilithium.swift */,
 			);
 			name = item;
+			sourceTree = "<group>";
+		};
+		2778CD491EC22751003BE7AA /* stat screen */ = {
+			isa = PBXGroup;
+			children = (
+				2778CD471EC2274B003BE7AA /* StatScreen.swift */,
+				2778CD4A1EC228D4003BE7AA /* LobbyButton.swift */,
+			);
+			name = "stat screen";
 			sourceTree = "<group>";
 		};
 		27B5F30C1E6C342C00F05F72 /* object */ = {
@@ -354,6 +370,7 @@
 			children = (
 				27D9130C1E6DC07D0030EFAC /* ShipSelectionScene.swift */,
 				271980DE1E73230F006A058A /* GameScene.swift */,
+				2778CD451EC22664003BE7AA /* StatScene.swift */,
 			);
 			name = scene;
 			sourceTree = "<group>";
@@ -506,8 +523,11 @@
 				27B752DA1EA960BD001CFD51 /* Meteoroid.swift in Sources */,
 				27CABFEB1E99235500CE0717 /* SwiftyJSON.swift in Sources */,
 				2719C9E71E991764009D57B3 /* CPUSlaveShip.swift in Sources */,
+				2778CD4B1EC228D4003BE7AA /* LobbyButton.swift in Sources */,
+				2778CD461EC22664003BE7AA /* StatScene.swift in Sources */,
 				27E6BE3C1EBF2EDC008FFC42 /* StartClientCommand.swift in Sources */,
 				27C3A2091EB72B0200337027 /* ClientInterface.swift in Sources */,
+				2778CD481EC2274B003BE7AA /* StatScreen.swift in Sources */,
 				271F699C1EB686F100AAC43B /* Player.swift in Sources */,
 				271980DF1E73230F006A058A /* GameScene.swift in Sources */,
 				27E6BE321EBF260E008FFC42 /* StateSyncClientCommand.swift in Sources */,

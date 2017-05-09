@@ -13,7 +13,7 @@ protocol PeerChangeDelegate {
     func peerDidChange(_ peers: [MCPeerID])
 }
 
-class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
+class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonProtocol {
     
     private var name: String
     private var rank: LocalRank
@@ -149,6 +149,29 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
         self.scene = skView?.scene
     }
     
+    public func didReceiveGameover(stats: [JSON]) {
+        for stat in stats {
+            if let player = getPlayerByID(stat["pid"].intValue) {
+                player.fireCount = stat["shots_fired"].intValue
+                player.hitCount = stat["shots_hit"].intValue
+                player.killedBy = stat["killed_by"].string
+            }
+        }
+        
+        let skView = self.viewController.view as? SKView
+        skView?.presentScene(StatScene(screenSize: viewController.view.bounds.size, client: self))
+        self.scene = skView?.scene
+    }
+    
+    public func didPressLobby() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let lobbyVC = storyboard.instantiateViewController(withIdentifier: "lobbyVC")
+        
+        viewController.present(lobbyVC, animated: false, completion: {
+            self.disconnect()
+        })
+    }
+    
     public func resumeGame() {
         (self.scene as? GameScene)?.resumeGame()
         shouldSendMoveMessages = true
@@ -166,6 +189,10 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate {
     
     public func didCollide(_ id1: Int, _ id2: Int) {
         (self.scene as? GameScene)?.didCollide(id1, id2)
+    }
+    
+    public func getOwnerIDOfTorpedo(fid: Int) -> Int {
+        return (self.scene as? GameScene)?.getOwnerIDOfTorpedo(fid: fid) ?? 0
     }
     
     public func sendTorpedo(torpedo: Torpedo) {

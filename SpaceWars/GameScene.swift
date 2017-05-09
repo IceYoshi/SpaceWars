@@ -23,6 +23,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     private var physicUpdateDelegates = [NeedsPhysicsUpdateProtocol?]()
     
     fileprivate var countdown: Countdown?
+    private var isRunning: Bool = true
     
     init(screenSize: CGSize, setup: JSON, client: ClientInterface) {
         let pid = setup["pid"].intValue
@@ -128,6 +129,10 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         objectManager.didReceiveMove(objects: objects)
     }
     
+    public func getOwnerIDOfTorpedo(fid: Int) -> Int {
+        return objectManager.getOwnerIDOfTorpedo(fid: fid)
+    }
+    
     public func getConfig() -> JSON {
         return objectManager.getConfig()
     }
@@ -149,6 +154,13 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        if(isRunning &&
+            (objectManager.spaceships.count == 0 ||
+            (objectManager.spaceships.count == 1 && objectManager.enemies.count == 0))) {
+                isRunning = false
+                objectManager.client.server?.sendGameover()
+        }
+        
         let delegates = updateDelegates
         for (i, delegate) in delegates.enumerated() {
             if(delegate != nil) {
@@ -241,12 +253,12 @@ extension GameScene: SKPhysicsContactDelegate {
                 let objB = contact.bodyB.node as? GameObject {
                 
                 if((objA as? Spacestation) == nil && (objB as? Spacestation) == nil) {
-                    if let torpedo = objA as? Torpedo, let ship = objB as? Spaceship {
-                        if(ship.ownsTorpedo(torpedo)) {
+                    if let ship = objB as? Spaceship {
+                        if(ship.ownsTorpedo(objA.id)) {
                             return
                         }
-                    } else if let torpedo = objB as? Torpedo, let ship = objA as? Spaceship {
-                        if(ship.ownsTorpedo(torpedo)) {
+                    } else if let ship = objA as? Spaceship {
+                        if(ship.ownsTorpedo(objB.id)) {
                             return
                         }
                     }

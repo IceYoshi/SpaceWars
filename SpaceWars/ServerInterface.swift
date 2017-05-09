@@ -152,6 +152,7 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func startShipSelection(setup: JSON) {
+        state = .ship_selection
         client.connectionManager.stopPairingService()
         sendToClients(["type":"start_ship_selection"], .reliable)
         state = .ship_selection
@@ -202,6 +203,7 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didLoadGame(config: JSON) {
+        state = .pre_game
         if(setup != nil) {
             setup!["objects"] = config
             var personalizedSetup = setup!
@@ -215,6 +217,7 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didStartGame() {
+        state = .playing
         sendToClients(["type":"start"], .reliable)
         shouldSendMoveMessages = true
     }
@@ -227,6 +230,13 @@ class ServerInterface: PeerChangeDelegate {
         ]
         
         sendToClients(message, .reliable)
+        
+        if let player = getPlayerByID(client.getOwnerIDOfTorpedo(fid: id1)) {
+            player.incrementHitCount()
+        }
+        if let player = getPlayerByID(client.getOwnerIDOfTorpedo(fid: id2)) {
+            player.incrementHitCount()
+        }
     }
     
     public func didReceivePause(_ peerID: String) {
@@ -241,6 +251,7 @@ class ServerInterface: PeerChangeDelegate {
     
     public func didReceiveFire(_ config: JSON, _ peerID: String) {
         if let sender = getPlayerByPeerID(peerID) {
+            sender.incrementFireCount()
             var message = config
             message["pid"] = JSON(sender.id)
             
@@ -327,5 +338,31 @@ class ServerInterface: PeerChangeDelegate {
                 self.sendMove()
             })
         }
+    }
+    
+    public func didRemoveSpaceship(ref: Spaceship, killedBy: String) {
+        if let player = getPlayerByID(ref.id) {
+            player.killedBy = killedBy
+        }
+    }
+    
+    public func sendGameover() {
+        shouldSendMoveMessages = false
+        state = .join
+        var message: JSON = [
+            "type":"gameover",
+            "players":[]
+        ]
+        
+        for player in players {
+                try? message["players"].merge(with: [[
+                        "pid":player.id,
+                        "shots_fired":player.fireCount,
+                        "shots_hit":player.hitCount,
+                        "killed_by":player.killedBy as Any
+                    ]])
+        }
+        
+        sendToClients(message, .reliable)
     }
 }

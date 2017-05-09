@@ -18,7 +18,7 @@ class GameoverClientCommand: Command {
     }
     
     override func process(_ data: JSON, _ peerID: String) {
-        
+        delegate.didReceiveGameover(stats: data["players"].arrayValue)
     }
     
 }
