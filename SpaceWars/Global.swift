@@ -15,14 +15,14 @@ class Global {
         static let serviceType: String = "mcspace-mpcdmv1"
         
         // Debug information
-        static let debugShowFPS: Bool = true
-        static let debugShowNodeCount: Bool = true
+        static let debugShowFPS: Bool = false
+        static let debugShowNodeCount: Bool = false
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
         
         static let torpedoSize: CGSize = CGSize(width: 30, height: 90)
-        static let torpedoVelocity: CGFloat = 3000
-        static let torpedoAlphaDecay: CGFloat = 0.03
+        static let torpedoVelocity: CGFloat = 2000
+        static let torpedoAlphaDecay: CGFloat = 0.02
         static let shootDelay: Double = 0.3
         
         static let maxZoomLevel: CGFloat = 5.0

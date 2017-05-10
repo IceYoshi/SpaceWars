@@ -112,6 +112,10 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func sendNames() {
+        sendToClients(createNamesMessage(), .reliable)
+    }
+    
+    public func createNamesMessage() -> JSON {
         var response: JSON = [
             "type":"name",
             "val":[]
@@ -125,26 +129,31 @@ class ServerInterface: PeerChangeDelegate {
                 try? response["val"].merge(with: [val])
             }
         }
-        
-        sendToClients(response, .reliable)
+        return response
     }
     
     public func sendSync(_ peerID: String) {
-        setup?["objects"] = client.getConfig()
+        sendTo(peerID, createNamesMessage(), .reliable)
+        
         var response: JSON = [
             "type":"state_sync",
             "state":state.rawValue
         ]
+        
+        let pid: Int = getPlayerByPeerID(peerID)?.id ?? 0
+        setup?["pid"] = JSON(pid)
+        
         switch state {
         case .join:
             break
         case .ship_selection:
-            response["paused"] = false
+            break
         case .pre_game:
-            response["paused"] = false
+            setup?["objects"] = client.getConfig()
             response["setup"] = setup ?? []
         case .playing:
-            response["paused"] = false
+            didReceivePause(peerID)
+            setup?["objects"] = client.getConfig()
             response["setup"] = setup ?? []
         }
         
@@ -153,7 +162,7 @@ class ServerInterface: PeerChangeDelegate {
     
     public func startShipSelection(setup: JSON) {
         state = .ship_selection
-        client.connectionManager.stopPairingService()
+        //client.connectionManager.stopPairingService()
         sendToClients(["type":"start_ship_selection"], .reliable)
         state = .ship_selection
         self.setup = setup
@@ -173,14 +182,19 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didReceiveShipSelection(peerID: String, type: String) {
-        if let player = getPlayerByPeerID(peerID) {
-            let response: JSON = [
-                "type":"ship_selected",
-                "pid":player.id,
-                "ship_type":type
-            ]
-            sendToClients(response, .reliable)
+        if(state == .ship_selection) {
+            if let player = getPlayerByPeerID(peerID) {
+                let response: JSON = [
+                    "type":"ship_selected",
+                    "pid":player.id,
+                    "ship_type":type
+                ]
+                sendToClients(response, .reliable)
+            }
+        } else {
+            sendSync(peerID)
         }
+        
     }
     
     public func didEndShipSelection(players: [Player]) {
@@ -240,31 +254,40 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didReceivePause(_ peerID: String) {
-        let message: JSON = [
-            "type":"pause",
-            "pid":getPlayerByPeerID(peerID)?.id ?? 0
-        ]
+        if(state == .playing) {
+            let message: JSON = [
+                "type":"pause",
+                "pid":getPlayerByPeerID(peerID)?.id ?? 0
+            ]
+            
+            sendToClients(message, .reliable)
+            shouldSendMoveMessages = false
+        } else {
+            sendSync(peerID)
+        }
         
-        sendToClients(message, .reliable)
-        shouldSendMoveMessages = false
     }
     
     public func didReceiveFire(_ config: JSON, _ peerID: String) {
-        if let sender = getPlayerByPeerID(peerID) {
-            sender.incrementFireCount()
-            var message = config
-            message["pid"] = JSON(sender.id)
-            
-            for player in players.filter( { $0 !== sender } ) {
-                if(player.peerID == UIDevice.current.identifierForVendor!.uuidString) {
-                    if let data = try? message.rawData() {
-                        client.commandProcessor.interpret(data, player.peerID)
-                    }
-                } else {
-                    sendTo(player.peerID, message, .reliable)
-                }
+        if(state == .playing) {
+            if let sender = getPlayerByPeerID(peerID) {
+                sender.incrementFireCount()
+                var message = config
+                message["pid"] = JSON(sender.id)
                 
+                for player in players.filter( { $0 !== sender } ) {
+                    if(player.peerID == UIDevice.current.identifierForVendor!.uuidString) {
+                        if let data = try? message.rawData() {
+                            client.commandProcessor.interpret(data, player.peerID)
+                        }
+                    } else {
+                        sendTo(player.peerID, message, .reliable)
+                    }
+                    
+                }
             }
+        } else {
+            sendSync(peerID)
         }
     }
     
@@ -308,7 +331,11 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didReceiveMove(obj: JSON, peerID: String) {
-        getPlayerByPeerID(peerID)?.setMoveObject(obj: obj)
+        if(state == .playing) {
+            getPlayerByPeerID(peerID)?.setMoveObject(obj: obj)
+        } else {
+            sendSync(peerID)
+        }
     }
     
     // Sends move command to clients. Recursively calls itself after some delay.

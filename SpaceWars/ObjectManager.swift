@@ -197,7 +197,7 @@ class ObjectManager {
         enemies.append(enemy)
         
         if(client.server != nil) {
-            enemy.controller = CPUController(ref: enemy, speedThrottle: 0.1, shootDelay: 3)
+            enemy.controller = CPUController(ref: enemy, speedThrottle: 0.2, shootDelay: 3)
         }
         
         enemy.addClickDelegate(self)
