@@ -62,6 +62,7 @@ class StartButton: SKNode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.pressedPanel?.alpha = 1
         self.button?.setScale(0.95)
+        self.run(SKAction.playSoundFileNamed("click.mp3", waitForCompletion: false))
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

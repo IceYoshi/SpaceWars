@@ -73,6 +73,7 @@ class Dilithium: GameObject {
     }
     
     override public func remove() {
+        self.run(SKAction.playSoundFileNamed("pop.mp3", waitForCompletion: false))
         self.physicsBody = nil
         self.run(SKAction.group([
             SKAction.scale(by: 3, duration: 0.5),

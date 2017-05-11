@@ -113,7 +113,6 @@ class Spacestation: GameObject {
                 let transferAction = SKAction.run {
                     if(self.ownerRef != nil) {
                         self.delegate?.stationTrigger(enabled: true, transfer: true, ref: self)
-                        self.ownerRef?.changeHP(value: self.regenerationRate)
                     }
                 }
                 self.run(SKAction.sequence([waitAction, transferAction])) {

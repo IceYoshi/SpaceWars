@@ -59,10 +59,12 @@ class NavigationButtons: SKNode {
                 self.previousButton?.colorBlendFactor = 0.5
                 self.previousButton?.setScale(0.8)
                 self.delegate.selectPrevious()
+                self.run(SKAction.playSoundFileNamed("click.mp3", waitForCompletion: false))
             } else if(node == self.nextButton){
                 self.nextButton?.colorBlendFactor = 0.5
                 self.nextButton?.setScale(0.8)
                 self.delegate.selectNext()
+                self.run(SKAction.playSoundFileNamed("click.mp3", waitForCompletion: false))
             }
         }
     }

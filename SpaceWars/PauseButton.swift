@@ -109,6 +109,7 @@ class PauseButton: SKNode {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if( !(sPauseButton!.hasActions() || sResumeButton?.hasActions() ?? false) ) {
+            self.run(SKAction.playSoundFileNamed("click.mp3", waitForCompletion: false))
             switch state {
             case .paused:
                 self.sResumeButton?.run(fadeOutAction)

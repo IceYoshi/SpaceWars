@@ -238,6 +238,8 @@ class Spaceship: GameObject {
     }
     
     override public func remove() {
+        self.removeAllActions()
+        self.run(SKAction.playSoundFileNamed("explosion.mp3", waitForCompletion: false))
         self.controller = nil
         self.physicsBody = nil
         self.hp = 0

@@ -32,6 +32,7 @@ class Torpedo: GameObject {
         self.physicsBody!.collisionBitMask = 0
         self.physicsBody!.categoryBitMask = Global.Constants.torpedoCategory
         self.physicsBody!.contactTestBitMask = Global.Constants.spaceshipCategory | Global.Constants.meteoroidCategory
+        self.run(SKAction.playSoundFileNamed("laser.mp3", waitForCompletion: false))
     }
     
     convenience init(id: Int, dmg: Int, pos: CGPoint, rot: CGFloat) {
@@ -72,11 +73,13 @@ extension Torpedo: ContactDelegate {
     func contactWith(_ object: GameObject) {
         if let obj = object as? Spaceship {
             if(!obj.ownsTorpedo(self.id)) {
+                self.run(SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false))
                 obj.lastCollisionBy = self.id
                 obj.changeHP(value: -self.dmg)
                 self.remove()
             }
         } else if let obj = object as? Meteoroid {
+            self.run(SKAction.playSoundFileNamed("hit.mp3", waitForCompletion: false))
             obj.changeHP(value: -self.dmg)
             self.remove()
         }

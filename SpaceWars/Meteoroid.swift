@@ -104,6 +104,7 @@ class Meteoroid: GameObject {
     }
     
     override public func remove() {
+        self.run(SKAction.playSoundFileNamed("explosion.mp3", waitForCompletion: false))
         self.physicsBody = nil
         if let sprite = self.sMeteoroid {
             self.children.filter({ $0 != sprite }).forEach({ $0.removeFromParent() })

@@ -54,6 +54,7 @@ class Countdown: SKNode {
     
     public func endTimer() {
         self.label?.removeAllActions()
+        self.run(SKAction.playSoundFileNamed("go.mp3", waitForCompletion: false))
         self.running = false
         
         for delegate in self.delegates {
@@ -80,6 +81,9 @@ class Countdown: SKNode {
                 SKAction.fadeOut(withDuration: 0.5)
                 ])
             let scaleAction = SKAction.scale(to: 4, duration: 1)
+            if(self.startTime < 4) {
+                self.run(SKAction.playSoundFileNamed("countdown.mp3", waitForCompletion: false))
+            }
             self.label?.run(SKAction.group([fadeInOutAction, scaleAction])) {
                 self.startTime -= 1
                 self.label?.setScale(1)

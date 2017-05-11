@@ -157,6 +157,8 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonPro
                 player.killedBy = stat["killed_by"].string
             }
         }
+        self.scene?.removeAllActions()
+        self.scene?.removeAllChildren()
         
         let skView = self.viewController.view as? SKView
         skView?.presentScene(StatScene(screenSize: viewController.view.bounds.size, client: self))
@@ -164,6 +166,10 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonPro
     }
     
     public func didPressLobby() {
+        self.scene?.removeAllActions()
+        self.scene?.removeAllChildren()
+        self.scene = nil
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let lobbyVC = storyboard.instantiateViewController(withIdentifier: "lobbyVC")
         

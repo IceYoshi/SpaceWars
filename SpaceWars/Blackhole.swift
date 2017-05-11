@@ -93,6 +93,7 @@ class Blackhole: GameObject {
     }
     
     public func animateWith(_ spaceship: Spaceship) {
+        self.run(SKAction.playSoundFileNamed("pulled.mp3", waitForCompletion: false))
         let blackholeCategory = self.physicsBody?.categoryBitMask
         let spaceshipCategory = spaceship.physicsBody?.categoryBitMask
         

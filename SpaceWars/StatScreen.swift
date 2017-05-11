@@ -52,6 +52,8 @@ class StatScreen: SKNode {
         let button = LobbyButton(buttonSize, delegate)
         button.position = CGPoint(x: screenSize.width - buttonSize.width/2, y: buttonSize.height/2)
         self.addChild(button)
+        
+        self.run(SKAction.playSoundFileNamed("victory.mp3", waitForCompletion: false))
     }
     
     required init?(coder aDecoder: NSCoder) {

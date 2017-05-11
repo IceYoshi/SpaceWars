@@ -67,6 +67,11 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         } else {
             startCountdown(time: setup["countdown"].intValue)
         }
+        
+        let backgroundMusic = SKAudioNode(fileNamed: "light-years.mp3")
+        backgroundMusic.autoplayLooped = true
+        backgroundMusic.isPositional = false
+        self.addChild(backgroundMusic)
     }
     
     required init?(coder aDecoder: NSCoder) {

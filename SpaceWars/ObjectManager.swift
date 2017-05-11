@@ -397,6 +397,7 @@ class ObjectManager {
             station.enabled = status
             if(transfer) {
                 (getObjectById(id: station.ownerID) as? Spaceship)?.changeHP(value: station.regenerationRate)
+                station.run(SKAction.playSoundFileNamed("powerup.mp3", waitForCompletion: false))
             }
         }
     }

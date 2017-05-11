@@ -315,9 +315,11 @@ class ServerInterface: PeerChangeDelegate {
             "enabled":status,
             "transfer":transfer
         ]
+        /*
         for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
             sendTo(player.peerID, message, .reliable)
-        }
+        }*/
+        sendToClients(message, .reliable)
     }
     
     public func sendObjectRespawn(config: JSON) {

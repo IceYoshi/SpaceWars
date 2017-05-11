@@ -15,7 +15,7 @@ class Global {
         static let serviceType: String = "mcspace-mpcdmv1"
         
         // Debug information
-        static let debugShowFPS: Bool = false
+        static let debugShowFPS: Bool = true
         static let debugShowNodeCount: Bool = false
         static let debugShowPhysics: Bool = false
         static let debugShowFields: Bool = false
