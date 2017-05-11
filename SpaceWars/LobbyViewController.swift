@@ -195,7 +195,11 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
         if(self.server == nil) {
             self.showToast(message: "Only the host can start the game")
         } else {
-            self.server?.startShipSelection(setup: createSetup())
+            if(self.server!.players.count < 2 && Int(settingsCPUEnemiesLabel.text!)! == 0) {
+                self.showToast(message: "You need at least one adversary (CPU included)")
+            } else {
+                self.server?.startShipSelection(setup: createSetup())
+            }
         }
     }
     

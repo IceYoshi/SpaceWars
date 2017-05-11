@@ -143,10 +143,24 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonPro
         }
     }
     
-    public func loadGame(_ setup: JSON) {
-        let skView = self.viewController.view as? SKView
-        skView?.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, client: self))
-        self.scene = skView?.scene
+    public func loadGame(_ setup: JSON, ignoreCountdown: Bool = false) {
+        if(self.scene == nil) {
+            let gameVC = GameViewController(self, showScene: false)
+            viewController.present(gameVC, animated: false, completion: {
+                self.viewController = gameVC
+                
+                if let skView = self.viewController.view as? SKView {
+                    skView.presentScene(GameScene(screenSize: self.viewController.view.bounds.size, setup: setup, client: self, ignoreCountdown: ignoreCountdown))
+                    self.scene = skView.scene
+                }
+                
+            })
+        } else {
+            if let skView = self.viewController.view as? SKView {
+                skView.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, client: self, ignoreCountdown: ignoreCountdown))
+                self.scene = skView.scene
+            }
+        }
     }
     
     public func didReceiveGameover(stats: [JSON]) {

@@ -24,19 +24,10 @@ class StateSyncClientCommand: Command {
                 delegate.didPressLobby()
             case .ship_selection:
                 delegate.didReceiveStartShipSelection()
-                break
             case .pre_game:
-                delegate.didReceiveStartShipSelection()
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                    self.delegate.loadGame(data["setup"])
-                })
-                break
+                self.delegate.loadGame(data["setup"], ignoreCountdown: true)
             case .playing:
-                delegate.didReceiveStartShipSelection()
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                    self.delegate.loadGame(data["setup"])
-                })
-                break
+                self.delegate.loadGame(data["setup"], ignoreCountdown: true)
             }
         } else {
             print("Received unknown sync state \(data["state"].stringValue)")

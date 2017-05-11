@@ -21,6 +21,8 @@ class Player: CustomStringConvertible {
     public var hitCount: Int = 0
     public var killedBy: String?
     
+    public var shipSelected: JSON?
+    
     
     public var description: String {
         get {
@@ -42,6 +44,10 @@ class Player: CustomStringConvertible {
         if(moveObject == nil || moveObject!["sqn"].uInt64Value < obj["sqn"].uInt64Value) {
             moveObject = obj
         }
+    }
+    
+    public func resetSQN() {
+        moveObject?["sqn"] = JSON(UInt64(0))
     }
     
     public func getMoveObject() -> JSON? {

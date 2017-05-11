@@ -12,13 +12,15 @@ import GameplayKit
 
 class GameViewController: UIViewController {
     private var client: ClientInterface
+    private var showScene: Bool
     
     public var skView: SKView {
         return self.view as! SKView
     }
     
-    required init(_ client: ClientInterface) {
+    required init(_ client: ClientInterface, showScene: Bool = true) {
         self.client = client
+        self.showScene = showScene
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,8 +49,11 @@ class GameViewController: UIViewController {
         skView.showsPhysics = Global.Constants.debugShowPhysics
         skView.showsFields = Global.Constants.debugShowFields
         
-        let scene = ShipSelectionScene(self.view.bounds.size, client)
-        skView.presentScene(scene)
+        if(self.showScene) {
+            let scene = ShipSelectionScene(self.view.bounds.size, client)
+            skView.presentScene(scene)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {

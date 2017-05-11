@@ -22,6 +22,7 @@ class ConnectionManager: NSObject {
     private var serviceBrowser: MCNearbyServiceBrowser?
     
     public var commandDelegate: CommandProcessorDelegate?
+    public var peerAcceptDelegate: PeerAcceptDelegate?
     public var peerChangeDelegate: PeerChangeDelegate?
     
     init(_ rank: LocalRank) {
@@ -108,7 +109,11 @@ extension ConnectionManager: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {}
     
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        invitationHandler(true, self.session)
+        if(self.peerAcceptDelegate?.shouldAcceptInvite(peerID.displayName) ?? true) {
+            invitationHandler(true, self.session)
+        } else {
+            invitationHandler(false, self.session)
+        }
     }
 }
 

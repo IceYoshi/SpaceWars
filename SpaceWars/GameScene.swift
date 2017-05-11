@@ -25,7 +25,7 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     fileprivate var countdown: Countdown?
     private var isRunning: Bool = true
     
-    init(screenSize: CGSize, setup: JSON, client: ClientInterface) {
+    init(screenSize: CGSize, setup: JSON, client: ClientInterface, ignoreCountdown: Bool) {
         let pid = setup["pid"].intValue
         let fieldShape = SpacefieldShape(rawValue: setup["space_field"]["shape"].stringValue) ?? .rect
         let fieldSize: CGSize
@@ -60,12 +60,17 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
         self.addNeedsUpdateDelegate(delegate: objectManager)
         self.addNeedsPhysicsUpdateDelegate(delegate: objectManager)
         
-        if(client.server != nil) {
-            self.run(SKAction.wait(forDuration: 0.5)){
-                self.startCountdown(time: setup["countdown"].intValue)
+        if(!ignoreCountdown) {
+            if(client.server != nil) {
+                self.run(SKAction.wait(forDuration: 0.5)){
+                    self.startCountdown(time: setup["countdown"].intValue)
+                }
+            } else {
+                startCountdown(time: setup["countdown"].intValue)
             }
         } else {
-            startCountdown(time: setup["countdown"].intValue)
+            objectManager.attachPauseButton()
+            pauseGame(caller: objectManager.client.getPlayerByID(pid)?.name)
         }
         
         let backgroundMusic = SKAudioNode(fileNamed: "light-years.mp3")
@@ -85,7 +90,6 @@ class GameScene: SKScene, UIGestureRecognizerDelegate {
     
     public func pauseGame(caller: String?) {
         pauseGame()
-        
         objectManager.pauseGame(name: caller)
     }
     

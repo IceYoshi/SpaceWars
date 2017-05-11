@@ -16,10 +16,14 @@ enum GameState: String {
     playing = "playing"
 }
 
-class ServerInterface: PeerChangeDelegate {
+protocol PeerAcceptDelegate {
+    func shouldAcceptInvite(_ peerID: String) -> Bool
+}
+
+class ServerInterface: PeerChangeDelegate, PeerAcceptDelegate {
     
     private var state: GameState = .join
-    private var players = [Player]()
+    private(set) var players = [Player]()
     
     private var commandProcessor = CommandProcessor()
     private(set) var idCounter = IDCounter()
@@ -44,6 +48,7 @@ class ServerInterface: PeerChangeDelegate {
         // Override delegates to the connectionManager
         client.connectionManager.commandDelegate = commandProcessor
         client.connectionManager.peerChangeDelegate = self
+        client.connectionManager.peerAcceptDelegate = self
         
         commandProcessor.register(command: NameServerCommand(self))
         commandProcessor.register(command: ShipSelectedServerCommand(self))
@@ -64,6 +69,13 @@ class ServerInterface: PeerChangeDelegate {
     
     public func clearNonConnectedClients() {
         players = players.filter( { $0.isConnected } )
+    }
+    
+    func shouldAcceptInvite(_ peerID: String) -> Bool {
+        if(state == .join || getPlayerByPeerID(peerID) != nil) {
+            return true
+        }
+        return false
     }
     
     public func getPlayerByPeerID(_ peerID: String) -> Player? {
@@ -99,6 +111,9 @@ class ServerInterface: PeerChangeDelegate {
     }
     
     public func didSendName(name: String, peerID: String) {
+        if let player = getPlayerByPeerID(peerID) {
+            player.resetSQN()
+        }
         if(state == .join) {
             if let player = getPlayerByPeerID(peerID) {
                 player.name = name
@@ -147,17 +162,27 @@ class ServerInterface: PeerChangeDelegate {
         case .join:
             break
         case .ship_selection:
+            sendTo(peerID, response, .reliable)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500), execute: {
+                for player in self.players {
+                    if let shipSelected = player.shipSelected {
+                        self.sendTo(peerID, shipSelected, .reliable)
+                    }
+                }
+            })
             break
         case .pre_game:
             setup?["objects"] = client.getConfig()
             response["setup"] = setup ?? []
+            sendTo(peerID, response, .reliable)
         case .playing:
             didReceivePause(peerID)
             setup?["objects"] = client.getConfig()
             response["setup"] = setup ?? []
+            sendTo(peerID, response, .reliable)
         }
         
-        sendTo(peerID, response, .reliable)
     }
     
     public func startShipSelection(setup: JSON) {
@@ -189,6 +214,7 @@ class ServerInterface: PeerChangeDelegate {
                     "pid":player.id,
                     "ship_type":type
                 ]
+                player.shipSelected = response
                 sendToClients(response, .reliable)
             }
         } else {
@@ -315,10 +341,6 @@ class ServerInterface: PeerChangeDelegate {
             "enabled":status,
             "transfer":transfer
         ]
-        /*
-        for player in players.filter( { $0.peerID != UIDevice.current.identifierForVendor!.uuidString } ) {
-            sendTo(player.peerID, message, .reliable)
-        }*/
         sendToClients(message, .reliable)
     }
     
@@ -377,6 +399,8 @@ class ServerInterface: PeerChangeDelegate {
     
     public func sendGameover() {
         shouldSendMoveMessages = false
+        self.client.connectionManager.stopPairingService()
+        
         state = .join
         var message: JSON = [
             "type":"gameover",
