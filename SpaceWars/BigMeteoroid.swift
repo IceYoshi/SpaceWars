@@ -42,7 +42,7 @@ class BigMeteoroid: Meteoroid {
     convenience init(idCounter: IDCounter, pos: CGPoint) {
         self.init(id: idCounter.nextID(),
                   pos: pos,
-                  width: Int.rand(64, 128),
+                  width: Int.rand(64, 256),
                   rot: CGFloat.rand(0, 2*CGFloat.pi)
         )
     }

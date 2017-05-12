@@ -91,7 +91,7 @@ class Spacestation: GameObject {
                   activeTime: 10,
                   inactiveTime: 60,
                   pos: pos,
-                  radius: 150,
+                  radius: 200,
                   rot: CGFloat.rand(0, 2*CGFloat.pi)
         )
     }

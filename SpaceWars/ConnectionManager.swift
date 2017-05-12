@@ -75,7 +75,7 @@ class ConnectionManager: NSObject {
     }
     
     public func sendToPeers(_ data: Data, _ mode: MCSessionSendDataMode) {
-        print("send \(String(data: data, encoding: .utf8)!)")
+        //print("send \(String(data: data, encoding: .utf8)!)")
         
         if(session.connectedPeers.count > 0) {
             do {
@@ -88,7 +88,7 @@ class ConnectionManager: NSObject {
     }
     
     public func sendTo(_ peerID: String, _ data: Data, _ mode: MCSessionSendDataMode) {
-        print("send \(String(data: data, encoding: .utf8)!)")
+        //print("send \(String(data: data, encoding: .utf8)!)")
         for peer in session.connectedPeers {
             if(peer.displayName == peerID) {
                 do {
@@ -135,7 +135,7 @@ extension ConnectionManager: MCSessionDelegate {
             stopPairingService()
         }
         DispatchQueue.main.async() {
-            print("Peer connection changed. Now connected to \(session.connectedPeers.count) peers.")
+            //print("Peer connection changed. Now connected to \(session.connectedPeers.count) peers.")
             self.peerChangeDelegate?.peerDidChange(session.connectedPeers)
         }
         
@@ -143,7 +143,7 @@ extension ConnectionManager: MCSessionDelegate {
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         DispatchQueue.main.async() {
-            print("received \(String(data: data, encoding: .utf8)!)")
+            //print("received \(String(data: data, encoding: .utf8)!)")
             self.commandDelegate?.interpret(data, peerID.displayName)
         }
     }

@@ -269,6 +269,19 @@ class LobbyViewController: UIViewController, UITextFieldDelegate {
         return setup
     }
     
+    public func pauseGame() {
+        self.client?.sendPause()
+        self.server?.didReceivePause(UIDevice.current.identifierForVendor!.uuidString)
+    }
+    
+    public func syncGame() {
+        self.client?.sendName()
+        
+        if let player = self.server?.getPlayerByPeerID(UIDevice.current.identifierForVendor!.uuidString) {
+            self.server?.didSendName(name: player.name, peerID: player.peerID)
+        }
+    }
+    
 }
 
 

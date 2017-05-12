@@ -280,18 +280,13 @@ class ServerInterface: PeerChangeDelegate, PeerAcceptDelegate {
     }
     
     public func didReceivePause(_ peerID: String) {
-        if(state == .playing) {
-            let message: JSON = [
-                "type":"pause",
-                "pid":getPlayerByPeerID(peerID)?.id ?? 0
-            ]
-            
-            sendToClients(message, .reliable)
-            shouldSendMoveMessages = false
-        } else {
-            sendSync(peerID)
-        }
+        let message: JSON = [
+            "type":"pause",
+            "pid":getPlayerByPeerID(peerID)?.id ?? 0
+        ]
         
+        sendToClients(message, .reliable)
+        shouldSendMoveMessages = false
     }
     
     public func didReceiveFire(_ config: JSON, _ peerID: String) {

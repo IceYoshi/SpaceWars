@@ -71,6 +71,12 @@ class StatScreen: SKNode {
             playerLabel.fontColor = .white
             playerLabel.fontName = "Menlo"
             playerLabel.position = CGPoint(x: 0, y: size.height/2)
+            
+            let playerLabelBackground = SKShapeNode(rectOf: playerLabel.calculateAccumulatedFrame().size)
+            playerLabelBackground.fillColor = .black
+            playerLabelBackground.strokeColor = .black
+            playerLabelBackground.position = playerLabel.position
+            panel.addChild(Global.cache(shape: playerLabelBackground))
             panel.addChild(playerLabel)
             
             let shotsFired = SKLabelNode(text: "Shots fired: \(player!.fireCount)")
