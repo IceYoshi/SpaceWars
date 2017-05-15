@@ -118,6 +118,8 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonPro
     }
     
     public func didReceiveStartShipSelection() {
+        self.scene?.removeAllActions()
+        self.scene?.removeAllChildren()
         let gameVC = GameViewController(self)
         viewController.present(gameVC, animated: false, completion: {
             self.viewController = gameVC
@@ -156,6 +158,8 @@ class ClientInterface: PeerChangeDelegate, ShipSelectionDelegate, LobbyButtonPro
                 
             })
         } else {
+            self.scene?.removeAllActions()
+            self.scene?.removeAllChildren()
             if let skView = self.viewController.view as? SKView {
                 skView.presentScene(GameScene(screenSize: viewController.view.bounds.size, setup: setup, client: self, ignoreCountdown: ignoreCountdown))
                 self.scene = skView.scene
